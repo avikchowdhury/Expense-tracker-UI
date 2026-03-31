@@ -1,0 +1,5 @@
+This is a dummy file for testing the upload feature.
+You can use this file to test file uploads in your application.
+
+Filename: dummy-upload.txt
+Date: March 29, 2026

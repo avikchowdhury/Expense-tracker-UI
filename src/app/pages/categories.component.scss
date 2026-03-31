@@ -1,0 +1,28 @@
+
+.categories-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.categories-table-container {
+  overflow-x: auto;
+}
+
+.categories-table {
+  width: 100%;
+  min-width: 300px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  margin: 2rem 0;
+}

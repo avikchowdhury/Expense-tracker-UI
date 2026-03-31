@@ -1,0 +1,29 @@
+/* Budgets styles */
+
+.budgets-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
+}
+
+.budgets-table-container {
+	overflow-x: auto;
+}
+
+.budgets-table {
+	width: 100%;
+	min-width: 400px;
+}
+
+.loading-spinner {
+	display: flex;
+	justify-content: center;
+	margin: 2rem 0;
+}
+
+.empty-state {
+	text-align: center;
+	color: #888;
+	margin: 2rem 0;
+}

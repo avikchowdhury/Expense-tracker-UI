@@ -1,0 +1,94 @@
+import { Component, OnInit } from '@angular/core';
+import { ProfileService, Profile } from '../services/profile.service';
+import { NotificationService } from '../services/notification.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
+})
+export class ProfileComponent implements OnInit {
+  showOldPassword = false;
+  showNewPassword = false;
+  profile: Profile | null = null;
+  loading = false;
+  editForm: FormGroup;
+  passwordForm: FormGroup;
+  avatarUploading = false;
+
+  constructor(
+    private profileService: ProfileService,
+    private notification: NotificationService,
+    private fb: FormBuilder
+  ) {
+    this.editForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+    this.passwordForm = this.fb.group({
+      oldPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  ngOnInit() {
+    this.loadProfile();
+  }
+
+  loadProfile() {
+    this.loading = true;
+    this.profileService.getProfile().subscribe({
+      next: (profile) => {
+        this.profile = profile;
+        this.editForm.patchValue({ email: profile.email });
+        this.loading = false;
+      },
+      error: () => {
+        this.notification.error('Failed to load profile');
+        this.loading = false;
+      }
+    });
+  }
+
+  saveProfile() {
+    if (this.editForm.invalid) return;
+    const email = this.editForm.value.email;
+    this.profileService.updateProfile(email).subscribe({
+      next: (profile) => {
+        this.notification.success('Profile updated');
+        this.profile = profile;
+      },
+      error: () => this.notification.error('Failed to update profile')
+    });
+  }
+
+  changePassword() {
+    if (this.passwordForm.invalid) return;
+    const { oldPassword, newPassword } = this.passwordForm.value;
+    this.profileService.changePassword(oldPassword, newPassword).subscribe({
+      next: () => {
+        this.notification.success('Password changed');
+        this.passwordForm.reset();
+      },
+      error: () => this.notification.error('Failed to change password')
+    });
+  }
+
+  onAvatarSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    this.avatarUploading = true;
+    this.profileService.uploadAvatar(file).subscribe({
+      next: (res) => {
+        this.notification.success('Avatar updated');
+        if (this.profile) this.profile.avatarUrl = res.avatarUrl;
+        this.avatarUploading = false;
+      },
+      error: () => {
+        this.notification.error('Failed to upload avatar');
+        this.avatarUploading = false;
+      }
+    });
+  }
+}
