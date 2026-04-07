@@ -1,0 +1,55 @@
+<mat-card class="upload-card">
+  <mat-card-title>AI upload assistant</mat-card-title>
+  <mat-card-subtitle>Pick a file, review the smart preview, and save with better metadata.</mat-card-subtitle>
+
+  <label class="upload-dropzone">
+    <input #fileInput type="file" accept="image/*,application/pdf" (change)="onFileChange($event)" />
+    <mat-icon>upload_file</mat-icon>
+    <strong>{{ selectedFile?.name || 'Choose a receipt file' }}</strong>
+    <span>Images or PDFs supported</span>
+  </label>
+
+  <div class="preview-loading" *ngIf="parsingPreview">
+    <mat-spinner diameter="28"></mat-spinner>
+    <span>Generating AI preview...</span>
+  </div>
+
+  <div class="ai-preview" *ngIf="preview">
+    <div class="preview-row">
+      <span>Vendor</span>
+      <strong>{{ preview.vendor || 'Unknown vendor' }}</strong>
+    </div>
+    <div class="preview-row">
+      <span>Amount</span>
+      <strong>{{ (preview.amount || 0) | currency }}</strong>
+    </div>
+    <div class="preview-row">
+      <span>Suggested category</span>
+      <strong>{{ preview.category || 'Uncategorized' }}</strong>
+    </div>
+  </div>
+
+  <div class="edit-grid" *ngIf="selectedFile">
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="category">
+        <mat-option value="">Uncategorized</mat-option>
+        <mat-option *ngFor="let categoryItem of categories" [value]="categoryItem.name">
+          {{ categoryItem.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Notes for the receipt</mat-label>
+      <textarea matInput rows="4" [(ngModel)]="notes" placeholder="Optional notes or correction details"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="upload-actions" *ngIf="selectedFile">
+    <button mat-stroked-button type="button" (click)="clear()">Clear</button>
+    <button mat-raised-button color="primary" type="button" (click)="upload()" [disabled]="uploading">
+      {{ uploading ? 'Uploading...' : 'Save receipt' }}
+    </button>
+  </div>
+</mat-card>

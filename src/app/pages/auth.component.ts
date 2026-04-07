@@ -6,14 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent {
-  selectedTab: 'login' | 'register' = 'login';
-  showPassword = false;
-
-  switchTab(tab: 'login' | 'register') {
-    this.selectedTab = tab;
-  }
-
-  togglePassword() {
-    this.showPassword = !this.showPassword;
-  }
+  readonly message = 'Legacy auth component replaced by the lazy-loaded auth feature.';
 }

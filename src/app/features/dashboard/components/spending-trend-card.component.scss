@@ -1,0 +1,21 @@
+.panel-card {
+  border-radius: 26px;
+  min-height: 360px;
+  box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
+}
+
+.chart-card {
+  padding: 0.4rem;
+}
+
+.chart-shell {
+  position: relative;
+  min-height: 260px;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  color: #61798a;
+}

@@ -30,6 +30,10 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+.api-build/
+.api-obj/
+.ng-build-check/
+.ng-build-check-2/
 .sass-cache/
 /connect.lock
 /coverage

@@ -1,0 +1,63 @@
+.auth-hero {
+  padding: 2rem;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(9, 29, 41, 0.95) 0%, rgba(8, 43, 56, 0.95) 100%);
+  color: #f4fbfd;
+  box-shadow: 0 24px 60px rgba(3, 14, 21, 0.28);
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7de0be;
+}
+
+.auth-hero h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  line-height: 0.98;
+}
+
+.lead {
+  margin: 0 0 1.5rem;
+  max-width: 560px;
+  color: #c7d9e0;
+  font-size: 1.02rem;
+}
+
+.hero-cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero-card {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-card .label {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(125, 224, 190, 0.14);
+  color: #9cf3d2;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-card strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+}
+
+.hero-card p {
+  margin: 0;
+  color: #c7d9e0;
+}

@@ -1,0 +1,17 @@
+<mat-card class="panel-card">
+  <div class="header-row">
+    <div>
+      <mat-card-title>Category breakdown</mat-card-title>
+      <mat-card-subtitle>Top spending area: {{ topCategory }}</mat-card-subtitle>
+    </div>
+    <div class="top-category">{{ topCategory }}</div>
+  </div>
+
+  <div class="chart-shell" *ngIf="data.datasets.length && data.datasets[0].data.length; else emptyState">
+    <canvas baseChart [data]="data" [type]="type"></canvas>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">Category insights appear after your first tracked expenses.</div>
+  </ng-template>
+</mat-card>

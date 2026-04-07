@@ -1,0 +1,40 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Receipts</p>
+    <h2>Upload, review, and organize with AI help</h2>
+    <p class="lead">Preview receipt extraction before saving, then filter your history with reusable controls.</p>
+  </div>
+</section>
+
+<div class="receipts-grid">
+  <app-receipt-upload-assistant
+    [selectedFile]="selectedFile"
+    [preview]="aiPreview"
+    [parsingPreview]="parsingPreview"
+    [uploading]="uploading"
+    [categories]="categories"
+    (fileSelected)="handleFileSelected($event)"
+    (uploadRequested)="uploadReceipt($event)"
+    (cleared)="clearUploadSelection()"
+  ></app-receipt-upload-assistant>
+
+  <section class="list-panel">
+    <app-receipt-filters
+      [categories]="categories"
+      [filters]="filters"
+      (filtersChange)="handleFiltersChange($event)"
+    ></app-receipt-filters>
+
+    <app-receipt-table
+      [receipts]="receipts"
+      [loading]="loading"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [totalReceipts]="totalReceipts"
+      (pageChange)="handlePageChange($event)"
+      (view)="viewReceipt($event)"
+      (edit)="editReceipt($event)"
+      (delete)="deleteReceipt($event)"
+    ></app-receipt-table>
+  </section>
+</div>

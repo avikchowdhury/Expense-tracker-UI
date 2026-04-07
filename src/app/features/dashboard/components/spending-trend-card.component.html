@@ -1,0 +1,12 @@
+<mat-card class="panel-card chart-card">
+  <mat-card-title>Monthly spending trend</mat-card-title>
+  <mat-card-subtitle>See whether your expense pace is rising or settling down.</mat-card-subtitle>
+
+  <div class="chart-shell" *ngIf="data.datasets.length && data.datasets[0].data.length; else emptyState">
+    <canvas baseChart [data]="data" [options]="options" [type]="type"></canvas>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">Upload receipts or sync expenses to populate the chart.</div>
+  </ng-template>
+</mat-card>

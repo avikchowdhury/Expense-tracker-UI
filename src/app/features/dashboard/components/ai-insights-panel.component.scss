@@ -1,0 +1,113 @@
+.panel-card {
+  border-radius: 26px;
+  min-height: 360px;
+  box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.health-chip {
+  align-self: flex-start;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: #eefaf6;
+  color: #0f6c5b;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.budget-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.budget-strip div {
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #f6fafc;
+}
+
+.budget-strip span {
+  display: block;
+  color: #61798a;
+  font-size: 0.86rem;
+}
+
+.budget-strip strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+}
+
+.insight-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.insight-card {
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #f7fbfd;
+  border: 1px solid rgba(15, 39, 56, 0.08);
+}
+
+.insight-card.warning {
+  background: #fff7ef;
+  border-color: rgba(241, 107, 78, 0.2);
+}
+
+.insight-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.insight-header h3,
+.quick-tips h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.insight-card p {
+  margin: 0 0 0.35rem;
+  color: #445b6b;
+}
+
+.insight-card small {
+  color: #0f6c5b;
+}
+
+.quick-tips {
+  margin-top: 1rem;
+}
+
+.anomaly-list {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #fff7ef;
+}
+
+.anomaly-list h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.anomaly-list p {
+  margin: 0.35rem 0 0;
+  color: #8f4a2f;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  color: #61798a;
+}

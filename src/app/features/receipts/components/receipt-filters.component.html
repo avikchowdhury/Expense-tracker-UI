@@ -1,0 +1,36 @@
+<mat-card class="filters-card">
+  <div class="filters-header">
+    <div>
+      <mat-card-title>Filters</mat-card-title>
+      <mat-card-subtitle>Search by vendor, category, or uploaded date range.</mat-card-subtitle>
+    </div>
+    <button mat-button type="button" (click)="reset()">Reset</button>
+  </div>
+
+  <div class="filters-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="draftFilters.search" placeholder="Vendor, notes, or filename" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="draftFilters.category">
+        <mat-option value="">All categories</mat-option>
+        <mat-option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date from</mat-label>
+      <input matInput type="date" [(ngModel)]="draftFilters.dateFrom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date to</mat-label>
+      <input matInput type="date" [(ngModel)]="draftFilters.dateTo" />
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" type="button" (click)="apply()">Apply filters</button>
+</mat-card>

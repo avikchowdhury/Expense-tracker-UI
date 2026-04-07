@@ -1,0 +1,18 @@
+<mat-card class="panel-card">
+  <mat-card-title>Recent receipts</mat-card-title>
+  <mat-card-subtitle>Latest imports the AI parser can use for trend detection.</mat-card-subtitle>
+
+  <div class="receipt-list" *ngIf="receipts.length; else emptyState">
+    <article class="receipt-row" *ngFor="let receipt of receipts">
+      <div>
+        <strong>{{ receipt.vendor || 'Unknown vendor' }}</strong>
+        <p>{{ receipt.uploadedAt | date:'mediumDate' }} · {{ receipt.category || 'Uncategorized' }}</p>
+      </div>
+      <span>{{ receipt.totalAmount | currency }}</span>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">No recent receipts yet.</div>
+  </ng-template>
+</mat-card>

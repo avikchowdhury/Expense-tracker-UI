@@ -1,31 +1,6 @@
-.auth-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 32px;
-  background: #fff;
+.legacy-note {
+  padding: 1rem;
   border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-}
-.tab-switch {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-.tab-switch button {
-  flex: 1;
-  padding: 12px 0;
-  border: none;
-  background: #f0f0f0;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.tab-switch button.active {
-  background: #3f51b5;
-  color: #fff;
-}
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  background: #fff8e1;
+  color: #5f4300;
 }

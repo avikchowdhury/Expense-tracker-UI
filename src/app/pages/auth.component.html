@@ -1,41 +1,5 @@
-<div class="auth-container">
-  <div class="tab-switch">
-    <button [class.active]="selectedTab === 'login'" (click)="switchTab('login')">Login</button>
-    <button [class.active]="selectedTab === 'register'" (click)="switchTab('register')">Register</button>
-  </div>
-
-  <form *ngIf="selectedTab === 'login'" class="auth-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" required />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input matInput [type]="showPassword ? 'text' : 'password'" required />
-      <button mat-icon-button matSuffix type="button" (click)="togglePassword()">
-        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Login</button>
-  </form>
-
-  <form *ngIf="selectedTab === 'register'" class="auth-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Email (Gmail only)</mat-label>
-      <input matInput type="email" required pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input matInput [type]="showPassword ? 'text' : 'password'" required />
-      <button mat-icon-button matSuffix type="button" (click)="togglePassword()">
-        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-      </button>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>OTP</mat-label>
-      <input matInput type="text" required />
-      <button mat-raised-button color="accent" type="button">Send OTP</button>
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Register</button>
-  </form>
+<div class="legacy-note">
+  <h2>Legacy Auth Component</h2>
+  <p>{{ message }}</p>
+  <p>Use the new routes under <code>/auth/login</code> and <code>/auth/register</code>.</p>
 </div>

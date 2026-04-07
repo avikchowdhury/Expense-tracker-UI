@@ -1,0 +1,44 @@
+.panel-card {
+  border-radius: 26px;
+  min-height: 360px;
+  box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
+}
+
+.receipt-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+}
+
+.receipt-row strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.receipt-row p {
+  margin: 0;
+  color: #61798a;
+}
+
+.receipt-row span {
+  font-weight: 700;
+  color: #13293d;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  color: #61798a;
+}

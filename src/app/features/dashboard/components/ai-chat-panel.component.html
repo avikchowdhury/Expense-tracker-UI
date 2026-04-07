@@ -1,0 +1,32 @@
+<mat-card class="chat-panel">
+  <div class="chat-header">
+    <div>
+      <mat-card-title>Ask your expense copilot</mat-card-title>
+      <mat-card-subtitle>Chat with the app using your real budget and receipt activity as context.</mat-card-subtitle>
+    </div>
+
+    <div class="prompt-list">
+      <button mat-stroked-button type="button" *ngFor="let starter of starterPrompts" (click)="usePrompt(starter)">
+        {{ starter }}
+      </button>
+    </div>
+  </div>
+
+  <div class="message-list">
+    <article class="message" *ngFor="let message of messages" [class.assistant]="message.role === 'assistant'">
+      <span>{{ message.role === 'assistant' ? 'AI' : 'You' }}</span>
+      <p>{{ message.content }}</p>
+    </article>
+  </div>
+
+  <form class="chat-form" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Ask about your spending</mat-label>
+      <input matInput [(ngModel)]="prompt" name="prompt" placeholder="Where am I most likely to overspend?" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+      {{ loading ? 'Thinking...' : 'Send' }}
+    </button>
+  </form>
+</mat-card>

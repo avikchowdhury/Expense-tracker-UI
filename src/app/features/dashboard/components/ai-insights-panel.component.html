@@ -1,0 +1,47 @@
+<mat-card class="panel-card insights-panel">
+  <div class="panel-header">
+    <div>
+      <mat-card-title>AI guidance</mat-card-title>
+      <mat-card-subtitle>Actionable coaching from your tracked budget and receipt activity.</mat-card-subtitle>
+    </div>
+    <span class="health-chip">{{ snapshot?.budgetHealth || budgetStatus?.status || 'Learning' }}</span>
+  </div>
+
+  <div class="budget-strip" *ngIf="budgetStatus">
+    <div>
+      <span>Budget</span>
+      <strong>{{ budgetStatus.budget | currency }}</strong>
+    </div>
+    <div>
+      <span>Spent</span>
+      <strong>{{ budgetStatus.spent | currency }}</strong>
+    </div>
+  </div>
+
+  <div class="insight-list" *ngIf="snapshot?.insights?.length; else emptyState">
+    <article class="insight-card" *ngFor="let insight of snapshot?.insights" [class.warning]="insight.severity === 'warning' || insight.severity === 'critical'">
+      <div class="insight-header">
+        <h3>{{ insight.title }}</h3>
+        <span *ngIf="insight.metricValue">{{ insight.metricValue }}</span>
+      </div>
+      <p>{{ insight.summary }}</p>
+      <small *ngIf="insight.action">{{ insight.action }}</small>
+    </article>
+  </div>
+
+  <div class="anomaly-list" *ngIf="snapshot?.anomalies?.length">
+    <h3>Watch list</h3>
+    <p *ngFor="let anomaly of snapshot?.anomalies">{{ anomaly }}</p>
+  </div>
+
+  <div class="quick-tips" *ngIf="snapshot?.suggestions?.length">
+    <h3>Next best moves</h3>
+    <mat-chip-set>
+      <mat-chip *ngFor="let suggestion of snapshot?.suggestions">{{ suggestion }}</mat-chip>
+    </mat-chip-set>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">AI guidance will appear once expenses and budgets are available.</div>
+  </ng-template>
+</mat-card>

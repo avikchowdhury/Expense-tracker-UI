@@ -1,0 +1,7 @@
+<section class="summary-grid">
+  <article class="summary-card" *ngFor="let metric of metrics" [class.warning]="metric.tone === 'warning'" [class.positive]="metric.tone === 'positive'">
+    <span>{{ metric.label }}</span>
+    <strong>{{ metric.value }}</strong>
+    <p>{{ metric.detail }}</p>
+  </article>
+</section>

@@ -1,0 +1,14 @@
+<div class="auth-page">
+  <div class="auth-grid">
+    <app-auth-hero [mode]="(activeMode$ | async) || 'login'"></app-auth-hero>
+
+    <section class="auth-panel">
+      <div class="auth-tabs">
+        <a routerLink="/auth/login" routerLinkActive="active" class="auth-tab">Login</a>
+        <a routerLink="/auth/register" routerLinkActive="active" class="auth-tab">Register</a>
+      </div>
+
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</div>
