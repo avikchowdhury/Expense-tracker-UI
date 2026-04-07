@@ -1,0 +1,17 @@
+<section class="overview-grid">
+  <mat-card
+    *ngFor="let card of cards"
+    class="metric-card"
+    [style.--accent]="card.accent"
+  >
+    <div class="metric-icon">
+      <mat-icon>{{ card.icon }}</mat-icon>
+    </div>
+
+    <div class="metric-copy">
+      <span>{{ card.label }}</span>
+      <strong>{{ card.value }}</strong>
+      <p>{{ card.hint }}</p>
+    </div>
+  </mat-card>
+</section>

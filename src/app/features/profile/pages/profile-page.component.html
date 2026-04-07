@@ -75,6 +75,43 @@
           <strong>Password + OTP</strong>
         </div>
       </div>
+
+      <div class="admin-setup-card enhanced-admin-setup" *ngIf="profile.role !== 'Admin'">
+        <div class="admin-setup-info">
+          <span class="setup-label">Admin setup</span>
+          <strong>Claim the first admin seat for this workspace</strong>
+          <p>
+            <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+            <span>
+              Use this once while setting up the app locally.<br>
+              <b>Only works when no admin account exists yet.</b>
+            </span>
+          </p>
+        </div>
+        <div class="admin-setup-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="claimInitialAdminAccess()"
+            [disabled]="bootstrappingAdmin"
+            class="claim-admin-btn"
+          >
+            <mat-icon>admin_panel_settings</mat-icon>
+            {{ bootstrappingAdmin ? 'Activating...' : 'Claim admin access' }}
+          </button>
+          <button
+            mat-stroked-button
+            color="accent"
+            type="button"
+            (click)="demoPromoteToAdmin()"
+            class="demo-promote-btn"
+          >
+            <mat-icon>bolt</mat-icon>
+            Demo Promote
+          </button>
+        </div>
+      </div>
     </mat-card>
 
     <mat-card class="settings-card">

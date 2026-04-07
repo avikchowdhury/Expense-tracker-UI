@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guest.guard';
 import { AppShellComponent } from './layout/app-shell.component';
@@ -57,6 +58,12 @@ const routes: Routes = [
           import('./features/profile/profile.module').then(
             (m) => m.ProfileModule,
           ),
+      },
+      {
+        path: 'admin',
+        canActivate: [AdminGuard],
+        loadChildren: () =>
+          import('./features/admin/admin.module').then((m) => m.AdminModule),
       },
     ],
   },

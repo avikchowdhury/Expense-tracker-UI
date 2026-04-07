@@ -1,0 +1,75 @@
+.admin-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: #0f6c5b;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.page-header h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #13293d;
+}
+
+.lead {
+  margin: 0;
+  max-width: 780px;
+  color: #577083;
+}
+
+.admin-panel {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.2rem, 2vw, 1.7rem);
+  border-radius: 26px;
+  box-shadow: 0 18px 36px rgba(20, 40, 57, 0.08);
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.panel-label {
+  margin: 0 0 0.3rem;
+  color: #0f6c5b;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.panel-head h3 {
+  margin: 0;
+  color: #13293d;
+  font-size: 1.35rem;
+}
+
+.panel-count {
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(15, 108, 91, 0.1);
+  color: #0f6c5b;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .page-header,
+  .panel-head {
+    flex-direction: column;
+  }
+}

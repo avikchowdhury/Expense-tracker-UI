@@ -1,0 +1,88 @@
+.loading-state,
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  text-align: center;
+}
+
+.empty-state {
+  gap: 0.4rem;
+  color: #577083;
+}
+
+.empty-state mat-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  font-size: 2.7rem;
+  color: #0f6c5b;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0;
+}
+
+.avatar {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f5fffb 0%, #e6f6ef 100%);
+  color: #0f6c5b;
+  font-weight: 700;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.identity,
+.role-cell,
+.activity-cell {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.identity strong {
+  color: #13293d;
+}
+
+.identity small,
+.role-cell small,
+.activity-cell small {
+  color: #6d8495;
+}
+
+.activity-cell span {
+  color: #29485c;
+}
+
+.admin-role-chip {
+  font-weight: 700;
+}
+
+th.mat-mdc-header-cell,
+td.mat-mdc-cell {
+  padding: 0.95rem 0.85rem;
+}
+
+@media (max-width: 720px) {
+  .admin-table {
+    min-width: 760px;
+  }
+}

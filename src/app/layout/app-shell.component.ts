@@ -8,6 +8,7 @@ interface NavigationItem {
   label: string;
   path: string;
   icon: string;
+  adminOnly?: boolean;
 }
 
 @Component({
@@ -21,7 +22,13 @@ export class AppShellComponent implements OnInit, OnDestroy {
     { label: 'Receipts', path: '/receipts', icon: 'receipt_long' },
     { label: 'Budgets', path: '/budgets', icon: 'savings' },
     { label: 'Categories', path: '/categories', icon: 'category' },
-    { label: 'Profile', path: '/profile', icon: 'manage_accounts' }
+    { label: 'Profile', path: '/profile', icon: 'manage_accounts' },
+    {
+      label: 'Admin',
+      path: '/admin',
+      icon: 'admin_panel_settings',
+      adminOnly: true,
+    },
   ];
 
   profile: Profile | null = null;
@@ -52,6 +59,13 @@ export class AppShellComponent implements OnInit, OnDestroy {
   get avatarInitials(): string {
     const email = this.profile?.email?.trim() || '';
     return email ? email.slice(0, 2).toUpperCase() : 'AI';
+  }
+
+  get visibleNavigation(): NavigationItem[] {
+    const isAdmin =
+      this.profile?.role?.toLowerCase() === 'admin' || this.authService.isAdmin();
+
+    return this.navigation.filter((item) => !item.adminOnly || isAdmin);
   }
 
   logout(): void {

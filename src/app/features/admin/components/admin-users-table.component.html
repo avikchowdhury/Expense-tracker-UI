@@ -1,0 +1,88 @@
+<div *ngIf="loading" class="loading-state">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<div *ngIf="!loading && !users.length" class="empty-state">
+  <mat-icon>group_off</mat-icon>
+  <h4>No users available yet</h4>
+  <p>Registered users will appear here once the workspace has active accounts.</p>
+</div>
+
+<div *ngIf="!loading && users.length" class="table-wrap">
+  <table
+    mat-table
+    [dataSource]="users"
+    class="admin-table"
+    [trackBy]="trackByUserId"
+  >
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef>User</th>
+      <td mat-cell *matCellDef="let user">
+        <div class="user-cell">
+          <div class="avatar">
+            <img *ngIf="user.avatarUrl" [src]="user.avatarUrl" [alt]="user.email" />
+            <span *ngIf="!user.avatarUrl">{{ getAvatarInitials(user) }}</span>
+          </div>
+
+          <div class="identity">
+            <strong>{{ user.email }}</strong>
+            <small>User ID: {{ user.id }}</small>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let user">
+        <div class="role-cell">
+          <mat-chip
+            [color]="user.role === 'Admin' ? 'primary' : undefined"
+            [class.admin-role-chip]="user.role === 'Admin'"
+          >
+            {{ user.role }}
+          </mat-chip>
+          <small *ngIf="!canManage(user)">Current signed-in account</small>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="activity">
+      <th mat-header-cell *matHeaderCellDef>Activity</th>
+      <td mat-cell *matCellDef="let user">
+        <div class="activity-cell">
+          <span>{{ user.receiptCount }} receipts</span>
+          <span>{{ user.budgetCount }} budgets</span>
+          <span>{{ user.categoryCount }} categories</span>
+          <small *ngIf="user.latestReceiptAt">
+            Last receipt: {{ user.latestReceiptAt | date : 'mediumDate' }}
+          </small>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let user">
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="submitRoleChange(user)"
+          [disabled]="!canManage(user) || updatingUserId === user.id"
+        >
+          {{
+            updatingUserId === user.id
+              ? 'Updating...'
+              : user.role === 'Admin'
+                ? 'Convert to User'
+                : 'Promote to Admin'
+          }}
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

@@ -1,8 +1,12 @@
 <div class="shell">
   <header class="shell-header">
-    <div>
-      <p class="eyebrow">AI Expense Tracker</p>
-      <h1>Smart money monitoring for everyday spending</h1>
+
+    <div class="brand-header">
+      <img src="assets/brand/brand.webp" alt="App Logo" class="app-logo" />
+      <div class="brand-title-block">
+        <p class="eyebrow">AI Expense Tracker</p>
+        <h1>Smart money monitoring for everyday spending</h1>
+      </div>
     </div>
 
     <div class="shell-actions">
@@ -27,7 +31,7 @@
 
   <nav class="shell-nav">
     <a
-      *ngFor="let item of navigation"
+      *ngFor="let item of visibleNavigation"
       [routerLink]="item.path"
       routerLinkActive="active"
       class="nav-link"

@@ -23,6 +23,10 @@ export class AuthService {
     });
   }
 
+  bootstrapAdmin(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${API_BASE}/auth/bootstrap-admin`, {});
+  }
+
   saveToken(data: AuthResponse): void {
     localStorage.setItem('exp_tracker_token', data.token);
     localStorage.setItem('exp_tracker_expires_at', data.expiresAt);
@@ -49,6 +53,31 @@ export class AuthService {
     return new Date(expiresAt) > new Date();
   }
 
+  getUserRole(): string | null {
+    return this.getClaimValue([
+      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+      'role',
+    ]);
+  }
+
+  getUserId(): number | null {
+    const userId = this.getClaimValue([
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier',
+      'sub',
+    ]);
+
+    if (!userId) {
+      return null;
+    }
+
+    const parsed = Number(userId);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole()?.toLowerCase() === 'admin';
+  }
+
   sendOtp(email: string): Observable<OtpSendResponse> {
     return this.http.post<OtpSendResponse>(`${API_BASE}/auth/send-otp`, {
       email,
@@ -65,5 +94,41 @@ export class AuthService {
       otp,
       password,
     });
+  }
+
+  private getClaimValue(claimNames: string[]): string | null {
+    const payload = this.getTokenPayload();
+    if (!payload) {
+      return null;
+    }
+
+    for (const claimName of claimNames) {
+      const value = payload[claimName];
+      if (typeof value === 'string' && value.trim()) {
+        return value;
+      }
+    }
+
+    return null;
+  }
+
+  private getTokenPayload(): Record<string, unknown> | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+
+    const segments = token.split('.');
+    if (segments.length < 2) {
+      return null;
+    }
+
+    try {
+      const base64 = segments[1].replace(/-/g, '+').replace(/_/g, '/');
+      const normalized = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+      return JSON.parse(window.atob(normalized)) as Record<string, unknown>;
+    } catch {
+      return null;
+    }
   }
 }

@@ -1,5 +1,9 @@
+// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.service';
 import { Profile, ProfileService } from '../../../services/profile.service';
 
@@ -15,14 +19,17 @@ export class ProfilePageComponent implements OnInit {
   loading = false;
   savingProfile = false;
   changingPassword = false;
+  bootstrappingAdmin = false;
   editForm: FormGroup;
   passwordForm: FormGroup;
   avatarUploading = false;
 
   constructor(
+    private authService: AuthService,
     private profileService: ProfileService,
     private notification: NotificationService,
     private fb: FormBuilder,
+    private router: Router,
   ) {
     this.editForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -106,5 +113,43 @@ export class ProfilePageComponent implements OnInit {
         this.avatarUploading = false;
       },
     });
+  }
+
+  claimInitialAdminAccess(): void {
+    if (this.bootstrappingAdmin) {
+      return;
+    }
+
+    this.bootstrappingAdmin = true;
+
+    this.authService
+      .bootstrapAdmin()
+      .pipe(
+        switchMap((response) => {
+          this.authService.saveToken(response);
+          return this.profileService.getProfile();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.notification.success(
+            'Admin access is now active for this account.',
+            'Admin',
+          );
+          this.bootstrappingAdmin = false;
+          this.router.navigate(['/admin']);
+        },
+        error: (error) => {
+          const message =
+            error?.error?.message ||
+            'Unable to claim admin access for this account.';
+          this.notification.error(message, 'Admin');
+          this.bootstrappingAdmin = false;
+        },
+      });
+  }
+  demoPromoteToAdmin(): void {
+    this.notification.success('Demo: User promoted to admin (mock action).', 'Demo Promote');
+    // Here you would call a real promote endpoint or mock the effect for demo purposes.
   }
 }

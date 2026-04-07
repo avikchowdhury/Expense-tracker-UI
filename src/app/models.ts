@@ -4,6 +4,8 @@ export interface AuthResponse {
   expiresAt: string;
 }
 
+export type AppUserRole = 'Admin' | 'User';
+
 export interface PaginatedResponse<T> {
   total: number;
   data: T[];
@@ -114,4 +116,23 @@ export interface AiChatMessage {
   role: 'user' | 'assistant';
   content: string;
   createdAt?: string;
+}
+
+export interface AdminOverview {
+  totalUsers: number;
+  adminCount: number;
+  standardUserCount: number;
+  receiptCount: number;
+  trackedReceiptSpend: number;
+}
+
+export interface AdminUserSummary {
+  id: number;
+  email: string;
+  role: AppUserRole;
+  avatarUrl?: string;
+  receiptCount: number;
+  budgetCount: number;
+  categoryCount: number;
+  latestReceiptAt?: string;
 }

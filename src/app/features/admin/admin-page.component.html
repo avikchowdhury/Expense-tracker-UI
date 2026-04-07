@@ -1,0 +1,43 @@
+<section class="admin-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Admin Workspace</p>
+      <h2>Control access, roles, and system health</h2>
+      <p class="lead">
+        Manage who can access the AI expense tracker and keep an eye on the
+        overall workspace footprint.
+      </p>
+    </div>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="loadAdminWorkspace()"
+      [disabled]="loading"
+    >
+      <mat-icon>refresh</mat-icon>
+      {{ loading ? 'Refreshing...' : 'Refresh data' }}
+    </button>
+  </header>
+
+  <app-admin-overview-grid [overview]="overview"></app-admin-overview-grid>
+
+  <mat-card class="admin-panel">
+    <div class="panel-head">
+      <div>
+        <p class="panel-label">Access Control</p>
+        <h3>User roles and workspace ownership</h3>
+      </div>
+      <span class="panel-count">{{ users.length }} users</span>
+    </div>
+
+    <app-admin-users-table
+      [users]="users"
+      [loading]="loading"
+      [currentUserId]="currentUserId"
+      [updatingUserId]="updatingUserId"
+      (roleChange)="handleRoleChange($event)"
+    ></app-admin-users-table>
+  </mat-card>
+</section>
