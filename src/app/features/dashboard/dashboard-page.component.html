@@ -1,32 +1,56 @@
-<section class="page-header">
-  <div>
-    <p class="eyebrow">Overview</p>
-    <h2>AI-first expense command center</h2>
-    <p class="lead">Watch your cash flow, scan for risk, and ask the tracker what deserves action next.</p>
+<section class="dashboard-page">
+  <section class="page-hero">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Overview</p>
+        <h2>AI-first expense command center</h2>
+        <p class="lead">Watch your cash flow, scan for risk, and ask the tracker what deserves action next.</p>
+      </div>
+    </header>
+
+    <div class="hero-strip" *ngIf="!loading && !loadError">
+      <article class="hero-card">
+        <span>Budget health</span>
+        <strong>{{ aiSnapshot?.budgetHealth || budgetStatus?.message || 'Learning from activity' }}</strong>
+      </article>
+
+      <article class="hero-card">
+        <span>Top category</span>
+        <strong>{{ topCategory }}</strong>
+      </article>
+
+      <article class="hero-card">
+        <span>AI sync</span>
+        <strong>{{ aiSnapshot?.generatedAt ? (aiSnapshot?.generatedAt | date:'mediumDate') : 'Waiting for data' }}</strong>
+      </article>
+    </div>
+  </section>
+
+  <div *ngIf="loading" class="dashboard-loading">
+    <mat-spinner diameter="44"></mat-spinner>
   </div>
+
+  <div *ngIf="!loading && loadError" class="dashboard-error">
+    {{ loadError }}
+  </div>
+
+  <ng-container *ngIf="!loading && !loadError">
+    <app-dashboard-summary [metrics]="metrics"></app-dashboard-summary>
+
+    <div class="dashboard-grid">
+      <app-spending-trend-card [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></app-spending-trend-card>
+      <app-category-breakdown-card
+        [data]="pieChartData"
+        [type]="pieChartType"
+        [topCategory]="topCategory"
+      ></app-category-breakdown-card>
+      <app-ai-insights-panel [snapshot]="aiSnapshot" [budgetStatus]="budgetStatus"></app-ai-insights-panel>
+      <app-recent-receipts-card
+        [receipts]="recentReceipts"
+        [calendarReceipts]="calendarReceipts"
+      ></app-recent-receipts-card>
+    </div>
+
+    <app-ai-chat-panel></app-ai-chat-panel>
+  </ng-container>
 </section>
-
-<div *ngIf="loading" class="dashboard-loading">
-  <mat-spinner diameter="44"></mat-spinner>
-</div>
-
-<div *ngIf="!loading && loadError" class="dashboard-error">
-  {{ loadError }}
-</div>
-
-<ng-container *ngIf="!loading && !loadError">
-  <app-dashboard-summary [metrics]="metrics"></app-dashboard-summary>
-
-  <div class="dashboard-grid">
-    <app-spending-trend-card [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></app-spending-trend-card>
-    <app-category-breakdown-card
-      [data]="pieChartData"
-      [type]="pieChartType"
-      [topCategory]="topCategory"
-    ></app-category-breakdown-card>
-    <app-ai-insights-panel [snapshot]="aiSnapshot" [budgetStatus]="budgetStatus"></app-ai-insights-panel>
-    <app-recent-receipts-card [receipts]="recentReceipts"></app-recent-receipts-card>
-  </div>
-
-  <app-ai-chat-panel></app-ai-chat-panel>
-</ng-container>

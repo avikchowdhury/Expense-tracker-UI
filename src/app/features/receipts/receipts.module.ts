@@ -6,6 +6,7 @@ import { ReceiptDeleteDialogComponent } from '../../pages/receipt-delete-dialog.
 import { ReceiptEditDialogComponent } from '../../pages/receipt-edit-dialog.component';
 import { ReceiptViewDialogComponent } from '../../pages/receipt-view-dialog.component';
 import { ReceiptFiltersComponent } from './components/receipt-filters.component';
+import { ReceiptActivityCalendarComponent } from './components/receipt-activity-calendar.component';
 import { ReceiptTableComponent } from './components/receipt-table.component';
 import { ReceiptUploadAssistantComponent } from './components/receipt-upload-assistant.component';
 import { ReceiptsPageComponent } from './receipts-page.component';
@@ -15,6 +16,7 @@ import { ReceiptsRoutingModule } from './receipts-routing.module';
   declarations: [
     ReceiptsPageComponent,
     ReceiptUploadAssistantComponent,
+    ReceiptActivityCalendarComponent,
     ReceiptFiltersComponent,
     ReceiptTableComponent,
     ReceiptViewDialogComponent,

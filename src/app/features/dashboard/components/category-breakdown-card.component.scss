@@ -1,19 +1,33 @@
 .panel-card {
-  padding: 0.4rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
   border-radius: 26px;
   min-height: 360px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
+}
+
+.panel-card mat-card-title {
+  margin: 0;
+  color: #13293d;
+}
+
+.panel-card mat-card-subtitle {
+  margin: -0.35rem 0 0;
+  color: #61798a;
 }
 
 .header-row {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .top-category {
   align-self: flex-start;
-  padding: 0.45rem 0.8rem;
+  padding: 0.55rem 0.9rem;
   border-radius: 999px;
   background: #eefaf6;
   color: #0f6c5b;
@@ -21,12 +35,92 @@
 }
 
 .chart-shell {
-  min-height: 250px;
+  min-height: 220px;
+  padding: 0.75rem 0.25rem 0.25rem;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+}
+
+.chart-shell canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.legend-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(247, 251, 253, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.legend-label,
+.legend-value {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.legend-label strong {
+  color: #13293d;
+}
+
+.legend-value span {
+  color: #13293d;
+  font-weight: 700;
+}
+
+.legend-value small {
+  color: #61798a;
+}
+
+.swatch {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.category-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: #61798a;
+}
+
+.category-footer strong {
+  color: #13293d;
 }
 
 .empty-state {
   display: grid;
   place-items: center;
+  gap: 0.45rem;
   min-height: 220px;
+  padding: 1rem;
   color: #61798a;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+  text-align: center;
+}
+
+.empty-state strong,
+.empty-state p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .legend-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

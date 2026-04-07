@@ -1,24 +1,67 @@
 .panel-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
   border-radius: 26px;
   min-height: 360px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
 }
 
+.panel-card mat-card-title {
+  margin: 0;
+  color: #13293d;
+}
+
+.panel-card mat-card-subtitle {
+  margin: -0.35rem 0 0;
+  color: #61798a;
+}
+
+.receipt-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.summary-chip {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(247, 251, 253, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.summary-chip span {
+  color: #688092;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.summary-chip strong {
+  color: #13293d;
+  font-size: 1.05rem;
+}
+
 .receipt-list {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.85rem;
 }
 
 .receipt-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  padding: 0.95rem 0;
-  border-bottom: 1px solid rgba(19, 41, 61, 0.08);
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(247, 251, 253, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
 }
 
-.receipt-row:last-child {
-  border-bottom: none;
+.receipt-main {
+  min-width: 0;
 }
 
 .receipt-row strong {
@@ -27,18 +70,158 @@
 }
 
 .receipt-row p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
   margin: 0;
   color: #61798a;
 }
 
-.receipt-row span {
+.separator {
+  color: #9cb0bd;
+}
+
+.amount {
   font-weight: 700;
   color: #13293d;
+  white-space: nowrap;
+}
+
+.mini-calendar {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.calendar-header h3,
+.calendar-header p {
+  margin: 0;
+}
+
+.calendar-header h3 {
+  color: #13293d;
+  font-size: 1rem;
+}
+
+.calendar-header p {
+  color: #61798a;
+}
+
+.calendar-month {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: #eefaf6;
+  color: #0f6c5b;
+  font-weight: 700;
+}
+
+.calendar-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: #61798a;
+}
+
+.calendar-summary strong {
+  color: #13293d;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.weekday {
+  text-align: center;
+  color: #688092;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.day-cell {
+  display: grid;
+  gap: 0.2rem;
+  min-height: 56px;
+  padding: 0.45rem 0.2rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+  text-align: center;
+}
+
+.day-cell strong {
+  color: #13293d;
+  font-size: 0.92rem;
+}
+
+.day-cell small {
+  color: #61798a;
+  line-height: 1;
+}
+
+.day-cell.active {
+  background: linear-gradient(180deg, #f5fffb 0%, #eaf8f1 100%);
+  border-color: rgba(15, 108, 91, 0.22);
+}
+
+.day-cell.today {
+  box-shadow: inset 0 0 0 2px rgba(24, 168, 193, 0.24);
+}
+
+.day-cell.muted {
+  opacity: 0.4;
 }
 
 .empty-state {
   display: grid;
   place-items: center;
+  gap: 0.55rem;
   min-height: 220px;
+  padding: 1rem;
   color: #61798a;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+  text-align: center;
+}
+
+.empty-state strong,
+.empty-state p {
+  margin: 0;
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .receipt-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-grid {
+    gap: 0.35rem;
+  }
+
+  .receipt-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

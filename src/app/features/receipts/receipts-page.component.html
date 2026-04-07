@@ -1,40 +1,99 @@
-<section class="page-header">
-  <div>
-    <p class="eyebrow">Receipts</p>
-    <h2>Upload, review, and organize with AI help</h2>
-    <p class="lead">Preview receipt extraction before saving, then filter your history with reusable controls.</p>
-  </div>
-</section>
+<section class="receipts-page">
+  <section class="page-hero">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Receipts</p>
+        <h2>Upload, review, and organize with AI help</h2>
+        <p class="lead">Preview receipt extraction before saving, then filter your history with reusable controls.</p>
+      </div>
+    </header>
 
-<div class="receipts-grid">
-  <app-receipt-upload-assistant
-    [selectedFile]="selectedFile"
-    [preview]="aiPreview"
-    [parsingPreview]="parsingPreview"
-    [uploading]="uploading"
-    [categories]="categories"
-    (fileSelected)="handleFileSelected($event)"
-    (uploadRequested)="uploadReceipt($event)"
-    (cleared)="clearUploadSelection()"
-  ></app-receipt-upload-assistant>
+    <section class="summary-strip">
+      <article class="summary-card">
+        <span>Saved receipts</span>
+        <strong>{{ totalReceipts }}</strong>
+        <small>Current receipt records available for search and review.</small>
+      </article>
 
-  <section class="list-panel">
-    <app-receipt-filters
-      [categories]="categories"
-      [filters]="filters"
-      (filtersChange)="handleFiltersChange($event)"
-    ></app-receipt-filters>
+      <article class="summary-card">
+        <span>Available categories</span>
+        <strong>{{ categories.length }}</strong>
+        <small>Category labels ready for AI suggestions and manual cleanup.</small>
+      </article>
 
-    <app-receipt-table
-      [receipts]="receipts"
-      [loading]="loading"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [totalReceipts]="totalReceipts"
-      (pageChange)="handlePageChange($event)"
-      (view)="viewReceipt($event)"
-      (edit)="editReceipt($event)"
-      (delete)="deleteReceipt($event)"
-    ></app-receipt-table>
+      <article class="summary-card">
+        <span>Upload status</span>
+        <strong>{{ selectedFile ? 'Ready to save' : 'Waiting for file' }}</strong>
+        <small>{{ aiPreview ? 'Preview generated and ready for confirmation.' : 'Pick a receipt to generate the AI preview.' }}</small>
+      </article>
+    </section>
   </section>
-</div>
+
+  <div class="receipts-grid">
+    <app-receipt-upload-assistant
+      [selectedFile]="selectedFile"
+      [preview]="aiPreview"
+      [parsingPreview]="parsingPreview"
+      [uploading]="uploading"
+      [categories]="categories"
+      (fileSelected)="handleFileSelected($event)"
+      (uploadRequested)="uploadReceipt($event)"
+      (cleared)="clearUploadSelection()"
+    ></app-receipt-upload-assistant>
+
+    <section class="list-panel">
+      <app-receipt-filters
+        [categories]="categories"
+        [filters]="filters"
+        (filtersChange)="handleFiltersChange($event)"
+      ></app-receipt-filters>
+
+      <app-receipt-table
+        [receipts]="receipts"
+        [loading]="loading"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [totalReceipts]="totalReceipts"
+        (pageChange)="handlePageChange($event)"
+        (view)="viewReceipt($event)"
+        (edit)="editReceipt($event)"
+        (delete)="deleteReceipt($event)"
+      ></app-receipt-table>
+    </section>
+  </div>
+
+  <section class="support-grid">
+    <app-receipt-activity-calendar [receipts]="receipts"></app-receipt-activity-calendar>
+
+    <mat-card class="workflow-card">
+      <mat-card-title>Receipt workflow</mat-card-title>
+      <mat-card-subtitle>Keep uploads tidy so AI suggestions stay useful and your history remains easy to scan.</mat-card-subtitle>
+
+      <div class="workflow-list">
+        <article class="workflow-item">
+          <span>1</span>
+          <div>
+            <strong>Preview first</strong>
+            <p>Check vendor, amount, and category before saving the receipt to history.</p>
+          </div>
+        </article>
+
+        <article class="workflow-item">
+          <span>2</span>
+          <div>
+            <strong>Correct categories fast</strong>
+            <p>Use a consistent category list so budgets and dashboard trends stay accurate.</p>
+          </div>
+        </article>
+
+        <article class="workflow-item">
+          <span>3</span>
+          <div>
+            <strong>Review weekly</strong>
+            <p>Open this page once a week to clean up notes, missing vendors, and odd totals.</p>
+          </div>
+        </article>
+      </div>
+    </mat-card>
+  </section>
+</section>

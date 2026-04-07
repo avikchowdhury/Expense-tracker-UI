@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface Profile {
   email: string;
@@ -11,15 +11,21 @@ export interface Profile {
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private apiUrl = '/api/profile';
+  private profileSubject = new BehaviorSubject<Profile | null>(null);
+  readonly profile$ = this.profileSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(this.apiUrl);
+    return this.http
+      .get<Profile>(this.apiUrl)
+      .pipe(tap((profile) => this.profileSubject.next(profile)));
   }
 
   updateProfile(email: string): Observable<Profile> {
-    return this.http.put<Profile>(this.apiUrl, { email });
+    return this.http
+      .put<Profile>(this.apiUrl, { email })
+      .pipe(tap((profile) => this.profileSubject.next(profile)));
   }
 
   changePassword(oldPassword: string, newPassword: string): Observable<void> {
@@ -29,6 +35,22 @@ export class ProfileService {
   uploadAvatar(file: File): Observable<{ avatarUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<{ avatarUrl: string }>(`${this.apiUrl}/avatar`, formData);
+    return this.http
+      .post<{ avatarUrl: string }>(`${this.apiUrl}/avatar`, formData)
+      .pipe(
+        tap((response) => {
+          const current = this.profileSubject.value;
+          if (current) {
+            this.profileSubject.next({
+              ...current,
+              avatarUrl: response.avatarUrl
+            });
+          }
+        })
+      );
+  }
+
+  clearProfile(): void {
+    this.profileSubject.next(null);
   }
 }

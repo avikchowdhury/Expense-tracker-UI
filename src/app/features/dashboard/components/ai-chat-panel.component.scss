@@ -1,5 +1,7 @@
 .chat-panel {
-  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
   border-radius: 26px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
 }
@@ -9,21 +11,42 @@
   gap: 1rem;
 }
 
+.chat-panel mat-card-title {
+  margin: 0;
+  color: #13293d;
+}
+
+.chat-panel mat-card-subtitle {
+  margin: -0.35rem 0 0;
+  color: #61798a;
+}
+
 .prompt-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.prompt-list button {
+  justify-content: flex-start;
+  min-height: 48px;
+  padding: 0.65rem 0.95rem;
+  border-radius: 16px;
+  text-align: left;
 }
 
 .message-list {
   display: grid;
   gap: 0.8rem;
-  margin: 1.25rem 0;
+  padding: 1rem;
+  margin: 0;
+  border-radius: 22px;
+  background: rgba(247, 251, 253, 0.9);
 }
 
 .message {
   max-width: 760px;
-  padding: 1rem;
+  padding: 1rem 1.05rem;
   border-radius: 20px;
   background: #eff4f7;
 }
@@ -44,12 +67,13 @@
 .message p {
   margin: 0;
   color: #13293d;
+  line-height: 1.55;
 }
 
 .chat-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.85rem;
+  gap: 1rem;
   align-items: start;
 }
 

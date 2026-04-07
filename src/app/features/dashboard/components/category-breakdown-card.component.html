@@ -7,11 +7,32 @@
     <div class="top-category">{{ topCategory }}</div>
   </div>
 
-  <div class="chart-shell" *ngIf="data.datasets.length && data.datasets[0].data.length; else emptyState">
-    <canvas baseChart [data]="data" [type]="type"></canvas>
+  <div class="chart-shell" *ngIf="hasChartData; else emptyState">
+    <canvas baseChart [data]="data" [options]="chartOptions" [type]="type"></canvas>
+  </div>
+
+  <section class="legend-list" *ngIf="hasChartData">
+    <article class="legend-row" *ngFor="let item of legendItems | slice:0:4">
+      <div class="legend-label">
+        <span class="swatch" [style.background]="item.color"></span>
+        <strong>{{ item.label }}</strong>
+      </div>
+      <div class="legend-value">
+        <span>{{ item.value | currency }}</span>
+        <small>{{ item.share }}%</small>
+      </div>
+    </article>
+  </section>
+
+  <div class="category-footer" *ngIf="hasChartData">
+    <span>{{ legendItems.length }} tracked categories</span>
+    <strong>{{ trackedTotal | currency }} total classified spend</strong>
   </div>
 
   <ng-template #emptyState>
-    <div class="empty-state">Category insights appear after your first tracked expenses.</div>
+    <div class="empty-state">
+      <strong>No category signal yet</strong>
+      <p>Once receipts are categorized, this panel will show your biggest spend areas and their share of total expenses.</p>
+    </div>
   </ng-template>
 </mat-card>

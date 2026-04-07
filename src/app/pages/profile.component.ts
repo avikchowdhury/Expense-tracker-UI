@@ -13,6 +13,8 @@ export class ProfileComponent implements OnInit {
   showNewPassword = false;
   profile: Profile | null = null;
   loading = false;
+  savingProfile = false;
+  changingPassword = false;
   editForm: FormGroup;
   passwordForm: FormGroup;
   avatarUploading = false;
@@ -35,6 +37,11 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
   }
 
+  get avatarInitials(): string {
+    const email = this.profile?.email?.trim() || '';
+    return email ? email.slice(0, 2).toUpperCase() : 'AI';
+  }
+
   loadProfile() {
     this.loading = true;
     this.profileService.getProfile().subscribe({
@@ -51,26 +58,35 @@ export class ProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    if (this.editForm.invalid) return;
+    if (this.editForm.invalid || this.savingProfile) return;
     const email = this.editForm.value.email;
+    this.savingProfile = true;
     this.profileService.updateProfile(email).subscribe({
       next: (profile) => {
         this.notification.success('Profile updated');
         this.profile = profile;
+        this.editForm.patchValue({ email: profile.email });
       },
-      error: () => this.notification.error('Failed to update profile')
+      error: () => this.notification.error('Failed to update profile'),
+      complete: () => {
+        this.savingProfile = false;
+      }
     });
   }
 
   changePassword() {
-    if (this.passwordForm.invalid) return;
+    if (this.passwordForm.invalid || this.changingPassword) return;
     const { oldPassword, newPassword } = this.passwordForm.value;
+    this.changingPassword = true;
     this.profileService.changePassword(oldPassword, newPassword).subscribe({
       next: () => {
         this.notification.success('Password changed');
         this.passwordForm.reset();
       },
-      error: () => this.notification.error('Failed to change password')
+      error: () => this.notification.error('Failed to change password'),
+      complete: () => {
+        this.changingPassword = false;
+      }
     });
   }
 

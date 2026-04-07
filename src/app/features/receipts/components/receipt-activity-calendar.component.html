@@ -1,0 +1,42 @@
+<mat-card class="calendar-card">
+  <div class="calendar-header">
+    <div>
+      <mat-card-title>Receipt activity calendar</mat-card-title>
+      <mat-card-subtitle>Track which days in the current month already have uploaded receipts.</mat-card-subtitle>
+    </div>
+    <div class="month-pill">{{ monthLabel }}</div>
+  </div>
+
+  <div class="calendar-summary">
+    <article class="summary-pill">
+      <span>Active days</span>
+      <strong>{{ activeDays }}</strong>
+    </article>
+
+    <article class="summary-pill">
+      <span>Visible total</span>
+      <strong>{{ visibleTotal | currency }}</strong>
+    </article>
+
+    <article class="summary-pill">
+      <span>Busiest day</span>
+      <strong>{{ busiestDayLabel }}</strong>
+    </article>
+  </div>
+
+  <div class="calendar-grid">
+    <span class="weekday" *ngFor="let label of weekdayLabels">{{ label }}</span>
+
+    <article
+      class="day-cell"
+      *ngFor="let cell of dayCells"
+      [class.muted]="!cell.isCurrentMonth"
+      [class.active]="cell.receiptCount > 0"
+      [class.today]="cell.isToday"
+    >
+      <strong>{{ cell.dayNumber }}</strong>
+      <small *ngIf="cell.receiptCount > 0">{{ cell.receiptCount }} receipt{{ cell.receiptCount > 1 ? 's' : '' }}</small>
+      <small *ngIf="cell.receiptCount === 0">&nbsp;</small>
+    </article>
+  </div>
+</mat-card>

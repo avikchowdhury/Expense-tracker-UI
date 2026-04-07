@@ -5,10 +5,10 @@
 
 <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
   <mat-form-field appearance="outline">
-    <mat-label>Gmail address</mat-label>
+    <mat-label>Email address</mat-label>
     <input matInput type="email" formControlName="email" />
     <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required.</mat-error>
-    <mat-error *ngIf="form.get('email')?.hasError('pattern')">Use a valid Gmail address.</mat-error>
+    <mat-error *ngIf="form.get('email')?.hasError('email')">Use a valid email address.</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">

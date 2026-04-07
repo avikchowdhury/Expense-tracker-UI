@@ -2,17 +2,77 @@
   <mat-card-title>Recent receipts</mat-card-title>
   <mat-card-subtitle>Latest imports the AI parser can use for trend detection.</mat-card-subtitle>
 
+  <section class="receipt-summary" *ngIf="receipts.length">
+    <article class="summary-chip">
+      <span>Visible receipts</span>
+      <strong>{{ receipts.length }}</strong>
+    </article>
+
+    <article class="summary-chip">
+      <span>Recent total</span>
+      <strong>{{ totalRecentAmount | currency }}</strong>
+    </article>
+
+    <article class="summary-chip">
+      <span>Lead category</span>
+      <strong>{{ primaryCategory }}</strong>
+    </article>
+  </section>
+
   <div class="receipt-list" *ngIf="receipts.length; else emptyState">
     <article class="receipt-row" *ngFor="let receipt of receipts">
-      <div>
+      <div class="receipt-main">
         <strong>{{ receipt.vendor || 'Unknown vendor' }}</strong>
-        <p>{{ receipt.uploadedAt | date:'mediumDate' }} · {{ receipt.category || 'Uncategorized' }}</p>
+        <p>
+          <span>{{ receipt.uploadedAt | date:'mediumDate' }}</span>
+          <span class="separator">&middot;</span>
+          <span>{{ receipt.category || 'Uncategorized' }}</span>
+        </p>
       </div>
-      <span>{{ receipt.totalAmount | currency }}</span>
+      <span class="amount">{{ receipt.totalAmount | currency }}</span>
     </article>
   </div>
 
+  <section class="mini-calendar" *ngIf="receipts.length">
+    <div class="calendar-header">
+      <div>
+        <h3>Upload calendar</h3>
+        <p>Activity for the current month at a glance.</p>
+      </div>
+      <span class="calendar-month">{{ monthLabel }}</span>
+    </div>
+
+    <div class="calendar-summary">
+      <span>{{ activeDays }} active days</span>
+      <strong>{{ calendarTotal | currency }}</strong>
+    </div>
+
+    <div class="calendar-grid">
+      <span class="weekday" *ngFor="let label of weekdayLabels">{{ label }}</span>
+
+      <article
+        class="day-cell"
+        *ngFor="let day of calendarDays"
+        [class.muted]="!day.isCurrentMonth"
+        [class.active]="day.receiptCount > 0"
+        [class.today]="day.isToday"
+      >
+        <strong>{{ day.dayNumber }}</strong>
+        <small *ngIf="day.receiptCount > 0">{{ day.receiptCount }}</small>
+        <small *ngIf="day.receiptCount === 0">&nbsp;</small>
+      </article>
+    </div>
+  </section>
+
   <ng-template #emptyState>
-    <div class="empty-state">No recent receipts yet.</div>
+    <div class="empty-state">
+      <strong>No recent receipts yet</strong>
+      <p>Upload your first receipt to unlock trend detection, category tracking, and AI recommendations.</p>
+
+      <div class="empty-actions">
+        <a mat-stroked-button color="primary" routerLink="/receipts">Open receipts</a>
+        <a mat-button [href]="sampleReceiptPath" download>Download sample PDF</a>
+      </div>
+    </div>
   </ng-template>
 </mat-card>

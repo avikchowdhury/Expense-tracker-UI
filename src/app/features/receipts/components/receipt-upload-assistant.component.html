@@ -2,6 +2,13 @@
   <mat-card-title>AI upload assistant</mat-card-title>
   <mat-card-subtitle>Pick a file, review the smart preview, and save with better metadata.</mat-card-subtitle>
 
+  <div class="sample-hint">
+    <span>Need a quick test?</span>
+    <a href="assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf" download>
+      Download sample receipt PDF
+    </a>
+  </div>
+
   <label class="upload-dropzone">
     <input #fileInput type="file" accept="image/*,application/pdf" (change)="onFileChange($event)" />
     <mat-icon>upload_file</mat-icon>

@@ -26,6 +26,22 @@ export class BudgetsComponent implements OnInit {
     this.loadBudgets();
   }
 
+  get activeBudgetCount(): number {
+    return this.budgets.length;
+  }
+
+  get totalBudgetAmount(): number {
+    return this.budgets.reduce((total, budget) => total + (Number(budget.amount) || 0), 0);
+  }
+
+  get trackedCategoryCount(): number {
+    return new Set(
+      this.budgets
+        .map((budget) => budget.category?.trim())
+        .filter((category): category is string => !!category)
+    ).size;
+  }
+
   loadBudgets() {
     this.loading = true;
     this.budgetService.getBudgets().subscribe({

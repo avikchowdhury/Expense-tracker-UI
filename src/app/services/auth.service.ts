@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthResponse } from '../models';
+import { AuthResponse, OtpSendResponse } from '../models';
 
 const API_BASE = '/api';
 
@@ -49,8 +49,10 @@ export class AuthService {
     return new Date(expiresAt) > new Date();
   }
 
-  sendOtp(email: string): Observable<any> {
-    return this.http.post(`${API_BASE}/auth/send-otp`, { email });
+  sendOtp(email: string): Observable<OtpSendResponse> {
+    return this.http.post<OtpSendResponse>(`${API_BASE}/auth/send-otp`, {
+      email,
+    });
   }
 
   verifyOtp(

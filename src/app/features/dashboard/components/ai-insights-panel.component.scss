@@ -1,4 +1,7 @@
 .panel-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
   border-radius: 26px;
   min-height: 360px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
@@ -8,11 +11,23 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.panel-card mat-card-title {
+  margin: 0;
+  color: #13293d;
+}
+
+.panel-card mat-card-subtitle {
+  margin: -0.35rem 0 0;
+  color: #61798a;
 }
 
 .health-chip {
   align-self: flex-start;
-  padding: 0.45rem 0.8rem;
+  padding: 0.55rem 0.9rem;
   border-radius: 999px;
   background: #eefaf6;
   color: #0f6c5b;
@@ -23,12 +38,11 @@
 .budget-strip {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 1rem 0;
+  gap: 0.85rem;
 }
 
 .budget-strip div {
-  padding: 0.9rem;
+  padding: 1rem;
   border-radius: 18px;
   background: #f6fafc;
 }
@@ -47,11 +61,11 @@
 
 .insight-list {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .insight-card {
-  padding: 0.9rem;
+  padding: 1rem;
   border-radius: 18px;
   background: #f7fbfd;
   border: 1px solid rgba(15, 39, 56, 0.08);
@@ -85,12 +99,12 @@
 }
 
 .quick-tips {
-  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .anomaly-list {
-  margin-top: 1rem;
-  padding: 0.9rem;
+  padding: 1rem;
   border-radius: 18px;
   background: #fff7ef;
 }
@@ -108,6 +122,35 @@
 .empty-state {
   display: grid;
   place-items: center;
+  gap: 0.6rem;
   min-height: 200px;
+  padding: 1rem;
   color: #61798a;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+  text-align: center;
+}
+
+.empty-state strong,
+.empty-state p {
+  margin: 0;
+}
+
+.warmup-list {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+}
+
+.warmup-list span {
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+@media (max-width: 640px) {
+  .budget-strip {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,21 +1,86 @@
 .panel-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.35rem;
   border-radius: 26px;
   min-height: 360px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
 }
 
-.chart-card {
-  padding: 0.4rem;
+.panel-card mat-card-title {
+  margin: 0;
+  color: #13293d;
+}
+
+.panel-card mat-card-subtitle {
+  margin: -0.35rem 0 0;
+  color: #61798a;
 }
 
 .chart-shell {
   position: relative;
-  min-height: 260px;
+  min-height: 220px;
+  padding: 0.75rem 0.25rem 0.25rem;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+}
+
+.chart-shell canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.trend-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.summary-pill {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: rgba(247, 251, 253, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.summary-pill span {
+  color: #688092;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.summary-pill strong {
+  color: #13293d;
+  font-size: 1.1rem;
+}
+
+.summary-pill small {
+  color: #61798a;
+  line-height: 1.4;
 }
 
 .empty-state {
   display: grid;
   place-items: center;
+  gap: 0.45rem;
   min-height: 220px;
+  padding: 1rem;
   color: #61798a;
+  border-radius: 20px;
+  background: rgba(247, 251, 253, 0.9);
+  text-align: center;
+}
+
+.empty-state strong,
+.empty-state p {
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .trend-summary {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,37 +1,29 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReceiptDto } from '../../../models';
 
-interface DashboardCalendarDayCell {
-  dayNumber: number;
+interface CalendarDayCell {
+  date: Date | null;
+  dayNumber: number | null;
   receiptCount: number;
-  isCurrentMonth: boolean;
+  totalAmount: number;
   isToday: boolean;
+  isCurrentMonth: boolean;
 }
 
 @Component({
-  selector: 'app-recent-receipts-card',
-  templateUrl: './recent-receipts-card.component.html',
-  styleUrls: ['./recent-receipts-card.component.scss']
+  selector: 'app-receipt-activity-calendar',
+  templateUrl: './receipt-activity-calendar.component.html',
+  styleUrls: ['./receipt-activity-calendar.component.scss']
 })
-export class RecentReceiptsCardComponent implements OnChanges {
+export class ReceiptActivityCalendarComponent implements OnChanges {
   @Input() receipts: ReceiptDto[] = [];
-  @Input() calendarReceipts: ReceiptDto[] = [];
 
-  readonly sampleReceiptPath = 'assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf';
-  readonly weekdayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  readonly weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   monthLabel = '';
-  calendarDays: DashboardCalendarDayCell[] = [];
+  dayCells: CalendarDayCell[] = [];
   activeDays = 0;
-  calendarTotal = 0;
-
-  get totalRecentAmount(): number {
-    return this.receipts.reduce((total, receipt) => total + receipt.totalAmount, 0);
-  }
-
-  get primaryCategory(): string {
-    const firstCategorized = this.receipts.find((receipt) => !!receipt.category)?.category;
-    return firstCategorized || 'Uncategorized';
-  }
+  visibleTotal = 0;
+  busiestDayLabel = 'No uploads yet';
 
   ngOnChanges(): void {
     this.buildCalendar();
@@ -45,9 +37,9 @@ export class RecentReceiptsCardComponent implements OnChanges {
     firstGridDate.setDate(firstGridDate.getDate() - monthStart.getDay());
 
     const receiptMap = new Map<string, { count: number; total: number }>();
-    this.calendarTotal = 0;
+    this.visibleTotal = 0;
 
-    this.calendarReceipts.forEach((receipt) => {
+    this.receipts.forEach((receipt) => {
       const uploadedAt = new Date(receipt.uploadedAt);
       if (
         uploadedAt.getFullYear() !== today.getFullYear() ||
@@ -61,31 +53,45 @@ export class RecentReceiptsCardComponent implements OnChanges {
       current.count += 1;
       current.total += receipt.totalAmount;
       receiptMap.set(key, current);
-      this.calendarTotal += receipt.totalAmount;
+      this.visibleTotal += receipt.totalAmount;
     });
 
     this.activeDays = receiptMap.size;
     this.monthLabel = monthStart.toLocaleDateString(undefined, {
-      month: 'short',
+      month: 'long',
       year: 'numeric'
     });
 
-    this.calendarDays = Array.from({ length: 35 }).map((_, index) => {
+    let busiestDayKey = '';
+    let busiestDayCount = 0;
+    receiptMap.forEach((value, key) => {
+      if (value.count > busiestDayCount) {
+        busiestDayCount = value.count;
+        busiestDayKey = key;
+      }
+    });
+    this.busiestDayLabel = busiestDayKey
+      ? new Date(busiestDayKey).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+      : 'No uploads yet';
+
+    this.dayCells = Array.from({ length: 35 }).map((_, index) => {
       const cellDate = new Date(firstGridDate);
       cellDate.setDate(firstGridDate.getDate() + index);
+
       const key = cellDate.toISOString().slice(0, 10);
       const match = receiptMap.get(key);
 
       return {
+        date: cellDate,
         dayNumber: cellDate.getDate(),
         receiptCount: match?.count ?? 0,
-        isCurrentMonth:
-          cellDate.getFullYear() === today.getFullYear() &&
-          cellDate.getMonth() === today.getMonth(),
+        totalAmount: match?.total ?? 0,
         isToday:
           cellDate.getFullYear() === today.getFullYear() &&
           cellDate.getMonth() === today.getMonth() &&
-          cellDate.getDate() === today.getDate()
+          cellDate.getDate() === today.getDate(),
+        isCurrentMonth:
+          cellDate >= monthStart && cellDate <= monthEnd
       };
     });
   }

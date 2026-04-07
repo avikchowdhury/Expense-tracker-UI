@@ -2,11 +2,34 @@
   <mat-card-title>Monthly spending trend</mat-card-title>
   <mat-card-subtitle>See whether your expense pace is rising or settling down.</mat-card-subtitle>
 
-  <div class="chart-shell" *ngIf="data.datasets.length && data.datasets[0].data.length; else emptyState">
+  <div class="chart-shell" *ngIf="hasChartData; else emptyState">
     <canvas baseChart [data]="data" [options]="options" [type]="type"></canvas>
   </div>
 
+  <section class="trend-summary" *ngIf="hasChartData">
+    <article class="summary-pill">
+      <span>Latest month</span>
+      <strong>{{ latestValue | currency }}</strong>
+      <small>{{ latestMonth }}</small>
+    </article>
+
+    <article class="summary-pill">
+      <span>Peak month</span>
+      <strong>{{ peakValue | currency }}</strong>
+      <small>{{ peakMonth }}</small>
+    </article>
+
+    <article class="summary-pill">
+      <span>Average pace</span>
+      <strong>{{ averageValue | currency }}</strong>
+      <small>{{ paceLabel }}</small>
+    </article>
+  </section>
+
   <ng-template #emptyState>
-    <div class="empty-state">Upload receipts or sync expenses to populate the chart.</div>
+    <div class="empty-state">
+      <strong>No monthly trend yet</strong>
+      <p>Upload receipts or sync expenses to turn this area into a live pace tracker.</p>
+    </div>
   </ng-template>
 </mat-card>

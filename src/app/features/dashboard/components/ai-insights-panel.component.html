@@ -42,6 +42,15 @@
   </div>
 
   <ng-template #emptyState>
-    <div class="empty-state">AI guidance will appear once expenses and budgets are available.</div>
+    <div class="empty-state">
+      <strong>AI guidance is warming up</strong>
+      <p>Upload receipts and add at least one budget so the assistant can turn this section into real coaching.</p>
+
+      <div class="warmup-list">
+        <span>1. Upload 2 to 3 receipts</span>
+        <span>2. Create a General budget</span>
+        <span>3. Return here for smarter suggestions</span>
+      </div>
+    </div>
   </ng-template>
 </mat-card>

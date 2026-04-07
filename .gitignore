@@ -32,8 +32,7 @@ yarn-error.log
 /.angular/cache
 .api-build/
 .api-obj/
-.ng-build-check/
-.ng-build-check-2/
+.ng-build-check*/
 .sass-cache/
 /connect.lock
 /coverage

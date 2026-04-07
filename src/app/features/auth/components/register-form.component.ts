@@ -22,7 +22,7 @@ export class RegisterFormComponent {
     private router: Router
   ) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@gmail\\.com$')]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       otp: ['', Validators.required]
     });
@@ -32,7 +32,7 @@ export class RegisterFormComponent {
     const emailControl = this.form.get('email');
     if (!emailControl?.valid || this.sendingOtp) {
       emailControl?.markAsTouched();
-      this.otpMessage = 'Enter a valid Gmail address first.';
+      this.otpMessage = 'Enter a valid email address first.';
       return;
     }
 
@@ -40,8 +40,10 @@ export class RegisterFormComponent {
     this.otpMessage = '';
 
     this.authService.sendOtp(emailControl.value).subscribe({
-      next: () => {
-        this.otpMessage = 'OTP sent to your Gmail inbox.';
+      next: (response) => {
+        this.otpMessage = response.developmentOtp
+          ? `${response.message} Dev OTP: ${response.developmentOtp}`
+          : response.message;
       },
       error: (err) => {
         this.otpMessage = err.error?.message || 'Failed to send OTP.';
@@ -63,8 +65,9 @@ export class RegisterFormComponent {
 
     const { email, otp, password } = this.form.value;
     this.authService.verifyOtp(email, otp, password).subscribe({
-      next: () => {
-        this.router.navigate(['/auth/login']);
+      next: (response) => {
+        this.authService.saveToken(response);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Registration failed.';

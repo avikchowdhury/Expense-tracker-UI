@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AiInsightSnapshot, BudgetStatus, CategorySpendItem, MonthlySpendingItem, ReceiptDto } from '../../models';
+import {
+  AiInsightSnapshot,
+  BudgetStatus,
+  CategorySpendItem,
+  MonthlySpendingItem,
+  PaginatedResponse,
+  ReceiptDto
+} from '../../models';
 import { AiAssistantService } from '../../services/ai-assistant.service';
 import { AnalyticsService } from '../../services/analytics.service';
 import { BudgetService } from '../../services/budget.service';
@@ -66,6 +73,7 @@ export class DashboardPageComponent implements OnInit {
   metrics: DashboardMetricCard[] = [];
   topCategory = 'N/A';
   recentReceipts: ReceiptDto[] = [];
+  calendarReceipts: ReceiptDto[] = [];
   budgetStatus: BudgetStatus | null = null;
   aiSnapshot: AiInsightSnapshot | null = null;
 
@@ -80,11 +88,15 @@ export class DashboardPageComponent implements OnInit {
     forkJoin({
       monthly: this.analyticsService.getMonthlySpendings(6).pipe(catchError(() => of<MonthlySpendingItem[]>([]))),
       category: this.analyticsService.getCategoryBreakdown().pipe(catchError(() => of<CategorySpendItem[]>([]))),
-      recentReceipts: this.receiptService.getRecentReceipts(5).pipe(catchError(() => of<ReceiptDto[]>([]))),
+      receiptFeed: this.receiptService
+        .getReceipts({ page: 1, pageSize: 60 })
+        .pipe(catchError(() => of<PaginatedResponse<ReceiptDto>>({ total: 0, data: [] }))),
       budgetStatus: this.budgetService.getBudgetStatus().pipe(catchError(() => of<BudgetStatus | null>(null))),
       aiSnapshot: this.aiAssistantService.getInsights().pipe(catchError(() => of<AiInsightSnapshot | null>(null)))
     }).subscribe({
-      next: ({ monthly, category, recentReceipts, budgetStatus, aiSnapshot }) => {
+      next: ({ monthly, category, receiptFeed, budgetStatus, aiSnapshot }) => {
+        const recentReceipts = receiptFeed.data.slice(0, 5);
+
         this.barChartData = {
           labels: monthly.map((item) => item.month),
           datasets: [
@@ -111,6 +123,7 @@ export class DashboardPageComponent implements OnInit {
           ? [...category].sort((left, right) => right.total - left.total)[0].category
           : 'N/A';
         this.recentReceipts = recentReceipts;
+        this.calendarReceipts = receiptFeed.data;
         this.budgetStatus = budgetStatus;
         this.aiSnapshot = aiSnapshot;
         this.metrics = this.buildMetrics(monthly, recentReceipts, budgetStatus, aiSnapshot);

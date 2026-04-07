@@ -67,6 +67,12 @@ export interface OtpRequest {
   email: string;
 }
 
+export interface OtpSendResponse {
+  message: string;
+  deliveryMode?: 'email' | 'development';
+  developmentOtp?: string;
+}
+
 export interface OtpVerifyRequest {
   email: string;
   otp: string;
