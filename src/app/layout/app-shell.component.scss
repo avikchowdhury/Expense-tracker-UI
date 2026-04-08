@@ -83,6 +83,23 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+.manual-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.7rem 0.95rem;
+  border-radius: 18px;
+  text-decoration: none;
+  color: #f9fbfd;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.manual-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .profile-chip:hover {
   background: rgba(255, 255, 255, 0.12);
 }

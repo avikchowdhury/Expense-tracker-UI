@@ -4,8 +4,20 @@
 
   <div class="sample-hint">
     <span>Need a quick test?</span>
-    <a href="assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf" download>
-      Download sample receipt PDF
+    <a [href]="userManualHref" target="_blank" rel="noopener">
+      Open user manual
+    </a>
+  </div>
+
+  <div class="sample-grid">
+    <a
+      class="sample-link"
+      *ngFor="let item of sampleReceipts"
+      [href]="item.href"
+      [attr.download]="item.fileName"
+    >
+      <strong>{{ item.label }}</strong>
+      <small>{{ item.fileName }}</small>
     </a>
   </div>
 

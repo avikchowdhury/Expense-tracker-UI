@@ -19,6 +19,40 @@ export class ReceiptUploadAssistantComponent implements OnChanges {
   @Output() uploadRequested = new EventEmitter<{ category: string; notes: string }>();
   @Output() cleared = new EventEmitter<void>();
 
+  readonly userManualHref = 'assets/help/expense-tracker-user-manual.html';
+  readonly sampleReceipts = [
+    {
+      label: 'Freshmart groceries',
+      fileName: 'freshmart-groceries-87.45-receipt.pdf',
+      href: 'assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf'
+    },
+    {
+      label: 'Netflix subscription February',
+      fileName: 'netflix-subscription-15.99-february-receipt.pdf',
+      href: 'assets/sample-receipts/netflix-subscription-15.99-february-receipt.pdf'
+    },
+    {
+      label: 'Netflix subscription March',
+      fileName: 'netflix-subscription-15.99-march-receipt.pdf',
+      href: 'assets/sample-receipts/netflix-subscription-15.99-march-receipt.pdf'
+    },
+    {
+      label: 'Uber airport travel',
+      fileName: 'uber-airport-travel-32.60-receipt.pdf',
+      href: 'assets/sample-receipts/uber-airport-travel-32.60-receipt.pdf'
+    },
+    {
+      label: 'Sunrise cafe dining',
+      fileName: 'sunrise-cafe-dining-24.50-receipt.pdf',
+      href: 'assets/sample-receipts/sunrise-cafe-dining-24.50-receipt.pdf'
+    },
+    {
+      label: 'Skyline housing rent',
+      fileName: 'skyline-rent-housing-1250.00-receipt.pdf',
+      href: 'assets/sample-receipts/skyline-rent-housing-1250.00-receipt.pdf'
+    }
+  ];
+
   category = '';
   notes = '';
 

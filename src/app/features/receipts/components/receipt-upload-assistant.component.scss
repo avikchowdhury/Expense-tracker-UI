@@ -38,6 +38,38 @@
   text-decoration: underline;
 }
 
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.85rem;
+}
+
+.sample-link {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 18px;
+  text-decoration: none;
+  color: #13293d;
+  background: rgba(247, 251, 253, 0.92);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.sample-link:hover {
+  border-color: rgba(15, 108, 91, 0.22);
+  background: #f3fbf8;
+}
+
+.sample-link strong {
+  color: #0f6c5b;
+  font-size: 0.95rem;
+}
+
+.sample-link small {
+  color: #61798a;
+  line-height: 1.45;
+}
+
 .upload-dropzone {
   display: grid;
   place-items: center;

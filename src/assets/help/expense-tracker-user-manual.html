@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Expense Tracker User Manual</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #13293d;
+        --muted: #5e7485;
+        --accent: #0f6c5b;
+        --accent-soft: #eaf8f3;
+        --panel: rgba(255, 255, 255, 0.96);
+        --line: rgba(19, 41, 61, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(36, 129, 255, 0.16), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(64, 196, 146, 0.12), transparent 24%),
+          linear-gradient(180deg, #f5f9ff 0%, #edf3f7 100%);
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 48px 20px 64px;
+      }
+
+      .hero,
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: 0 24px 48px rgba(20, 40, 57, 0.08);
+      }
+
+      .hero {
+        padding: 32px;
+        margin-bottom: 20px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(32px, 5vw, 44px);
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 720px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .hero-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .hero-actions a.primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .hero-actions a.secondary {
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: white;
+      }
+
+      section {
+        padding: 24px 26px;
+        margin-top: 18px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 24px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      ol,
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .tips {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .tip {
+        padding: 16px;
+        border-radius: 18px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(15, 108, 91, 0.12);
+      }
+
+      .tip strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--ink);
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+
+        main {
+          max-width: none;
+          padding: 0;
+        }
+
+        .hero,
+        section {
+          box-shadow: none;
+          border: 1px solid #d7e0e7;
+        }
+
+        .hero-actions {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <article class="hero">
+        <p class="eyebrow">AI Expense Tracker</p>
+        <h1>User Manual</h1>
+        <p>
+          This guide walks users through receipts, budgets, categories, vendor
+          rules, dashboards, and the AI copilot so they can use the app step by
+          step without guessing where anything lives.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary" href="javascript:window.print()">Print / Export PDF</a>
+          <a class="secondary" href="../sample-receipts/freshmart-groceries-87.45-receipt.pdf">Open Sample Receipt</a>
+        </div>
+      </article>
+
+      <section>
+        <h2>1. Getting Started</h2>
+        <ol>
+          <li>Register your account and verify your email with OTP.</li>
+          <li>Log in to open the main dashboard.</li>
+          <li>Open Profile to complete your personal details and upload an avatar.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>2. Dashboard</h2>
+        <p>
+          The dashboard is the command center. It shows budget health, top
+          category, AI alerts, recurring-spend hints, charts, and the expense
+          copilot chat.
+        </p>
+        <ul>
+          <li>Use the charts to understand monthly and category spending.</li>
+          <li>Read the AI guidance cards for risks and next actions.</li>
+          <li>Use the copilot chat for natural-language questions.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Receipts</h2>
+        <ol>
+          <li>Open Receipts and choose a PDF or image file.</li>
+          <li>Review the AI preview for vendor, amount, and category.</li>
+          <li>Correct the category if needed and save the receipt.</li>
+          <li>Use the filters and table to review older records.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>4. Budgets</h2>
+        <p>
+          Budgets help the AI reason about risk and month-end forecasting.
+        </p>
+        <ul>
+          <li>Create category-based monthly budget rules.</li>
+          <li>Watch the budget advisor for projected spend and headroom.</li>
+          <li>Review the category watchlist to see which areas need attention.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Categories And Vendor Rules</h2>
+        <ol>
+          <li>Create clean categories such as Groceries, Dining, Travel, or Housing.</li>
+          <li>Add vendor rules for repeat merchants.</li>
+          <li>Upload new receipts and confirm they auto-map correctly.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>6. AI Copilot</h2>
+        <p>
+          The copilot can answer spending, subscription, receipt, and app usage
+          questions from your real data.
+        </p>
+        <div class="tips">
+          <div class="tip">
+            <strong>Ask about risk</strong>
+            <span>Example: How much budget risk do I have right now?</span>
+          </div>
+          <div class="tip">
+            <strong>Ask about subscriptions</strong>
+            <span>Example: Which subscriptions should I review first?</span>
+          </div>
+          <div class="tip">
+            <strong>Ask for workflow help</strong>
+            <span>Example: Where do I add vendor rules?</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>7. Sample Data Pack</h2>
+        <p>
+          The app includes a sample receipt pack for groceries, dining, travel,
+          housing, and subscriptions so the AI flows can be tested quickly.
+        </p>
+      </section>
+
+      <section>
+        <h2>8. Weekly Best Practice</h2>
+        <ol>
+          <li>Upload the latest receipts.</li>
+          <li>Correct any uncategorized items.</li>
+          <li>Review vendor rules for repeat merchants.</li>
+          <li>Check the budget watchlist and dashboard alerts.</li>
+          <li>Ask the copilot for a summary and next actions.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+  </html>

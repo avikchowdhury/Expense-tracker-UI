@@ -1,7 +1,7 @@
 <mat-card class="chat-panel">
   <div class="chat-header">
     <div>
-      <mat-card-title>Ask your expense copilot</mat-card-title>
+      <mat-card-title>Ask your Expense Tracker AI Friend</mat-card-title>
       <mat-card-subtitle>Chat with the app using your real budget and receipt activity as context.</mat-card-subtitle>
     </div>
 
@@ -22,7 +22,7 @@
       >
         <div class="message-badge">
           <span class="badge-pill">{{
-            message.role === 'assistant' ? 'Copilot' : 'You'
+            message.role === 'assistant' ? 'AI Friend' : 'You'
           }}</span>
           <small *ngIf="message.createdAt">{{
             message.createdAt | date:'shortTime'
@@ -74,7 +74,7 @@
 
       <article class="message assistant pending-message" *ngIf="loading">
         <div class="message-badge">
-          <span class="badge-pill">Copilot</span>
+          <span class="badge-pill">AI Friend</span>
         </div>
 
         <div class="message-content">
