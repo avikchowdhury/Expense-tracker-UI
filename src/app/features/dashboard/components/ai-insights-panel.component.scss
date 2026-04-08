@@ -103,6 +103,12 @@
   gap: 0.75rem;
 }
 
+.alert-list,
+.subscription-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .anomaly-list {
   padding: 1rem;
   border-radius: 18px;
@@ -117,6 +123,52 @@
 .anomaly-list p {
   margin: 0.35rem 0 0;
   color: #8f4a2f;
+}
+
+.alert-list h3,
+.subscription-list h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.alert-card,
+.subscription-card {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: #f7fbfd;
+  border: 1px solid rgba(15, 39, 56, 0.08);
+}
+
+.alert-card.warning {
+  background: #fff7ef;
+}
+
+.alert-card.critical {
+  background: #fff0f2;
+}
+
+.alert-card strong,
+.subscription-card strong {
+  display: block;
+  color: #13293d;
+}
+
+.alert-card p,
+.subscription-card small {
+  margin: 0.25rem 0 0;
+  color: #61798a;
+}
+
+.subscription-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.subscription-card span {
+  color: #0f6c5b;
+  font-weight: 700;
 }
 
 .empty-state {

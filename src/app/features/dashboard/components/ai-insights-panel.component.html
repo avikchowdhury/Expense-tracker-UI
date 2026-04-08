@@ -34,6 +34,29 @@
     <p *ngFor="let anomaly of snapshot?.anomalies">{{ anomaly }}</p>
   </div>
 
+  <div class="alert-list" *ngIf="snapshot?.alerts?.length">
+    <h3>Live alerts</h3>
+    <article
+      class="alert-card"
+      *ngFor="let alert of snapshot?.alerts"
+      [ngClass]="alert.severity"
+    >
+      <strong>{{ alert.title }}</strong>
+      <p>{{ alert.detail }}</p>
+    </article>
+  </div>
+
+  <div class="subscription-list" *ngIf="snapshot?.subscriptions?.length">
+    <h3>Recurring spend</h3>
+    <article class="subscription-card" *ngFor="let item of snapshot?.subscriptions">
+      <div>
+        <strong>{{ item.vendor }}</strong>
+        <small>{{ item.frequency }} • {{ item.category }}</small>
+      </div>
+      <span>{{ item.estimatedMonthlyCost | currency }}</span>
+    </article>
+  </div>
+
   <div class="quick-tips" *ngIf="snapshot?.suggestions?.length">
     <h3>Next best moves</h3>
     <mat-chip-set>

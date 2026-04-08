@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AiChatRequest, AiChatResponse, AiInsightSnapshot } from '../models';
+import {
+  AiChatRequest,
+  AiChatResponse,
+  AiInsightSnapshot,
+  AiSubscriptionInsight,
+} from '../models';
 
 const API_BASE = '/api';
 
@@ -11,6 +16,10 @@ export class AiAssistantService {
 
   getInsights(): Observable<AiInsightSnapshot> {
     return this.http.get<AiInsightSnapshot>(`${API_BASE}/ai/insights`);
+  }
+
+  getSubscriptions(): Observable<AiSubscriptionInsight[]> {
+    return this.http.get<AiSubscriptionInsight[]>(`${API_BASE}/ai/subscriptions`);
   }
 
   sendMessage(payload: AiChatRequest): Observable<AiChatResponse> {

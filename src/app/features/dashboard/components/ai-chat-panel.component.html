@@ -12,11 +12,76 @@
     </div>
   </div>
 
-  <div class="message-list">
-    <article class="message" *ngFor="let message of messages" [class.assistant]="message.role === 'assistant'">
-      <span>{{ message.role === 'assistant' ? 'AI' : 'You' }}</span>
-      <p>{{ message.content }}</p>
-    </article>
+  <div class="message-shell">
+    <div class="message-list" #messageList>
+      <article
+        class="message"
+        *ngFor="let message of messages; trackBy: trackByMessage"
+        [class.assistant]="message.role === 'assistant'"
+        [class.user]="message.role === 'user'"
+      >
+        <div class="message-badge">
+          <span class="badge-pill">{{
+            message.role === 'assistant' ? 'Copilot' : 'You'
+          }}</span>
+          <small *ngIf="message.createdAt">{{
+            message.createdAt | date:'shortTime'
+          }}</small>
+        </div>
+
+        <div class="message-content">
+          <p>{{ message.content }}</p>
+        </div>
+
+        <small class="evidence" *ngIf="message.response?.evidenceSummary">
+          {{ message.response?.evidenceSummary }}
+        </small>
+
+        <div class="response-cards" *ngIf="message.response?.cards?.length">
+          <section
+            class="response-card"
+            *ngFor="let card of message.response?.cards"
+            [ngClass]="card.tone"
+          >
+            <strong>{{ card.title }}</strong>
+            <h4>{{ card.value }}</h4>
+            <small>{{ card.detail }}</small>
+          </section>
+        </div>
+
+        <div class="alert-strip" *ngIf="message.response?.alerts?.length">
+          <article
+            class="alert-item"
+            *ngFor="let alert of message.response?.alerts"
+            [ngClass]="alert.severity"
+          >
+            <strong>{{ alert.title }}</strong>
+            <small>{{ alert.detail }}</small>
+          </article>
+        </div>
+
+        <div class="follow-up-list" *ngIf="message.response?.suggestions?.length">
+          <button
+            mat-stroked-button
+            type="button"
+            *ngFor="let suggestion of message.response?.suggestions"
+            (click)="usePrompt(suggestion)"
+          >
+            {{ suggestion }}
+          </button>
+        </div>
+      </article>
+
+      <article class="message assistant pending-message" *ngIf="loading">
+        <div class="message-badge">
+          <span class="badge-pill">Copilot</span>
+        </div>
+
+        <div class="message-content">
+          <p>Thinking through your expense data...</p>
+        </div>
+      </article>
+    </div>
   </div>
 
   <form class="chat-form" (ngSubmit)="submit()">

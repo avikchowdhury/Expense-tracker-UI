@@ -118,15 +118,42 @@ export interface AiInsight {
   action?: string;
 }
 
+export interface AiCopilotAlert {
+  title: string;
+  detail: string;
+  severity: 'critical' | 'warning' | 'positive' | 'info';
+}
+
+export interface AiCopilotCard {
+  title: string;
+  value: string;
+  detail: string;
+  tone: 'default' | 'positive' | 'warning' | 'critical';
+}
+
+export interface AiSubscriptionInsight {
+  vendor: string;
+  category: string;
+  averageAmount: number;
+  estimatedMonthlyCost: number;
+  frequency: string;
+  occurrences: number;
+  lastSeenAt?: string;
+  nextExpectedDate?: string;
+}
+
 export interface AiInsightSnapshot {
   generatedAt: string;
   budgetHealth: string;
+  evidenceSummary: string;
   monthSpend: number;
   recentAverage: number;
   topCategory: string;
   anomalies: string[];
   suggestions: string[];
   insights: AiInsight[];
+  alerts: AiCopilotAlert[];
+  subscriptions: AiSubscriptionInsight[];
 }
 
 export interface AiChatRequest {
@@ -135,8 +162,11 @@ export interface AiChatRequest {
 
 export interface AiChatResponse {
   reply: string;
+  evidenceSummary: string;
   suggestions: string[];
   referencedMetrics: string[];
+  cards: AiCopilotCard[];
+  alerts: AiCopilotAlert[];
   generatedAt: string;
 }
 
@@ -144,6 +174,7 @@ export interface AiChatMessage {
   role: 'user' | 'assistant';
   content: string;
   createdAt?: string;
+  response?: AiChatResponse;
 }
 
 export interface AdminOverview {
