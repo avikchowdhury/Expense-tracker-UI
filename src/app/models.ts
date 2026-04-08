@@ -57,6 +57,34 @@ export interface BudgetStatus {
   message: string;
 }
 
+export interface BudgetAdvisorCategory {
+  category: string;
+  budget: number;
+  spent: number;
+  projectedSpend: number;
+  suggestedBudget: number;
+  historicalAverage: number;
+  remaining: number;
+  riskLevel: 'positive' | 'warning' | 'critical' | 'info';
+  insight: string;
+}
+
+export interface BudgetAdvisorSnapshot {
+  generatedAt: string;
+  totalBudget: number;
+  currentSpend: number;
+  projectedSpend: number;
+  suggestedBudget: number;
+  remainingBudget: number;
+  daysElapsed: number;
+  daysRemaining: number;
+  daysInMonth: number;
+  paceStatus: 'positive' | 'warning' | 'critical' | 'info';
+  summary: string;
+  recommendations: string[];
+  categories: BudgetAdvisorCategory[];
+}
+
 export interface Budget {
   id: number;
   period: string;

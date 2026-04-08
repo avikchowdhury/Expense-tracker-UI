@@ -1,0 +1,77 @@
+<mat-card class="watchlist-card">
+  <div class="panel-header">
+    <div>
+      <p class="eyebrow">Watchlist</p>
+      <h3>Category pressure points</h3>
+      <p>These categories need the closest watch before the month closes.</p>
+    </div>
+
+    <span class="watch-count">{{ visibleCategories.length }} tracked</span>
+  </div>
+
+  <div class="watchlist" *ngIf="visibleCategories.length; else emptyState">
+    <article
+      class="watch-item"
+      *ngFor="let item of visibleCategories; trackBy: trackByCategory"
+      [ngClass]="item.riskLevel"
+    >
+      <div class="item-header">
+        <div>
+          <h4>{{ item.category }}</h4>
+          <p>{{ item.insight }}</p>
+        </div>
+
+        <span class="risk-pill" [ngClass]="item.riskLevel">{{
+          getRiskLabel(item.riskLevel)
+        }}</span>
+      </div>
+
+      <div class="stat-grid">
+        <div>
+          <span>Budget</span>
+          <strong>{{ item.budget | currency }}</strong>
+        </div>
+        <div>
+          <span>Spent</span>
+          <strong>{{ item.spent | currency }}</strong>
+        </div>
+        <div>
+          <span>Projected</span>
+          <strong>{{ item.projectedSpend | currency }}</strong>
+        </div>
+        <div>
+          <span>Suggested</span>
+          <strong>{{ item.suggestedBudget | currency }}</strong>
+        </div>
+      </div>
+
+      <div class="usage-block" *ngIf="item.budget > 0; else uncoveredState">
+        <div class="usage-track">
+          <div
+            class="usage-fill"
+            [ngClass]="item.riskLevel"
+            [style.width.%]="getProjectedUsagePercent(item)"
+          ></div>
+        </div>
+        <small>{{ getProjectedUsageValue(item) }}% of budget at current pace</small>
+      </div>
+
+      <ng-template #uncoveredState>
+        <div class="uncovered-state">
+          <mat-icon>warning_amber</mat-icon>
+          <span>No budget cover set yet</span>
+        </div>
+      </ng-template>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <strong>No category watchlist yet</strong>
+      <p>
+        Once budgets and spend start landing together, this panel will surface
+        the categories most likely to drift.
+      </p>
+    </div>
+  </ng-template>
+</mat-card>

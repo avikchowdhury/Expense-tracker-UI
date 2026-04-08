@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Budget } from '../../../models';
+import { catchError, forkJoin, of } from 'rxjs';
+import { Budget, BudgetAdvisorSnapshot } from '../../../models';
 import { BudgetService } from '../../../services/budget.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
@@ -13,7 +14,7 @@ import { BudgetEditDialogComponent } from '../components/budget-edit-dialog.comp
 })
 export class BudgetsPageComponent implements OnInit {
   budgets: Budget[] = [];
-  displayedColumns: string[] = ['period', 'category', 'amount', 'actions'];
+  advisor: BudgetAdvisorSnapshot | null = null;
   loading = false;
 
   constructor(
@@ -23,7 +24,7 @@ export class BudgetsPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadBudgets();
+    this.loadBudgetWorkspace();
   }
 
   get activeBudgetCount(): number {
@@ -45,17 +46,33 @@ export class BudgetsPageComponent implements OnInit {
     ).size;
   }
 
-  loadBudgets() {
+  get projectedSpend(): number {
+    return this.advisor?.projectedSpend ?? 0;
+  }
+
+  get atRiskCategoryCount(): number {
+    return (
+      this.advisor?.categories.filter(
+        (category) =>
+          category.riskLevel === 'warning' || category.riskLevel === 'critical',
+      ).length ?? 0
+    );
+  }
+
+  loadBudgetWorkspace() {
     this.loading = true;
-    this.budgetService.getBudgets().subscribe({
-      next: (data: any[]) => {
-        // Map backend fields to Budget model
-        this.budgets = data.map((item) => ({
-          id: item.id,
-          period: item.lastReset ? item.lastReset.slice(0, 7) : '',
-          category: item.category,
-          amount: item.monthlyLimit,
-        }));
+    forkJoin({
+      budgets: this.budgetService.getBudgets(),
+      advisor: this.budgetService.getBudgetAdvisor().pipe(
+        catchError(() => {
+          this.notification.error('Budget advisor is unavailable right now');
+          return of(null);
+        }),
+      ),
+    }).subscribe({
+      next: ({ budgets, advisor }) => {
+        this.budgets = budgets.map((item: any) => this.mapBudget(item));
+        this.advisor = advisor;
         this.loading = false;
       },
       error: () => {
@@ -63,6 +80,16 @@ export class BudgetsPageComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  private mapBudget(item: any): Budget {
+    return {
+      id: item.id,
+      period: item.lastReset ? item.lastReset.slice(0, 7) : '',
+      category: item.category,
+      amount: item.monthlyLimit,
+      lastReset: item.lastReset,
+    };
   }
 
   // Add Budget
@@ -82,7 +109,7 @@ export class BudgetsPageComponent implements OnInit {
           .subscribe({
             next: () => {
               this.notification.success('Budget added');
-              this.loadBudgets();
+              this.loadBudgetWorkspace();
             },
             error: () => this.notification.error('Failed to add budget'),
           });
@@ -106,7 +133,7 @@ export class BudgetsPageComponent implements OnInit {
           .subscribe({
             next: () => {
               this.notification.success('Budget updated');
-              this.loadBudgets();
+              this.loadBudgetWorkspace();
             },
             error: () => this.notification.error('Failed to update budget'),
           });
@@ -127,7 +154,7 @@ export class BudgetsPageComponent implements OnInit {
         this.budgetService.deleteBudget(budget.id).subscribe({
           next: () => {
             this.notification.success('Budget deleted');
-            this.loadBudgets();
+            this.loadBudgetWorkspace();
           },
           error: () => this.notification.error('Failed to delete budget'),
         });

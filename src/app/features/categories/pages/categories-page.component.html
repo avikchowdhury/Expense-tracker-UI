@@ -35,6 +35,16 @@
         correctly.</small
       >
     </mat-card>
+
+    <mat-card class="summary-card">
+      <span>Vendor rules</span>
+      <strong>{{ activeRuleCount }}</strong>
+      <small>{{
+        activeRuleCount
+          ? "Merchant routing is helping new receipts land faster"
+          : "Add rules for vendors you use often"
+      }}</small>
+    </mat-card>
   </section>
 
   <mat-card class="page-panel">
@@ -91,4 +101,14 @@
       </table>
     </div>
   </mat-card>
+
+  <app-vendor-rule-manager
+    [categories]="categories"
+    [rules]="vendorRules"
+    [loading]="loading"
+    [saving]="ruleSaving"
+    (createRule)="createVendorRule($event)"
+    (updateRule)="updateVendorRule($event)"
+    (deleteRule)="deleteVendorRule($event)"
+  ></app-vendor-rule-manager>
 </section>

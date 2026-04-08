@@ -1,0 +1,121 @@
+<mat-card class="rules-panel">
+  <div class="panel-header">
+    <div>
+      <p class="panel-label">Vendor Rules</p>
+      <h3>Teach the tracker how to classify merchants</h3>
+      <p>
+        If a vendor name contains one of these patterns, new receipts will be
+        routed into the selected category automatically.
+      </p>
+    </div>
+    <span class="panel-count">{{ rules.length }} rules</span>
+  </div>
+
+  <div *ngIf="!categories.length" class="empty-state compact">
+    <p>Create at least one category before adding vendor rules.</p>
+  </div>
+
+  <form
+    *ngIf="categories.length"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="rule-form"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Vendor contains</mat-label>
+      <input matInput formControlName="vendorPattern" placeholder="e.g. Starbucks, Uber, Amazon Fresh" />
+      <mat-hint>We match partial vendor names from receipt imports.</mat-hint>
+      <mat-error *ngIf="form.get('vendorPattern')?.hasError('required')">
+        Vendor pattern is required
+      </mat-error>
+      <mat-error *ngIf="form.get('vendorPattern')?.hasError('minlength')">
+        Use at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Route to category</mat-label>
+      <mat-select formControlName="categoryId">
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="rule-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="saving">
+        {{ saving ? 'Saving...' : editingRuleId ? 'Update rule' : 'Add rule' }}
+      </button>
+      <button
+        *ngIf="editingRuleId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelEditing()"
+        [disabled]="saving"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="loading" class="loading-state compact">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span>Loading vendor rules...</span>
+  </div>
+
+  <div *ngIf="!loading && rules.length === 0" class="empty-state compact">
+    <p>
+      No rules yet. Add common merchants here so future receipts get categorized
+      automatically.
+    </p>
+  </div>
+
+  <div *ngIf="!loading && rules.length > 0" class="rules-table-container">
+    <table mat-table [dataSource]="rules" class="rules-table">
+      <ng-container matColumnDef="vendorPattern">
+        <th mat-header-cell *matHeaderCellDef>Vendor Pattern</th>
+        <td mat-cell *matCellDef="let rule">
+          <div class="rule-pattern">
+            <strong>{{ rule.vendorPattern }}</strong>
+            <small>If vendor contains this text</small>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let rule">
+          <mat-chip color="primary" selected>{{ rule.categoryName }}</mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let rule">
+          {{ rule.createdAt | date : 'mediumDate' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let rule" class="actions-cell">
+          <button mat-icon-button matTooltip="Edit rule" (click)="startEditing(rule)" [disabled]="saving">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            matTooltip="Delete rule"
+            (click)="remove(rule.id)"
+            [disabled]="saving"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['vendorPattern', 'category', 'createdAt', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['vendorPattern', 'category', 'createdAt', 'actions']"></tr>
+    </table>
+  </div>
+</mat-card>

@@ -1,0 +1,90 @@
+<mat-card class="advisor-card">
+  <div class="panel-header">
+    <div>
+      <p class="eyebrow">AI Budget Advisor</p>
+      <h3>Forecast your month before the overspend hits</h3>
+      <p>
+        This view uses live spend, current burn rate, and recent history to
+        recommend where your budget should move next.
+      </p>
+    </div>
+
+    <span class="status-chip" [ngClass]="advisor?.paceStatus || 'info'">{{
+      statusLabel
+    }}</span>
+  </div>
+
+  <ng-container *ngIf="advisor as snapshot; else emptyState">
+    <p class="summary-copy">{{ snapshot.summary }}</p>
+
+    <div class="metric-grid">
+      <article class="metric-card">
+        <span>Projected month-end spend</span>
+        <strong>{{ snapshot.projectedSpend | currency }}</strong>
+        <small>Current pace across {{ snapshot.daysInMonth }} days</small>
+      </article>
+
+      <article class="metric-card">
+        <span>Remaining budget today</span>
+        <strong>{{ snapshot.remainingBudget | currency }}</strong>
+        <small>{{ snapshot.daysRemaining }} days left in this cycle</small>
+      </article>
+
+      <article class="metric-card">
+        <span>Suggested budget target</span>
+        <strong>{{ snapshot.suggestedBudget | currency }}</strong>
+        <small>Based on projected spend and recent history</small>
+      </article>
+    </div>
+
+    <section class="pace-section" *ngIf="snapshot.totalBudget > 0">
+      <div class="pace-header">
+        <h4>Budget pace</h4>
+        <span>{{ projectedUsageValue }}% projected usage</span>
+      </div>
+
+      <div class="pace-track">
+        <div
+          class="pace-fill projected"
+          [style.width.%]="projectedUsagePercent"
+        ></div>
+        <div
+          class="pace-fill current"
+          [style.width.%]="currentUsagePercent"
+        ></div>
+      </div>
+
+      <div class="pace-labels">
+        <span>Current burn: {{ currentUsageValue }}%</span>
+        <span>Projected month-end: {{ projectedUsageValue }}%</span>
+      </div>
+    </section>
+
+    <section class="recommendations" *ngIf="snapshot.recommendations.length">
+      <div class="section-header">
+        <h4>Recommended moves</h4>
+        <small>Start with the highest-signal actions first.</small>
+      </div>
+
+      <div class="recommendation-list">
+        <article
+          class="recommendation-item"
+          *ngFor="let recommendation of snapshot.recommendations; let i = index"
+        >
+          <span>{{ i + 1 }}</span>
+          <p>{{ recommendation }}</p>
+        </article>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <strong>Budget forecasting is warming up</strong>
+      <p>
+        Add a budget and sync a few expenses or receipts so the advisor can
+        project your month-end burn rate.
+      </p>
+    </div>
+  </ng-template>
+</mat-card>
