@@ -78,7 +78,7 @@
           >
             <mat-spinner *ngIf="nlSaving" diameter="18"></mat-spinner>
             <mat-icon *ngIf="!nlSaving">save</mat-icon>
-            {{ nlSaving ? 'Saving…' : 'Save as Receipt' }}
+            {{ nlSaving ? "Saving…" : "Save as Receipt" }}
           </button>
           <button mat-stroked-button (click)="closeNlPanel()">Discard</button>
         </div>

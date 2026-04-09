@@ -219,23 +219,28 @@ export class ReceiptsPageComponent implements OnInit {
     if (!this.nlResult || this.nlSaving) return;
     const { vendor, amount, category, date } = this.nlResult;
     if (!vendor || !amount) {
-      this.notification.warning('Vendor and amount are required to save.', 'Cannot save');
+      this.notification.warning(
+        'Vendor and amount are required to save.',
+        'Cannot save',
+      );
       return;
     }
     this.nlSaving = true;
     const dateStr = date || new Date().toISOString().slice(0, 10);
-    this.receiptService.quickAddReceipt(vendor, amount, category ?? 'Uncategorized', dateStr).subscribe({
-      next: () => {
-        this.notification.success(`"${vendor}" added as a receipt.`, 'Saved');
-        this.nlSaving = false;
-        this.closeNlPanel();
-        this.loadReceipts();
-      },
-      error: () => {
-        this.notification.error('Failed to save the receipt.', 'Error');
-        this.nlSaving = false;
-      },
-    });
+    this.receiptService
+      .quickAddReceipt(vendor, amount, category ?? 'Uncategorized', dateStr)
+      .subscribe({
+        next: () => {
+          this.notification.success(`"${vendor}" added as a receipt.`, 'Saved');
+          this.nlSaving = false;
+          this.closeNlPanel();
+          this.loadReceipts();
+        },
+        error: () => {
+          this.notification.error('Failed to save the receipt.', 'Error');
+          this.nlSaving = false;
+        },
+      });
   }
 
   // Duplicate detection - called after file selected + parsed

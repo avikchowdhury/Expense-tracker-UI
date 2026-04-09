@@ -42,16 +42,34 @@
             ? (aiSnapshot?.generatedAt | date: "mediumDate")
             : "Not synced yet"
         }}</strong>
-        <mat-spinner *ngIf="syncing" diameter="20" style="margin:4px 0"></mat-spinner>
+        <mat-spinner
+          *ngIf="syncing"
+          diameter="20"
+          style="margin: 4px 0"
+        ></mat-spinner>
         <button
           mat-stroked-button
           color="primary"
-          style="margin-top:8px;font-size:12px;padding:0 12px;height:32px;line-height:32px"
+          style="
+            margin-top: 8px;
+            font-size: 12px;
+            padding: 0 12px;
+            height: 32px;
+            line-height: 32px;
+          "
           [disabled]="syncing"
           (click)="syncAi()"
         >
-          <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle">refresh</mat-icon>
-          {{ syncing ? 'Syncing…' : 'Sync AI' }}
+          <mat-icon
+            style="
+              font-size: 14px;
+              width: 14px;
+              height: 14px;
+              vertical-align: middle;
+            "
+            >refresh</mat-icon
+          >
+          {{ syncing ? "Syncing…" : "Sync AI" }}
         </button>
       </article>
     </div>

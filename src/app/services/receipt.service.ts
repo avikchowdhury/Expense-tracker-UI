@@ -90,7 +90,12 @@ export class ReceiptService {
       });
   }
 
-  quickAddReceipt(vendor: string, amount: number, category: string, date: string): Observable<ReceiptDto> {
+  quickAddReceipt(
+    vendor: string,
+    amount: number,
+    category: string,
+    date: string,
+  ): Observable<ReceiptDto> {
     return this.http.post<ReceiptDto>(`${API_BASE}/receipts/quick-add`, {
       vendor,
       amount,
