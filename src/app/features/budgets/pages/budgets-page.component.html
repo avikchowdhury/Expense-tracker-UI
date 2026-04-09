@@ -61,6 +61,67 @@
     ></app-budget-watchlist>
   </section>
 
+  <!-- AI Budget Coach -->
+  <mat-card class="coach-card" *ngIf="!loading">
+    <div class="coach-header" (click)="coachExpanded = !coachExpanded">
+      <div class="coach-title">
+        <mat-icon>auto_awesome</mat-icon>
+        <div>
+          <strong>AI Budget Coach</strong>
+          <small>Ask the model for a personalised spending plan</small>
+        </div>
+      </div>
+      <mat-icon class="expand-icon" [class.rotated]="coachExpanded"
+        >expand_more</mat-icon
+      >
+    </div>
+
+    <div class="coach-body" *ngIf="coachExpanded">
+      <div class="coach-goals">
+        <button
+          mat-stroked-button
+          type="button"
+          *ngFor="let goal of coachGoals"
+          (click)="askCoach(goal)"
+        >
+          {{ goal }}
+        </button>
+      </div>
+
+      <div class="coach-form">
+        <mat-form-field appearance="outline" class="coach-input">
+          <mat-label>Your budget goal or question</mat-label>
+          <input
+            matInput
+            [(ngModel)]="coachPrompt"
+            name="coachPrompt"
+            (keydown.enter)="askCoach()"
+            placeholder="e.g. I want to save $300 this month — how?"
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="askCoach()"
+          [disabled]="coachThinking || !coachPrompt.trim()"
+        >
+          <mat-icon>send</mat-icon>
+          {{ coachThinking ? "Thinking…" : "Ask" }}
+        </button>
+      </div>
+
+      <div class="coach-thinking" *ngIf="coachThinking">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+        <small>Reviewing your budget data…</small>
+      </div>
+
+      <div class="coach-reply" *ngIf="!coachThinking && coachResponse">
+        <mat-icon>smart_toy</mat-icon>
+        <p>{{ coachResponse }}</p>
+      </div>
+    </div>
+  </mat-card>
+
   <app-budget-list-panel
     [budgets]="budgets"
     [loading]="loading"

@@ -19,7 +19,9 @@ export class AiAssistantService {
   }
 
   getSubscriptions(): Observable<AiSubscriptionInsight[]> {
-    return this.http.get<AiSubscriptionInsight[]>(`${API_BASE}/ai/subscriptions`);
+    return this.http.get<AiSubscriptionInsight[]>(
+      `${API_BASE}/ai/subscriptions`,
+    );
   }
 
   sendMessage(payload: AiChatRequest): Observable<AiChatResponse> {
@@ -27,7 +29,9 @@ export class AiAssistantService {
   }
 
   getSpendingAnomalies(): Observable<SpendingAnomaly[]> {
-    return this.http.get<SpendingAnomaly[]>(`${API_BASE}/ai/spending-anomalies`);
+    return this.http.get<SpendingAnomaly[]>(
+      `${API_BASE}/ai/spending-anomalies`,
+    );
   }
 
   getMonthlySummary(): Observable<MonthlySummary> {

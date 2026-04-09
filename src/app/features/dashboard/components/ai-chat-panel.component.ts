@@ -5,22 +5,26 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { AiAssistantService, MonthlySummary, SpendingAnomaly } from '../../../services/ai-assistant.service';
 import { AiChatMessage } from '../../../models';
+import {
+  AiAssistantService,
+  MonthlySummary,
+  SpendingAnomaly,
+} from '../../../services/ai-assistant.service';
 
 const MAX_PROMPT_LENGTH = 500;
 
 @Component({
   selector: 'app-ai-chat-panel',
   templateUrl: './ai-chat-panel.component.html',
-  styleUrls: ['./ai-chat-panel.component.scss']
+  styleUrls: ['./ai-chat-panel.component.scss'],
 })
 export class AiChatPanelComponent implements AfterViewChecked, OnInit {
   private readonly defaultPrompts = [
     'How much budget risk do I have right now?',
     'Which subscriptions should I review first?',
     'How can I reduce my budget risk?',
-    'Summarize my latest receipt activity.'
+    'Summarize my latest receipt activity.',
   ];
 
   readonly maxLength = MAX_PROMPT_LENGTH;
@@ -34,8 +38,9 @@ export class AiChatPanelComponent implements AfterViewChecked, OnInit {
   messages: AiChatMessage[] = [
     {
       role: 'assistant',
-      content: 'Ask about budgets, subscriptions, receipt activity, or where your spend is drifting. I answer from your tracker data, not guesses.'
-    }
+      content:
+        'Ask about budgets, subscriptions, receipt activity, or where your spend is drifting. I answer from your tracker data, not guesses.',
+    },
   ];
 
   prompt = '';
@@ -78,7 +83,7 @@ export class AiChatPanelComponent implements AfterViewChecked, OnInit {
       },
       error: () => {
         this.summaryLoading = false;
-      }
+      },
     });
   }
 
@@ -86,17 +91,23 @@ export class AiChatPanelComponent implements AfterViewChecked, OnInit {
     this.messages = [
       {
         role: 'assistant',
-        content: 'Chat cleared. What would you like to know about your spending?'
-      }
+        content:
+          'Chat cleared. What would you like to know about your spending?',
+      },
     ];
     this.shouldScrollToBottom = true;
   }
 
   copyMessage(content: string, index: number): void {
-    navigator.clipboard.writeText(content).then(() => {
-      this.copiedIndex = index;
-      setTimeout(() => { this.copiedIndex = null; }, 2000);
-    }).catch(() => {});
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        this.copiedIndex = index;
+        setTimeout(() => {
+          this.copiedIndex = null;
+        }, 2000);
+      })
+      .catch(() => {});
   }
 
   usePrompt(p: string): void {
@@ -123,8 +134,8 @@ export class AiChatPanelComponent implements AfterViewChecked, OnInit {
             role: 'assistant',
             content: response.reply,
             createdAt: response.generatedAt,
-            response
-          }
+            response,
+          },
         ];
         this.shouldScrollToBottom = true;
       },
@@ -133,14 +144,15 @@ export class AiChatPanelComponent implements AfterViewChecked, OnInit {
           ...this.messages,
           {
             role: 'assistant',
-            content: 'I could not reach the AI assistant just now. Try again after the API is available.'
-          }
+            content:
+              'I could not reach the AI assistant just now. Try again after the API is available.',
+          },
         ];
         this.shouldScrollToBottom = true;
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 

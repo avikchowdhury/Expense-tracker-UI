@@ -4,7 +4,10 @@
       <div>
         <p class="eyebrow">Receipts</p>
         <h2>Upload, review, and organize with AI help</h2>
-        <p class="lead">Preview receipt extraction before saving, then filter your history with reusable controls.</p>
+        <p class="lead">
+          Preview receipt extraction before saving, then filter your history
+          with reusable controls.
+        </p>
       </div>
     </header>
 
@@ -18,13 +21,21 @@
       <article class="summary-card">
         <span>Available categories</span>
         <strong>{{ categories.length }}</strong>
-        <small>Category labels ready for AI suggestions and manual cleanup.</small>
+        <small
+          >Category labels ready for AI suggestions and manual cleanup.</small
+        >
       </article>
 
       <article class="summary-card">
         <span>Upload status</span>
-        <strong>{{ selectedFile ? 'Ready to save' : 'Waiting for file' }}</strong>
-        <small>{{ aiPreview ? 'Preview generated and ready for confirmation.' : 'Pick a receipt to generate the AI preview.' }}</small>
+        <strong>{{
+          selectedFile ? "Ready to save" : "Waiting for file"
+        }}</strong>
+        <small>{{
+          aiPreview
+            ? "Preview generated and ready for confirmation."
+            : "Pick a receipt to generate the AI preview."
+        }}</small>
       </article>
     </section>
   </section>
@@ -40,6 +51,27 @@
       (uploadRequested)="uploadReceipt($event)"
       (cleared)="clearUploadSelection()"
     ></app-receipt-upload-assistant>
+
+    <!-- AI post-upload insight -->
+    <div class="upload-insight-loading" *ngIf="uploadInsightLoading">
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>AI is reviewing your receipt…</span>
+    </div>
+
+    <div class="upload-insight" *ngIf="!uploadInsightLoading && uploadInsight">
+      <div class="upload-insight-body">
+        <mat-icon>auto_awesome</mat-icon>
+        <p>{{ uploadInsight }}</p>
+      </div>
+      <button
+        mat-icon-button
+        class="dismiss-btn"
+        matTooltip="Dismiss"
+        (click)="dismissInsight()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
     <section class="list-panel">
       <app-receipt-filters
@@ -63,18 +95,26 @@
   </div>
 
   <section class="support-grid">
-    <app-receipt-activity-calendar [receipts]="receipts"></app-receipt-activity-calendar>
+    <app-receipt-activity-calendar
+      [receipts]="receipts"
+    ></app-receipt-activity-calendar>
 
     <mat-card class="workflow-card">
       <mat-card-title>Receipt workflow</mat-card-title>
-      <mat-card-subtitle>Keep uploads tidy so AI suggestions stay useful and your history remains easy to scan.</mat-card-subtitle>
+      <mat-card-subtitle
+        >Keep uploads tidy so AI suggestions stay useful and your history
+        remains easy to scan.</mat-card-subtitle
+      >
 
       <div class="workflow-list">
         <article class="workflow-item">
           <span>1</span>
           <div>
             <strong>Preview first</strong>
-            <p>Check vendor, amount, and category before saving the receipt to history.</p>
+            <p>
+              Check vendor, amount, and category before saving the receipt to
+              history.
+            </p>
           </div>
         </article>
 
@@ -82,7 +122,10 @@
           <span>2</span>
           <div>
             <strong>Correct categories fast</strong>
-            <p>Use a consistent category list so budgets and dashboard trends stay accurate.</p>
+            <p>
+              Use a consistent category list so budgets and dashboard trends
+              stay accurate.
+            </p>
           </div>
         </article>
 
@@ -90,7 +133,10 @@
           <span>3</span>
           <div>
             <strong>Review weekly</strong>
-            <p>Open this page once a week to clean up notes, missing vendors, and odd totals.</p>
+            <p>
+              Open this page once a week to clean up notes, missing vendors, and
+              odd totals.
+            </p>
           </div>
         </article>
       </div>

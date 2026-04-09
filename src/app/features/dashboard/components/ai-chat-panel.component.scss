@@ -4,12 +4,11 @@
   padding: 1.35rem;
   border-radius: 26px;
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(246, 251, 253, 0.96) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(246, 251, 253, 0.96) 100%
+  );
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
@@ -179,20 +178,27 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: 22px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(247, 251, 253, 0.94) 0%,
-      rgba(240, 246, 249, 0.94) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(247, 251, 253, 0.94) 0%,
+    rgba(240, 246, 249, 0.94) 100%
+  );
   border: 1px solid rgba(19, 41, 61, 0.08);
   scrollbar-width: thin;
   scrollbar-color: rgba(15, 108, 91, 0.45) rgba(19, 41, 61, 0.08);
 }
 
-.message-list::-webkit-scrollbar { width: 8px; }
-.message-list::-webkit-scrollbar-track { border-radius: 999px; background: rgba(19, 41, 61, 0.06); }
-.message-list::-webkit-scrollbar-thumb { border-radius: 999px; background: rgba(15, 108, 91, 0.38); }
+.message-list::-webkit-scrollbar {
+  width: 8px;
+}
+.message-list::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(19, 41, 61, 0.06);
+}
+.message-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(15, 108, 91, 0.38);
+}
 
 .message-shell {
   position: relative;
@@ -307,15 +313,29 @@
     opacity: 0.35;
     animation: typing-bounce 1.2s infinite ease-in-out;
 
-    &:nth-child(1) { animation-delay: 0s; }
-    &:nth-child(2) { animation-delay: 0.2s; }
-    &:nth-child(3) { animation-delay: 0.4s; }
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
   }
 }
 
 @keyframes typing-bounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
-  30% { transform: translateY(-6px); opacity: 1; }
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
 }
 
 // ── Evidence + cards + alerts ─────────────────────────────────────────────────
@@ -341,13 +361,30 @@
   background: rgba(255, 255, 255, 0.86);
   border: 1px solid rgba(19, 41, 61, 0.08);
 
-  &.warning { background: rgba(255, 247, 236, 0.96); }
-  &.critical { background: rgba(255, 240, 242, 0.96); }
-  &.positive { background: rgba(238, 250, 246, 0.96); }
+  &.warning {
+    background: rgba(255, 247, 236, 0.96);
+  }
+  &.critical {
+    background: rgba(255, 240, 242, 0.96);
+  }
+  &.positive {
+    background: rgba(238, 250, 246, 0.96);
+  }
 
-  strong { color: #38556e; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
-  h4 { margin: 0; color: #13293d; font-size: 1.1rem; }
-  small { color: #61798a; }
+  strong {
+    color: #38556e;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  h4 {
+    margin: 0;
+    color: #13293d;
+    font-size: 1.1rem;
+  }
+  small {
+    color: #61798a;
+  }
 }
 
 .alert-strip {
@@ -364,11 +401,19 @@
   background: rgba(247, 251, 253, 0.9);
   border: 1px solid rgba(19, 41, 61, 0.08);
 
-  &.warning { background: rgba(255, 247, 236, 0.96); }
-  &.critical { background: rgba(255, 240, 242, 0.96); }
+  &.warning {
+    background: rgba(255, 247, 236, 0.96);
+  }
+  &.critical {
+    background: rgba(255, 240, 242, 0.96);
+  }
 
-  strong { color: #13293d; }
-  small { color: #61798a; }
+  strong {
+    color: #13293d;
+  }
+  small {
+    color: #61798a;
+  }
 }
 
 .follow-up-list {
@@ -376,7 +421,9 @@
   flex-wrap: wrap;
   gap: 0.65rem;
 
-  button { border-radius: 999px; }
+  button {
+    border-radius: 999px;
+  }
 }
 
 // ── Input form ────────────────────────────────────────────────────────────────
@@ -451,7 +498,6 @@
   }
 }
 
-
 .chat-header {
   display: grid;
   gap: 1rem;
@@ -491,12 +537,11 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: 22px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(247, 251, 253, 0.94) 0%,
-      rgba(240, 246, 249, 0.94) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(247, 251, 253, 0.94) 0%,
+    rgba(240, 246, 249, 0.94) 100%
+  );
   border: 1px solid rgba(19, 41, 61, 0.08);
   scrollbar-width: thin;
   scrollbar-color: rgba(15, 108, 91, 0.45) rgba(19, 41, 61, 0.08);

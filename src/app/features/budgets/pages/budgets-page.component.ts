@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, forkJoin, of } from 'rxjs';
 import { Budget, BudgetAdvisorSnapshot } from '../../../models';
+import { AiAssistantService } from '../../../services/ai-assistant.service';
 import { BudgetService } from '../../../services/budget.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
@@ -17,8 +18,23 @@ export class BudgetsPageComponent implements OnInit {
   advisor: BudgetAdvisorSnapshot | null = null;
   loading = false;
 
+  // AI Budget Coach
+  coachPrompt = '';
+  coachResponse = '';
+  coachThinking = false;
+  coachExpanded = false;
+
+  readonly coachGoals = [
+    'Give me a 3-step plan to stay under my budget this month.',
+    'Which category should I cut first to save the most?',
+    'How much can I realistically save by end of month?',
+    'Which budget limits should I adjust based on my spending trends?',
+    'Am I at risk of going over budget this month?',
+  ];
+
   constructor(
     private budgetService: BudgetService,
+    private aiService: AiAssistantService,
     private dialog: MatDialog,
     private notification: NotificationService,
   ) {}
@@ -90,6 +106,32 @@ export class BudgetsPageComponent implements OnInit {
       amount: item.monthlyLimit,
       lastReset: item.lastReset,
     };
+  }
+
+  askCoach(goal?: string): void {
+    const message = (goal ?? this.coachPrompt).trim();
+    if (!message || this.coachThinking) return;
+
+    if (!goal) this.coachPrompt = '';
+    this.coachExpanded = true;
+    this.coachThinking = true;
+    this.coachResponse = '';
+
+    const context = this.advisor
+      ? `My current budget: $${this.advisor.totalBudget.toFixed(0)} total, $${this.advisor.currentSpend.toFixed(0)} spent, projected $${this.advisor.projectedSpend.toFixed(0)}. At-risk categories: ${this.atRiskCategoryCount}. `
+      : '';
+
+    this.aiService.sendMessage({ message: context + message }).subscribe({
+      next: (res) => {
+        this.coachResponse = res.reply;
+        this.coachThinking = false;
+      },
+      error: () => {
+        this.coachResponse =
+          'Could not reach the AI right now. Please try again.';
+        this.coachThinking = false;
+      },
+    });
   }
 
   // Add Budget

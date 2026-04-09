@@ -60,6 +60,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'insights',
+        loadChildren: () =>
+          import('./features/insights/insights.module').then(
+            (m) => m.InsightsModule,
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [AdminGuard],
         loadChildren: () =>

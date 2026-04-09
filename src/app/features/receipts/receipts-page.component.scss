@@ -9,9 +9,21 @@
   padding: clamp(1.15rem, 2vw, 1.55rem);
   border-radius: 30px;
   background:
-    radial-gradient(circle at top right, rgba(24, 168, 193, 0.15), transparent 30%),
-    radial-gradient(circle at bottom left, rgba(15, 108, 91, 0.12), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 251, 253, 0.95) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(24, 168, 193, 0.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(15, 108, 91, 0.12),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(247, 251, 253, 0.95) 100%
+    );
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
 }
 
@@ -76,6 +88,64 @@
   grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
+}
+
+.upload-insight-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: rgba(15, 108, 91, 0.05);
+  border: 1px solid rgba(15, 108, 91, 0.15);
+  color: #38556e;
+  font-size: 0.85rem;
+  grid-column: 1;
+}
+
+.upload-insight {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(15, 108, 91, 0.06);
+  border: 1px solid rgba(15, 108, 91, 0.18);
+  grid-column: 1;
+
+  .upload-insight-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    flex: 1;
+
+    mat-icon {
+      color: #0f6c5b;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    p {
+      margin: 0;
+      color: #1f3d50;
+      line-height: 1.65;
+      font-size: 0.88rem;
+    }
+  }
+
+  .dismiss-btn {
+    color: #61798a;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    mat-icon {
+      font-size: 16px;
+    }
+  }
 }
 
 .list-panel {

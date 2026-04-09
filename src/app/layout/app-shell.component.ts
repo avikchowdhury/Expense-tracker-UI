@@ -14,14 +14,15 @@ interface NavigationItem {
 @Component({
   selector: 'app-shell',
   templateUrl: './app-shell.component.html',
-  styleUrls: ['./app-shell.component.scss']
+  styleUrls: ['./app-shell.component.scss'],
 })
 export class AppShellComponent implements OnInit, OnDestroy {
   readonly navigation: NavigationItem[] = [
-    { label: 'Dashboard', path: '/dashboard', icon: 'insights' },
+    { label: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
     { label: 'Receipts', path: '/receipts', icon: 'receipt_long' },
     { label: 'Budgets', path: '/budgets', icon: 'savings' },
     { label: 'Categories', path: '/categories', icon: 'category' },
+    { label: 'AI Insights', path: '/insights', icon: 'auto_awesome' },
     { label: 'Profile', path: '/profile', icon: 'manage_accounts' },
     {
       label: 'Admin',
@@ -37,18 +38,20 @@ export class AppShellComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private profileService: ProfileService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.subscription.add(
       this.profileService.profile$.subscribe((profile) => {
         this.profile = profile;
-      })
+      }),
     );
 
     if (this.authService.isAuthenticated()) {
-      this.subscription.add(this.profileService.getProfile().subscribe({ error: () => undefined }));
+      this.subscription.add(
+        this.profileService.getProfile().subscribe({ error: () => undefined }),
+      );
     }
   }
 
@@ -63,7 +66,8 @@ export class AppShellComponent implements OnInit, OnDestroy {
 
   get visibleNavigation(): NavigationItem[] {
     const isAdmin =
-      this.profile?.role?.toLowerCase() === 'admin' || this.authService.isAdmin();
+      this.profile?.role?.toLowerCase() === 'admin' ||
+      this.authService.isAdmin();
 
     return this.navigation.filter((item) => !item.adminOnly || isAdmin);
   }

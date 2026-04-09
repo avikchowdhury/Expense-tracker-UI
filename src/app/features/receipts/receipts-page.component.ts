@@ -1,10 +1,15 @@
-import { PageEvent } from '@angular/material/paginator';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import {
+  ReceiptAiParseResult,
+  ReceiptDto,
+  ReceiptQueryParams,
+} from '../../models';
+import { AiAssistantService } from '../../services/ai-assistant.service';
 import { Category, CategoryService } from '../../services/category.service';
 import { NotificationService } from '../../services/notification.service';
 import { ReceiptService } from '../../services/receipt.service';
-import { ReceiptAiParseResult, ReceiptDto, ReceiptQueryParams } from '../../models';
 import { ReceiptDeleteDialogComponent } from './dialogs/receipt-delete-dialog.component';
 import { ReceiptEditDialogComponent } from './dialogs/receipt-edit-dialog.component';
 import { ReceiptViewDialogComponent } from './dialogs/receipt-view-dialog.component';
@@ -12,7 +17,7 @@ import { ReceiptViewDialogComponent } from './dialogs/receipt-view-dialog.compon
 @Component({
   selector: 'app-receipts-page',
   templateUrl: './receipts-page.component.html',
-  styleUrls: ['./receipts-page.component.scss']
+  styleUrls: ['./receipts-page.component.scss'],
 })
 export class ReceiptsPageComponent implements OnInit {
   receipts: ReceiptDto[] = [];
@@ -27,20 +32,25 @@ export class ReceiptsPageComponent implements OnInit {
   parsingPreview = false;
   uploading = false;
 
+  // Post-upload AI insight
+  uploadInsight: string | null = null;
+  uploadInsightLoading = false;
+
   filters: ReceiptQueryParams = {
     page: 1,
     pageSize: 10,
     search: '',
     category: '',
     dateFrom: '',
-    dateTo: ''
+    dateTo: '',
   };
 
   constructor(
     private receiptService: ReceiptService,
     private categoryService: CategoryService,
+    private aiService: AiAssistantService,
     private dialog: MatDialog,
-    private notification: NotificationService
+    private notification: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +62,7 @@ export class ReceiptsPageComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
-      }
+      },
     });
   }
 
@@ -67,7 +77,7 @@ export class ReceiptsPageComponent implements OnInit {
       error: () => {
         this.notification.error('Failed to load receipts.', 'Error');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -77,7 +87,7 @@ export class ReceiptsPageComponent implements OnInit {
       ...this.filters,
       ...filters,
       page: 1,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     };
     this.loadReceipts();
   }
@@ -88,7 +98,7 @@ export class ReceiptsPageComponent implements OnInit {
     this.filters = {
       ...this.filters,
       page: event.pageIndex + 1,
-      pageSize: event.pageSize
+      pageSize: event.pageSize,
     };
     this.loadReceipts();
   }
@@ -108,9 +118,12 @@ export class ReceiptsPageComponent implements OnInit {
         this.parsingPreview = false;
       },
       error: () => {
-        this.notification.warning('AI preview is unavailable, but you can still upload the receipt.', 'Preview unavailable');
+        this.notification.warning(
+          'AI preview is unavailable, but you can still upload the receipt.',
+          'Preview unavailable',
+        );
         this.parsingPreview = false;
-      }
+      },
     });
   }
 
@@ -123,11 +136,15 @@ export class ReceiptsPageComponent implements OnInit {
     this.receiptService
       .uploadReceipt(this.selectedFile, {
         category: payload.category,
-        notes: payload.notes
+        notes: payload.notes,
       })
       .subscribe({
         next: () => {
-          this.notification.success('Receipt uploaded successfully.', 'Uploaded');
+          this.notification.success(
+            'Receipt uploaded successfully.',
+            'Uploaded',
+          );
+          this.triggerUploadInsight(payload.category, this.aiPreview);
           this.selectedFile = null;
           this.aiPreview = null;
           this.uploading = false;
@@ -136,7 +153,7 @@ export class ReceiptsPageComponent implements OnInit {
         error: () => {
           this.notification.error('Failed to upload receipt.', 'Error');
           this.uploading = false;
-        }
+        },
       });
   }
 
@@ -145,17 +162,46 @@ export class ReceiptsPageComponent implements OnInit {
     this.aiPreview = null;
   }
 
+  dismissInsight(): void {
+    this.uploadInsight = null;
+  }
+
+  private triggerUploadInsight(
+    category: string,
+    preview: ReceiptAiParseResult | null,
+  ): void {
+    const vendor = preview?.vendor || 'a vendor';
+    const amount = preview?.amount
+      ? `$${preview.amount.toFixed(2)}`
+      : 'an amount';
+    const cat = category || preview?.category || 'Uncategorized';
+    const message = `I just saved a receipt from ${vendor} for ${amount} in the ${cat} category. Based on my spending history, give me one short insight about this purchase.`;
+
+    this.uploadInsight = null;
+    this.uploadInsightLoading = true;
+
+    this.aiService.sendMessage({ message }).subscribe({
+      next: (res) => {
+        this.uploadInsight = res.reply;
+        this.uploadInsightLoading = false;
+      },
+      error: () => {
+        this.uploadInsightLoading = false;
+      },
+    });
+  }
+
   viewReceipt(receipt: ReceiptDto): void {
     this.dialog.open(ReceiptViewDialogComponent, {
       width: '420px',
-      data: { receipt }
+      data: { receipt },
     });
   }
 
   editReceipt(receipt: ReceiptDto): void {
     const dialogRef = this.dialog.open(ReceiptEditDialogComponent, {
       width: '420px',
-      data: { receipt }
+      data: { receipt },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -166,7 +212,7 @@ export class ReceiptsPageComponent implements OnInit {
       const updatedReceipt = {
         ...receipt,
         category: result.category,
-        parsedContentJson: result.notes
+        parsedContentJson: result.notes,
       };
 
       this.receiptService.updateReceipt(receipt.id, updatedReceipt).subscribe({
@@ -176,7 +222,7 @@ export class ReceiptsPageComponent implements OnInit {
         },
         error: () => {
           this.notification.error('Failed to update receipt.', 'Error');
-        }
+        },
       });
     });
   }
@@ -184,7 +230,7 @@ export class ReceiptsPageComponent implements OnInit {
   deleteReceipt(receipt: ReceiptDto): void {
     const dialogRef = this.dialog.open(ReceiptDeleteDialogComponent, {
       width: '360px',
-      data: { receipt }
+      data: { receipt },
     });
 
     dialogRef.afterClosed().subscribe((confirmed) => {
@@ -199,7 +245,7 @@ export class ReceiptsPageComponent implements OnInit {
         },
         error: () => {
           this.notification.error('Failed to delete receipt.', 'Error');
-        }
+        },
       });
     });
   }
