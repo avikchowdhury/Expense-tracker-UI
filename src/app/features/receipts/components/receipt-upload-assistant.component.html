@@ -4,9 +4,9 @@
 
   <div class="sample-hint">
     <span>Need a quick test?</span>
-    <a [href]="userManualHref" target="_blank" rel="noopener">
-      Open user manual
-    </a>
+    <button class="hint-link" (click)="downloadManual()" [disabled]="manualDownloading">
+      {{ manualDownloading ? 'Preparing…' : 'User Manual' }}
+    </button>
   </div>
 
   <div class="sample-grid">

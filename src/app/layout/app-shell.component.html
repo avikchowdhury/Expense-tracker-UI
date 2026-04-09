@@ -9,15 +9,15 @@
     </div>
 
     <div class="shell-actions">
-      <a
-        href="assets/help/expense-tracker-user-manual.html"
-        target="_blank"
-        rel="noopener"
+      <button
         class="manual-chip"
+        (click)="downloadManual()"
+        [disabled]="manualDownloading"
+        title="Download User Manual as PDF"
       >
-        <mat-icon>menu_book</mat-icon>
-        <span>User Manual</span>
-      </a>
+        <mat-icon>{{ manualDownloading ? 'hourglass_top' : 'picture_as_pdf' }}</mat-icon>
+        <span>{{ manualDownloading ? 'Preparing…' : 'User Manual' }}</span>
+      </button>
 
       <!-- Notification Bell -->
       <div class="notif-bell-wrapper">

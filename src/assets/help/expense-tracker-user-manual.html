@@ -201,6 +201,16 @@
         }
       }
     </style>
+    <script>
+      (function () {
+        if (new URLSearchParams(location.search).get('pdf') === '1') {
+          document.documentElement.classList.add('autoprint');
+          window.addEventListener('load', function () {
+            setTimeout(function () { window.print(); }, 300);
+          });
+        }
+      })();
+    </script>
   </head>
   <body>
     <main>
@@ -216,8 +226,8 @@
           up and running.
         </p>
         <div class="hero-actions">
-          <a class="primary" href="javascript:window.print()"
-            >Print / Save as PDF</a
+          <a class="primary" href="?pdf=1" target="_blank"
+            >&#11015; Download as PDF</a
           >
           <a
             class="secondary"

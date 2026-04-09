@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Category } from '../../../services/category.service';
 import { ReceiptAiParseResult } from '../../../models';
+import { UserManualService } from '../../../services/user-manual.service';
 
 @Component({
   selector: 'app-receipt-upload-assistant',
@@ -20,7 +21,17 @@ export class ReceiptUploadAssistantComponent implements OnChanges {
   @Output() uploadRequested = new EventEmitter<{ category: string; notes: string }>();
   @Output() cleared = new EventEmitter<void>();
 
-  readonly userManualHref = 'assets/help/expense-tracker-user-manual.html';
+  manualDownloading = false;
+
+  constructor(private userManualService: UserManualService) {}
+
+  downloadManual(): void {
+    if (this.manualDownloading) return;
+    this.manualDownloading = true;
+    this.userManualService
+      .downloadPdf()
+      .finally(() => (this.manualDownloading = false));
+  }
   readonly sampleReceipts = [
     {
       label: 'Freshmart groceries',

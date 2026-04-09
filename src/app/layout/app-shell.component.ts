@@ -7,6 +7,7 @@ import {
 } from '../services/ai-assistant.service';
 import { AuthService } from '../services/auth.service';
 import { Profile, ProfileService } from '../services/profile.service';
+import { UserManualService } from '../services/user-manual.service';
 
 interface NavigationItem {
   label: string;
@@ -40,6 +41,7 @@ export class AppShellComponent implements OnInit, OnDestroy {
   profile: Profile | null = null;
   notifications: AppNotification[] = [];
   notifPanelOpen = false;
+  manualDownloading = false;
   private readonly subscription = new Subscription();
 
   constructor(
@@ -47,6 +49,7 @@ export class AppShellComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private router: Router,
     private aiService: AiAssistantService,
+    private userManualService: UserManualService,
   ) {}
 
   ngOnInit(): void {
@@ -92,6 +95,14 @@ export class AppShellComponent implements OnInit, OnDestroy {
     if (type === 'anomaly') return 'trending_up';
     if (type === 'subscription') return 'autorenew';
     return 'notifications';
+  }
+
+  downloadManual(): void {
+    if (this.manualDownloading) return;
+    this.manualDownloading = true;
+    this.userManualService
+      .downloadPdf()
+      .finally(() => (this.manualDownloading = false));
   }
 
   ngOnDestroy(): void {
