@@ -67,6 +67,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'forecast',
+        loadChildren: () =>
+          import('./features/forecast/forecast.module').then(
+            (m) => m.ForecastModule,
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [AdminGuard],
         loadChildren: () =>

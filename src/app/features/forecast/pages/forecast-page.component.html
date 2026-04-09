@@ -1,0 +1,77 @@
+<div class="forecast-page">
+  <div class="page-header">
+    <div class="header-title">
+      <mat-icon>insights</mat-icon>
+      <div>
+        <h2>Spending Forecast</h2>
+        <p>AI-powered month-end projection based on your current pace</p>
+      </div>
+    </div>
+    <button mat-stroked-button (click)="load()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon> Refresh
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="state-center">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Generating forecast…</p>
+  </div>
+
+  <div *ngIf="loadError && !loading" class="state-center error">
+    <mat-icon>error_outline</mat-icon>
+    <p>Could not load forecast. <button mat-button (click)="load()">Retry</button></p>
+  </div>
+
+  <ng-container *ngIf="forecast && !loading">
+    <!-- Trend banner -->
+    <div class="trend-banner" [class]="trendClass">
+      <mat-icon>{{ trendIcon }}</mat-icon>
+      <div>
+        <strong>{{ trendLabel }}</strong>
+        <p>{{ forecast.aiNarrative }}</p>
+      </div>
+    </div>
+
+    <!-- Metric cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-label">Current Spend</span>
+        <span class="metric-value">{{ forecast.currentSpend | currency }}</span>
+        <span class="metric-sub">{{ forecast.daysElapsed }} days elapsed</span>
+      </div>
+      <div class="metric-card accent">
+        <span class="metric-label">Projected Month-End</span>
+        <span class="metric-value">{{ forecast.projectedMonthEnd | currency }}</span>
+        <span class="metric-sub">{{ forecast.daysRemaining }} days remaining</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Daily Average</span>
+        <span class="metric-value">{{ forecast.dailyAverage | currency }}</span>
+        <span class="metric-sub">per day this month</span>
+      </div>
+    </div>
+
+    <!-- Daily bar chart -->
+    <div class="chart-section">
+      <h3>Daily Spend — Actual vs Projected</h3>
+      <div class="bar-chart">
+        <div
+          *ngFor="let day of forecast.dailyBreakdown"
+          class="bar-col"
+          [title]="day.date + ': ' + (day.amount | currency)"
+        >
+          <div
+            class="bar"
+            [class.projected]="day.isProjected"
+            [style.height.%]="barHeight(day.amount)"
+          ></div>
+          <span class="bar-label">{{ day.date | date:'d' }}</span>
+        </div>
+      </div>
+      <div class="chart-legend">
+        <span class="legend-actual"><span></span>Actual</span>
+        <span class="legend-projected"><span></span>Projected</span>
+      </div>
+    </div>
+  </ng-container>
+</div>

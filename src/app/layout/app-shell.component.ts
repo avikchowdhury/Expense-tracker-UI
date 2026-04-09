@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Profile, ProfileService } from '../services/profile.service';
+import { AiAssistantService, AppNotification } from '../services/ai-assistant.service';
 
 interface NavigationItem {
   label: string;
@@ -23,6 +24,7 @@ export class AppShellComponent implements OnInit, OnDestroy {
     { label: 'Budgets', path: '/budgets', icon: 'savings' },
     { label: 'Categories', path: '/categories', icon: 'category' },
     { label: 'AI Insights', path: '/insights', icon: 'auto_awesome' },
+    { label: 'Forecast', path: '/forecast', icon: 'insights' },
     { label: 'Profile', path: '/profile', icon: 'manage_accounts' },
     {
       label: 'Admin',
@@ -33,12 +35,15 @@ export class AppShellComponent implements OnInit, OnDestroy {
   ];
 
   profile: Profile | null = null;
+  notifications: AppNotification[] = [];
+  notifPanelOpen = false;
   private readonly subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
     private profileService: ProfileService,
     private router: Router,
+    private aiService: AiAssistantService,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +57,34 @@ export class AppShellComponent implements OnInit, OnDestroy {
       this.subscription.add(
         this.profileService.getProfile().subscribe({ error: () => undefined }),
       );
+      this.loadNotifications();
     }
+  }
+
+  loadNotifications(): void {
+    this.aiService.getNotifications().subscribe({
+      next: (n) => { this.notifications = n; },
+      error: () => undefined,
+    });
+  }
+
+  get unreadCount(): number {
+    return this.notifications.filter((n) => n.severity === 'critical' || n.severity === 'warning').length;
+  }
+
+  toggleNotifPanel(): void {
+    this.notifPanelOpen = !this.notifPanelOpen;
+  }
+
+  closeNotifPanel(): void {
+    this.notifPanelOpen = false;
+  }
+
+  notifIcon(type: string): string {
+    if (type === 'budget') return 'account_balance_wallet';
+    if (type === 'anomaly') return 'trending_up';
+    if (type === 'subscription') return 'autorenew';
+    return 'notifications';
   }
 
   ngOnDestroy(): void {

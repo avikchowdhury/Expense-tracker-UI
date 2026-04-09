@@ -36,6 +36,15 @@ export class ReceiptsPageComponent implements OnInit {
   uploadInsight: string | null = null;
   uploadInsightLoading = false;
 
+  // Natural language quick-entry
+  nlPanelOpen = false;
+  nlText = '';
+  nlParsing = false;
+  nlResult: import('../../services/ai-assistant.service').ParseTextResult | null = null;
+
+  // Duplicate check
+  duplicateWarning: string | null = null;
+
   filters: ReceiptQueryParams = {
     page: 1,
     pageSize: 10,
@@ -116,6 +125,9 @@ export class ReceiptsPageComponent implements OnInit {
       next: (preview) => {
         this.aiPreview = preview;
         this.parsingPreview = false;
+        if (preview.vendor && preview.amount) {
+          this.checkDuplicateOnUpload(preview.vendor, preview.amount, preview.date || new Date().toISOString().slice(0, 10));
+        }
       },
       error: () => {
         this.notification.warning(
@@ -160,10 +172,53 @@ export class ReceiptsPageComponent implements OnInit {
   clearUploadSelection(): void {
     this.selectedFile = null;
     this.aiPreview = null;
+    this.duplicateWarning = null;
   }
 
   dismissInsight(): void {
     this.uploadInsight = null;
+  }
+
+  // Natural Language quick-entry
+  openNlPanel(): void {
+    this.nlPanelOpen = true;
+    this.nlText = '';
+    this.nlResult = null;
+  }
+
+  closeNlPanel(): void {
+    this.nlPanelOpen = false;
+    this.nlText = '';
+    this.nlResult = null;
+  }
+
+  parseNlText(): void {
+    if (!this.nlText.trim() || this.nlParsing) return;
+    this.nlParsing = true;
+    this.nlResult = null;
+    this.aiService.parseTextExpense(this.nlText.trim()).subscribe({
+      next: (r) => {
+        this.nlResult = r;
+        this.nlParsing = false;
+      },
+      error: () => { this.nlParsing = false; },
+    });
+  }
+
+  // Duplicate detection - called after file selected + parsed
+  checkDuplicateOnUpload(vendor: string, amount: number, date: string): void {
+    if (!vendor || amount <= 0) return;
+    this.duplicateWarning = null;
+    this.aiService.checkDuplicate(vendor, amount, date).subscribe({
+      next: (r) => {
+        if (r.isDuplicate) this.duplicateWarning = r.warning;
+      },
+      error: () => undefined,
+    });
+  }
+
+  dismissDuplicateWarning(): void {
+    this.duplicateWarning = null;
   }
 
   private triggerUploadInsight(

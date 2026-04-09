@@ -5,9 +5,10 @@ import {
   AiAssistantService,
   MonthlySummary,
   SpendingAnomaly,
+  VendorAnalysis,
 } from '../../../services/ai-assistant.service';
 
-type InsightsTab = 'overview' | 'subscriptions' | 'anomalies';
+type InsightsTab = 'overview' | 'subscriptions' | 'anomalies' | 'vendors';
 
 @Component({
   selector: 'app-insights-page',
@@ -24,6 +25,9 @@ export class InsightsPageComponent implements OnInit {
   monthlySummary: MonthlySummary | null = null;
   subscriptions: AiSubscriptionInsight[] = [];
   anomalies: SpendingAnomaly[] = [];
+
+  vendorAnalysis: VendorAnalysis | null = null;
+  vendorLoading = false;
 
   // Ask-the-AI section
   aiPrompt = '';
@@ -69,9 +73,32 @@ export class InsightsPageComponent implements OnInit {
 
   setTab(tab: InsightsTab): void {
     this.activeTab = tab;
+    if (tab === 'vendors' && !this.vendorAnalysis && !this.vendorLoading) {
+      this.loadVendors();
+    }
+  }
+
+  loadVendors(): void {
+    this.vendorLoading = true;
+    this.aiService.getVendorAnalysis().subscribe({
+      next: (v) => { this.vendorAnalysis = v; this.vendorLoading = false; },
+      error: () => { this.vendorLoading = false; },
+    });
+  }
+
+  downloadReport(): void {
+    this.aiService.exportAiReport();
+  }
+
+  trendIcon(trend: string): string {
+    if (trend === 'up') return 'trending_up';
+    if (trend === 'down') return 'trending_down';
+    if (trend === 'new') return 'fiber_new';
+    return 'trending_flat';
   }
 
   reload(): void {
+    this.vendorAnalysis = null;
     this.loadAll();
   }
 
