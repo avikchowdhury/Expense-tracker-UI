@@ -1,11 +1,18 @@
 <mat-card class="upload-card">
   <mat-card-title>AI upload assistant</mat-card-title>
-  <mat-card-subtitle>Pick a file, review the smart preview, and save with better metadata.</mat-card-subtitle>
+  <mat-card-subtitle
+    >Pick a file, review the smart preview, and save with better
+    metadata.</mat-card-subtitle
+  >
 
   <div class="sample-hint">
     <span>Need a quick test?</span>
-    <button class="hint-link" (click)="downloadManual()" [disabled]="manualDownloading">
-      {{ manualDownloading ? 'Preparing…' : 'User Manual' }}
+    <button
+      class="hint-link"
+      (click)="downloadManual()"
+      [disabled]="manualDownloading"
+    >
+      {{ manualDownloading ? "Preparing…" : "User Manual" }}
     </button>
   </div>
 
@@ -22,9 +29,14 @@
   </div>
 
   <label class="upload-dropzone">
-    <input #fileInput type="file" accept="image/*,application/pdf" (change)="onFileChange($event)" />
+    <input
+      #fileInput
+      type="file"
+      accept="image/*,application/pdf"
+      (change)="onFileChange($event)"
+    />
     <mat-icon>upload_file</mat-icon>
-    <strong>{{ selectedFile?.name || 'Choose a receipt file' }}</strong>
+    <strong>{{ selectedFile?.name || "Choose a receipt file" }}</strong>
     <span>Images or PDFs supported</span>
   </label>
 
@@ -36,15 +48,15 @@
   <div class="ai-preview" *ngIf="preview">
     <div class="preview-row">
       <span>Vendor</span>
-      <strong>{{ preview.vendor || 'Unknown vendor' }}</strong>
+      <strong>{{ preview.vendor || "Unknown vendor" }}</strong>
     </div>
     <div class="preview-row">
       <span>Amount</span>
-      <strong>{{ (preview.amount || 0) | currency }}</strong>
+      <strong>{{ preview.amount || 0 | currency }}</strong>
     </div>
     <div class="preview-row">
       <span>Suggested category</span>
-      <strong>{{ preview.category || 'Uncategorized' }}</strong>
+      <strong>{{ preview.category || "Uncategorized" }}</strong>
     </div>
   </div>
 
@@ -53,7 +65,10 @@
       <mat-label>Category</mat-label>
       <mat-select [(ngModel)]="category">
         <mat-option value="">Uncategorized</mat-option>
-        <mat-option *ngFor="let categoryItem of categories" [value]="categoryItem.name">
+        <mat-option
+          *ngFor="let categoryItem of categories"
+          [value]="categoryItem.name"
+        >
           {{ categoryItem.name }}
         </mat-option>
       </mat-select>
@@ -61,14 +76,25 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Notes for the receipt</mat-label>
-      <textarea matInput rows="4" [(ngModel)]="notes" placeholder="Optional notes or correction details"></textarea>
+      <textarea
+        matInput
+        rows="4"
+        [(ngModel)]="notes"
+        placeholder="Optional notes or correction details"
+      ></textarea>
     </mat-form-field>
   </div>
 
   <div class="upload-actions" *ngIf="selectedFile">
     <button mat-stroked-button type="button" (click)="clear()">Clear</button>
-    <button mat-raised-button color="primary" type="button" (click)="upload()" [disabled]="uploading">
-      {{ uploading ? 'Uploading...' : 'Save receipt' }}
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="upload()"
+      [disabled]="uploading"
+    >
+      {{ uploading ? "Uploading..." : "Save receipt" }}
     </button>
   </div>
 </mat-card>

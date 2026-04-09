@@ -203,10 +203,12 @@
     </style>
     <script>
       (function () {
-        if (new URLSearchParams(location.search).get('pdf') === '1') {
-          document.documentElement.classList.add('autoprint');
-          window.addEventListener('load', function () {
-            setTimeout(function () { window.print(); }, 300);
+        if (new URLSearchParams(location.search).get("pdf") === "1") {
+          document.documentElement.classList.add("autoprint");
+          window.addEventListener("load", function () {
+            setTimeout(function () {
+              window.print();
+            }, 300);
           });
         }
       })();

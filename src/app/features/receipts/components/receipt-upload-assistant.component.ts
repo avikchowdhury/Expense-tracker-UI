@@ -1,13 +1,23 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Category } from '../../../services/category.service';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { ReceiptAiParseResult } from '../../../models';
+import { Category } from '../../../services/category.service';
 import { UserManualService } from '../../../services/user-manual.service';
 
 @Component({
   selector: 'app-receipt-upload-assistant',
   templateUrl: './receipt-upload-assistant.component.html',
   styleUrls: ['./receipt-upload-assistant.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReceiptUploadAssistantComponent implements OnChanges {
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
@@ -18,7 +28,10 @@ export class ReceiptUploadAssistantComponent implements OnChanges {
   @Input() categories: Category[] = [];
 
   @Output() fileSelected = new EventEmitter<File | null>();
-  @Output() uploadRequested = new EventEmitter<{ category: string; notes: string }>();
+  @Output() uploadRequested = new EventEmitter<{
+    category: string;
+    notes: string;
+  }>();
   @Output() cleared = new EventEmitter<void>();
 
   manualDownloading = false;
@@ -36,33 +49,33 @@ export class ReceiptUploadAssistantComponent implements OnChanges {
     {
       label: 'Freshmart groceries',
       fileName: 'freshmart-groceries-87.45-receipt.pdf',
-      href: 'assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf'
+      href: 'assets/sample-receipts/freshmart-groceries-87.45-receipt.pdf',
     },
     {
       label: 'Netflix subscription February',
       fileName: 'netflix-subscription-15.99-february-receipt.pdf',
-      href: 'assets/sample-receipts/netflix-subscription-15.99-february-receipt.pdf'
+      href: 'assets/sample-receipts/netflix-subscription-15.99-february-receipt.pdf',
     },
     {
       label: 'Netflix subscription March',
       fileName: 'netflix-subscription-15.99-march-receipt.pdf',
-      href: 'assets/sample-receipts/netflix-subscription-15.99-march-receipt.pdf'
+      href: 'assets/sample-receipts/netflix-subscription-15.99-march-receipt.pdf',
     },
     {
       label: 'Uber airport travel',
       fileName: 'uber-airport-travel-32.60-receipt.pdf',
-      href: 'assets/sample-receipts/uber-airport-travel-32.60-receipt.pdf'
+      href: 'assets/sample-receipts/uber-airport-travel-32.60-receipt.pdf',
     },
     {
       label: 'Sunrise cafe dining',
       fileName: 'sunrise-cafe-dining-24.50-receipt.pdf',
-      href: 'assets/sample-receipts/sunrise-cafe-dining-24.50-receipt.pdf'
+      href: 'assets/sample-receipts/sunrise-cafe-dining-24.50-receipt.pdf',
     },
     {
       label: 'Skyline housing rent',
       fileName: 'skyline-rent-housing-1250.00-receipt.pdf',
-      href: 'assets/sample-receipts/skyline-rent-housing-1250.00-receipt.pdf'
-    }
+      href: 'assets/sample-receipts/skyline-rent-housing-1250.00-receipt.pdf',
+    },
   ];
 
   category = '';
@@ -96,7 +109,7 @@ export class ReceiptUploadAssistantComponent implements OnChanges {
   upload(): void {
     this.uploadRequested.emit({
       category: this.category,
-      notes: this.notes
+      notes: this.notes,
     });
   }
 }
