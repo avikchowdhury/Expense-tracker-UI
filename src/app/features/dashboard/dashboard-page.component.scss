@@ -9,9 +9,21 @@
   padding: clamp(1.15rem, 2vw, 1.6rem);
   border-radius: 30px;
   background:
-    radial-gradient(circle at top right, rgba(24, 168, 193, 0.16), transparent 28%),
-    radial-gradient(circle at bottom left, rgba(15, 108, 91, 0.12), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 251, 253, 0.95) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(24, 168, 193, 0.16),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(15, 108, 91, 0.12),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(247, 251, 253, 0.95) 100%
+    );
   box-shadow: 0 20px 40px rgba(20, 40, 57, 0.08);
 }
 

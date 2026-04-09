@@ -4,9 +4,18 @@
       <div>
         <p class="eyebrow">Overview</p>
         <h2>AI-first expense command center</h2>
-        <p class="lead">Watch your cash flow, scan for risk, and ask the tracker what deserves action next.</p>
+        <p class="lead">
+          Watch your cash flow, scan for risk, and ask the tracker what deserves
+          action next.
+        </p>
       </div>
-      <button mat-stroked-button color="primary" class="export-btn" (click)="onExportToExcel()" *ngIf="!loading && !loadError">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="export-btn"
+        (click)="onExportToExcel()"
+        *ngIf="!loading && !loadError"
+      >
         <mat-icon>download</mat-icon> Export Excel
       </button>
     </header>
@@ -14,7 +23,11 @@
     <div class="hero-strip" *ngIf="!loading && !loadError">
       <article class="hero-card">
         <span>Budget health</span>
-        <strong>{{ aiSnapshot?.budgetHealth || budgetStatus?.message || 'Learning from activity' }}</strong>
+        <strong>{{
+          aiSnapshot?.budgetHealth ||
+            budgetStatus?.message ||
+            "Learning from activity"
+        }}</strong>
       </article>
 
       <article class="hero-card">
@@ -24,7 +37,11 @@
 
       <article class="hero-card">
         <span>AI sync</span>
-        <strong>{{ aiSnapshot?.generatedAt ? (aiSnapshot?.generatedAt | date:'mediumDate') : 'Waiting for data' }}</strong>
+        <strong>{{
+          aiSnapshot?.generatedAt
+            ? (aiSnapshot?.generatedAt | date: "mediumDate")
+            : "Waiting for data"
+        }}</strong>
       </article>
     </div>
   </section>
@@ -41,13 +58,20 @@
     <app-dashboard-summary [metrics]="metrics"></app-dashboard-summary>
 
     <div class="dashboard-grid">
-      <app-spending-trend-card [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></app-spending-trend-card>
+      <app-spending-trend-card
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="barChartType"
+      ></app-spending-trend-card>
       <app-category-breakdown-card
         [data]="pieChartData"
         [type]="pieChartType"
         [topCategory]="topCategory"
       ></app-category-breakdown-card>
-      <app-ai-insights-panel [snapshot]="aiSnapshot" [budgetStatus]="budgetStatus"></app-ai-insights-panel>
+      <app-ai-insights-panel
+        [snapshot]="aiSnapshot"
+        [budgetStatus]="budgetStatus"
+      ></app-ai-insights-panel>
       <app-recent-receipts-card
         [receipts]="recentReceipts"
         [calendarReceipts]="calendarReceipts"
