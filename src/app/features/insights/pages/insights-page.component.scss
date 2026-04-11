@@ -146,6 +146,99 @@
   }
 }
 
+.weekly-summary-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: 18px;
+  border: 1px solid rgba(56, 85, 110, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 248, 251, 0.96) 100%);
+  box-shadow: none;
+}
+
+.weekly-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  strong {
+    color: #13293d;
+    font-size: 1rem;
+  }
+
+  span {
+    color: #61798a;
+    font-size: 0.82rem;
+  }
+}
+
+.weekly-risk {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(15, 108, 91, 0.09);
+  color: #0f6c5b !important;
+  font-weight: 700;
+}
+
+.weekly-summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+
+  div {
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(19, 41, 61, 0.08);
+  }
+
+  small {
+    display: block;
+    color: #61798a;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+    margin-bottom: 0.3rem;
+  }
+
+  strong {
+    color: #13293d;
+    font-size: 1.05rem;
+  }
+}
+
+.weekly-category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(19, 41, 61, 0.08);
+    color: #38556e;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.weekly-recommendation {
+  margin: 0;
+  color: #38556e;
+  line-height: 1.65;
+}
+
 // ── Tab bar ───────────────────────────────────────────────────────────────────
 
 .tab-bar {
@@ -300,6 +393,11 @@
     width: 14px;
     height: 14px;
   }
+}
+
+.insight-cta {
+  justify-self: start;
+  border-radius: 999px !important;
 }
 
 // ── Subscriptions ─────────────────────────────────────────────────────────────
@@ -730,6 +828,16 @@
     grid-template-columns: 1fr;
   }
   .summary-strip {
+    flex-direction: column;
+  }
+
+  .weekly-summary-header,
+  .weekly-summary-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .weekly-summary-header {
+    align-items: flex-start;
     flex-direction: column;
   }
 }

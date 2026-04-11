@@ -208,6 +208,91 @@
           <textarea matInput formControlName="address" rows="2"></textarea>
         </mat-form-field>
 
+        <section class="preference-block">
+          <div class="preference-block-header">
+            <strong>Notification preferences</strong>
+            <p>Choose which AI alerts should reach you inside the app.</p>
+          </div>
+
+          <div class="toggle-grid">
+            <label class="toggle-card">
+              <div>
+                <strong>Budget alerts</strong>
+                <span>Warnings when your current pace threatens the month.</span>
+              </div>
+              <mat-slide-toggle
+                color="primary"
+                formControlName="budgetNotificationsEnabled"
+              ></mat-slide-toggle>
+            </label>
+
+            <label class="toggle-card">
+              <div>
+                <strong>Anomaly alerts</strong>
+                <span>Flags when a category spikes above its normal range.</span>
+              </div>
+              <mat-slide-toggle
+                color="primary"
+                formControlName="anomalyNotificationsEnabled"
+              ></mat-slide-toggle>
+            </label>
+
+            <label class="toggle-card">
+              <div>
+                <strong>Subscription alerts</strong>
+                <span>Heads-up before likely recurring charges are due.</span>
+              </div>
+              <mat-slide-toggle
+                color="primary"
+                formControlName="subscriptionNotificationsEnabled"
+              ></mat-slide-toggle>
+            </label>
+          </div>
+        </section>
+
+        <section class="preference-block">
+          <div class="preference-block-header">
+            <strong>Weekly email and reports</strong>
+            <p>Control the digest cadence for your AI-generated summaries.</p>
+          </div>
+
+          <div class="toggle-grid">
+            <label class="toggle-card">
+              <div>
+                <strong>Weekly summary email</strong>
+                <span>Receive a compact spending digest once a week.</span>
+              </div>
+              <mat-slide-toggle
+                color="primary"
+                formControlName="weeklySummaryEmailEnabled"
+              ></mat-slide-toggle>
+            </label>
+
+            <label class="toggle-card">
+              <div>
+                <strong>Monthly AI report</strong>
+                <span>Keep monthly recap delivery enabled for longer reviews.</span>
+              </div>
+              <mat-slide-toggle
+                color="primary"
+                formControlName="monthlyReportEmailEnabled"
+              ></mat-slide-toggle>
+            </label>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Weekly summary day</mat-label>
+            <mat-select formControlName="weeklySummaryDay">
+              <mat-option
+                *ngFor="let day of weeklySummaryDays"
+                [value]="day"
+              >
+                {{ day }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+
         <div class="form-actions">
           <button
             mat-raised-button

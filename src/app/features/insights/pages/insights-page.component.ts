@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AiInsightSnapshot, AiSubscriptionInsight } from '../../../models';
 import {
@@ -6,6 +7,7 @@ import {
   MonthlySummary,
   SpendingAnomaly,
   VendorAnalysis,
+  WeeklySummary,
 } from '../../../services/ai-assistant.service';
 
 type InsightsTab = 'overview' | 'subscriptions' | 'anomalies' | 'vendors';
@@ -23,6 +25,7 @@ export class InsightsPageComponent implements OnInit {
 
   snapshot: AiInsightSnapshot | null = null;
   monthlySummary: MonthlySummary | null = null;
+  weeklySummary: WeeklySummary | null = null;
   subscriptions: AiSubscriptionInsight[] = [];
   anomalies: SpendingAnomaly[] = [];
 
@@ -42,9 +45,24 @@ export class InsightsPageComponent implements OnInit {
     'Am I likely to exceed my budget this month?',
   ];
 
-  constructor(private aiService: AiAssistantService) {}
+  constructor(
+    private aiService: AiAssistantService,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      const tab = params.get('tab');
+      if (
+        tab === 'overview' ||
+        tab === 'subscriptions' ||
+        tab === 'anomalies' ||
+        tab === 'vendors'
+      ) {
+        this.activeTab = tab;
+      }
+    });
     this.loadAll();
   }
 
@@ -55,11 +73,13 @@ export class InsightsPageComponent implements OnInit {
     forkJoin({
       snapshot: this.aiService.getInsights(forceRefresh),
       summary: this.aiService.getMonthlySummary(forceRefresh),
+      weeklySummary: this.aiService.getWeeklySummary(forceRefresh),
       subscriptions: this.aiService.getSubscriptions(forceRefresh),
     }).subscribe({
-      next: ({ snapshot, summary, subscriptions }) => {
+      next: ({ snapshot, summary, weeklySummary, subscriptions }) => {
         this.snapshot = snapshot;
         this.monthlySummary = summary;
+        this.weeklySummary = weeklySummary;
         this.anomalies = summary.anomalies ?? [];
         this.subscriptions = subscriptions;
         this.loading = false;
@@ -137,6 +157,21 @@ export class InsightsPageComponent implements OnInit {
     this.useQuickPrompt(
       `Why is my ${a.category} spending up ${pct}% and how do I fix it?`,
     );
+  }
+
+  openInsightAction(route?: string): void {
+    if (!route) {
+      return;
+    }
+
+    const urlTree = this.router.parseUrl(route);
+    const tab = urlTree.queryParams['tab'];
+
+    if (urlTree.root.children['primary']?.segments[0]?.path === 'insights' && tab) {
+      this.activeTab = tab as InsightsTab;
+    }
+
+    this.router.navigateByUrl(urlTree);
   }
 
   get healthColor(): string {

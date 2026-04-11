@@ -166,13 +166,88 @@
         (filtersChange)="handleFiltersChange($event)"
       ></app-receipt-filters>
 
+      <div class="bulk-toolbar" *ngIf="hasBulkSelection">
+        <div class="bulk-toolbar-copy">
+          <strong>{{ selectedReceiptIds.length }} selected</strong>
+          <span>Apply one cleanup action to the selected receipts.</span>
+        </div>
+
+        <div class="bulk-toolbar-actions">
+          <mat-form-field appearance="outline" class="bulk-category-field">
+            <mat-label>Bulk category</mat-label>
+            <mat-select [(ngModel)]="bulkCategory" name="bulkCategory">
+              <mat-option *ngFor="let category of categories" [value]="category.name">
+                {{ category.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="applyBulkCategory()"
+            [disabled]="!bulkCategory || bulkActionInFlight !== null"
+          >
+            Categorize
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="applyBulkVendorRules()"
+            [disabled]="bulkActionInFlight !== null"
+          >
+            Apply vendor rules
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="markBulkDuplicates(true)"
+            [disabled]="bulkActionInFlight !== null"
+          >
+            Mark duplicates
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="markBulkDuplicates(false)"
+            [disabled]="bulkActionInFlight !== null"
+          >
+            Clear duplicate flag
+          </button>
+
+          <button
+            mat-raised-button
+            color="warn"
+            type="button"
+            (click)="bulkDeleteReceipts()"
+            [disabled]="bulkActionInFlight !== null"
+          >
+            Delete selected
+          </button>
+
+          <button
+            mat-button
+            type="button"
+            (click)="clearBulkSelection()"
+            [disabled]="bulkActionInFlight !== null"
+          >
+            Clear selection
+          </button>
+        </div>
+      </div>
+
       <app-receipt-table
         [receipts]="receipts"
         [loading]="loading"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [totalReceipts]="totalReceipts"
+        [selectedReceiptIds]="selectedReceiptIds"
         (pageChange)="handlePageChange($event)"
+        (selectionChange)="handleSelectionChange($event)"
         (view)="viewReceipt($event)"
         (edit)="editReceipt($event)"
         (delete)="deleteReceipt($event)"

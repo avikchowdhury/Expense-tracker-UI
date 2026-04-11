@@ -91,6 +91,39 @@
       <p>{{ monthlySummary?.aiSummary }}</p>
     </mat-card>
 
+    <mat-card class="weekly-summary-card" *ngIf="weeklySummary">
+      <div class="weekly-summary-header">
+        <div>
+          <strong>Weekly digest</strong>
+          <span>{{ weeklySummary.rangeLabel }}</span>
+        </div>
+        <span class="weekly-risk">{{ weeklySummary.forecastRisk }}</span>
+      </div>
+
+      <div class="weekly-summary-metrics">
+        <div>
+          <small>Spent this week</small>
+          <strong>{{ weeklySummary.totalSpend | currency }}</strong>
+        </div>
+        <div>
+          <small>Receipts logged</small>
+          <strong>{{ weeklySummary.receiptCount }}</strong>
+        </div>
+        <div>
+          <small>Biggest category</small>
+          <strong>{{ weeklySummary.topCategory }}</strong>
+        </div>
+      </div>
+
+      <div class="weekly-category-list" *ngIf="weeklySummary.topCategories.length">
+        <span *ngFor="let item of weeklySummary.topCategories">
+          {{ item.category }} {{ item.totalSpend | currency }}
+        </span>
+      </div>
+
+      <p class="weekly-recommendation">{{ weeklySummary.recommendation }}</p>
+    </mat-card>
+
     <!-- Tabs -->
     <div class="tab-bar">
       <button
@@ -145,6 +178,16 @@
           <small class="insight-action" *ngIf="ins.action">
             <mat-icon>arrow_forward</mat-icon> {{ ins.action }}
           </small>
+          <button
+            *ngIf="ins.actionLabel && ins.actionRoute"
+            mat-stroked-button
+            type="button"
+            class="insight-cta"
+            (click)="openInsightAction(ins.actionRoute)"
+          >
+            <mat-icon>bolt</mat-icon>
+            {{ ins.actionLabel }}
+          </button>
         </div>
       </div>
       <div class="empty-state" *ngIf="!snapshot?.insights?.length">

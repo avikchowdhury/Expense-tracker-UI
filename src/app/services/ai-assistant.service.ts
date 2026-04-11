@@ -72,6 +72,23 @@ export class AiAssistantService {
     );
   }
 
+  getWhatIfForecast(
+    adjustments: ForecastAdjustment[],
+  ): Observable<WhatIfForecast> {
+    return this.http.post<WhatIfForecast>(`${API_BASE}/ai/forecast/what-if`, {
+      adjustments,
+    });
+  }
+
+  getWeeklySummary(forceRefresh = false): Observable<WeeklySummary> {
+    return this.getCached(
+      'ai-weekly-summary',
+      () => this.http.get<WeeklySummary>(`${API_BASE}/ai/weekly-summary`),
+      forceRefresh,
+      60_000,
+    );
+  }
+
   getNotifications(forceRefresh = false): Observable<AppNotification[]> {
     return this.getCached(
       'ai-notifications',
@@ -129,6 +146,7 @@ export class AiAssistantService {
       'ai-anomalies',
       'ai-monthly-summary',
       'ai-forecast',
+      'ai-weekly-summary',
       'ai-notifications',
       'ai-vendor-analysis',
     );
@@ -198,7 +216,44 @@ export interface SpendingForecast {
   daysRemaining: number;
   trend: 'on-track' | 'warning' | 'critical';
   aiNarrative: string;
+  budgetAmount: number;
+  topCategory: string;
+  drivers: ForecastDriver[];
   dailyBreakdown: DailySpendPoint[];
+}
+
+export interface ForecastDriver {
+  category: string;
+  amount: number;
+}
+
+export interface ForecastAdjustment {
+  category: string;
+  deltaAmount: number;
+}
+
+export interface WhatIfForecast {
+  baseProjectedMonthEnd: number;
+  adjustedProjectedMonthEnd: number;
+  netChange: number;
+  trend: 'on-track' | 'warning' | 'critical';
+  summary: string;
+  adjustments: ForecastAdjustment[];
+}
+
+export interface WeeklyCategorySpend {
+  category: string;
+  totalSpend: number;
+}
+
+export interface WeeklySummary {
+  rangeLabel: string;
+  totalSpend: number;
+  receiptCount: number;
+  topCategory: string;
+  forecastRisk: string;
+  recommendation: string;
+  topCategories: WeeklyCategorySpend[];
 }
 
 export interface AppNotification {

@@ -1,0 +1,77 @@
+<div class="quick-add-dialog">
+  <div class="dialog-header">
+    <div>
+      <p class="eyebrow">Quick Add</p>
+      <h2>Log an expense from anywhere</h2>
+      <p>Describe the expense in plain English, then confirm the parsed details before saving.</p>
+    </div>
+    <button mat-icon-button type="button" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Describe your expense</mat-label>
+    <textarea
+      matInput
+      rows="3"
+      [(ngModel)]="text"
+      placeholder="e.g. spent $42 on groceries at Reliance Fresh today"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="dialog-actions">
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="parse()"
+      [disabled]="!text.trim() || parsing"
+    >
+      <mat-icon *ngIf="!parsing">auto_awesome</mat-icon>
+      <mat-spinner *ngIf="parsing" diameter="18"></mat-spinner>
+      {{ parsing ? "Parsing..." : "Parse with AI" }}
+    </button>
+  </div>
+
+  <div class="draft-grid" *ngIf="vendor || amount">
+    <mat-form-field appearance="outline">
+      <mat-label>Vendor</mat-label>
+      <input matInput [(ngModel)]="vendor" name="vendor" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" min="0.01" [(ngModel)]="amount" name="amount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="category" name="category">
+        <mat-option [value]="'Uncategorized'">Uncategorized</mat-option>
+        <mat-option *ngFor="let item of categories" [value]="item.name">
+          {{ item.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date</mat-label>
+      <input matInput type="date" [(ngModel)]="date" name="date" />
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-actions end">
+    <button mat-button type="button" (click)="close()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="save()"
+      [disabled]="!vendor.trim() || !amount || amount <= 0 || saving"
+    >
+      <mat-icon *ngIf="!saving">save</mat-icon>
+      <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
+      {{ saving ? "Saving..." : "Save expense" }}
+    </button>
+  </div>
+</div>

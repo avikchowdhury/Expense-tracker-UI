@@ -6,11 +6,12 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppShellComponent } from './layout/app-shell.component';
+import { QuickAddExpenseDialogComponent } from './layout/quick-add-expense-dialog.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, AppShellComponent],
+  declarations: [AppComponent, AppShellComponent, QuickAddExpenseDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

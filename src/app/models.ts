@@ -30,6 +30,7 @@ export interface ReceiptDto {
   vendor?: string;
   category?: string;
   parsedContentJson?: string;
+  isMarkedDuplicate: boolean;
 }
 
 export interface ReceiptQueryParams {
@@ -39,6 +40,7 @@ export interface ReceiptQueryParams {
   category?: string;
   dateFrom?: string;
   dateTo?: string;
+  markedDuplicate?: boolean;
 }
 
 export interface ReceiptAiParseResult {
@@ -125,6 +127,8 @@ export interface AiInsight {
   metricLabel?: string;
   metricValue?: string;
   action?: string;
+  actionLabel?: string;
+  actionRoute?: string;
 }
 
 export interface AiCopilotAlert {

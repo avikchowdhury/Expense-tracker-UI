@@ -56,6 +56,114 @@
         <span class="metric-value">{{ forecast.dailyAverage | currency }}</span>
         <span class="metric-sub">per day this month</span>
       </div>
+      <div class="metric-card">
+        <span class="metric-label">Budget Cover</span>
+        <span class="metric-value">{{ forecast.budgetAmount | currency }}</span>
+        <span class="metric-sub">current planned budget</span>
+      </div>
+    </div>
+
+    <div class="drivers-card" *ngIf="availableDrivers.length">
+      <div class="section-heading">
+        <h3>Top forecast drivers</h3>
+        <p>These categories are currently shaping the month-end outcome.</p>
+      </div>
+      <div class="driver-list">
+        <div class="driver-chip" *ngFor="let driver of availableDrivers">
+          <span>{{ driver.category }}</span>
+          <strong>{{ driver.amount | currency }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="what-if-card">
+      <div class="section-heading">
+        <h3>What-if forecast</h3>
+        <p>Test how a category cut or extra spend could change the month-end projection.</p>
+      </div>
+
+      <div class="scenario-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="whatIfCategory" name="whatIfCategory">
+            <mat-option *ngFor="let driver of availableDrivers" [value]="driver.category">
+              {{ driver.category }}
+            </mat-option>
+            <mat-option
+              *ngIf="
+                forecast.topCategory &&
+                forecast.topCategory !== 'N/A' &&
+                !hasDriverCategory(forecast.topCategory)
+              "
+              [value]="forecast.topCategory"
+            >
+              {{ forecast.topCategory }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            min="1"
+            [(ngModel)]="whatIfAmount"
+            name="whatIfAmount"
+          />
+        </mat-form-field>
+
+        <div class="mode-toggle">
+          <button
+            mat-stroked-button
+            type="button"
+            [class.active]="whatIfMode === 'reduce'"
+            (click)="whatIfMode = 'reduce'"
+          >
+            Reduce spend
+          </button>
+          <button
+            mat-stroked-button
+            type="button"
+            [class.active]="whatIfMode === 'increase'"
+            (click)="whatIfMode = 'increase'"
+          >
+            Add spend
+          </button>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="runWhatIf()"
+          [disabled]="!whatIfCategory || !whatIfAmount || whatIfLoading"
+        >
+          <mat-icon *ngIf="!whatIfLoading">calculate</mat-icon>
+          <mat-spinner *ngIf="whatIfLoading" diameter="18"></mat-spinner>
+          {{ whatIfLoading ? "Running..." : "Run scenario" }}
+        </button>
+      </div>
+
+      <div class="what-if-result" *ngIf="whatIfResult">
+        <div class="scenario-metrics">
+          <div>
+            <span>Base forecast</span>
+            <strong>{{ whatIfResult.baseProjectedMonthEnd | currency }}</strong>
+          </div>
+          <div>
+            <span>Adjusted forecast</span>
+            <strong>{{ whatIfResult.adjustedProjectedMonthEnd | currency }}</strong>
+          </div>
+          <div>
+            <span>Net change</span>
+            <strong [class.positive]="whatIfResult.netChange > 0" [class.negative]="whatIfResult.netChange < 0">
+              {{ whatIfResult.netChange | currency }}
+            </strong>
+          </div>
+        </div>
+        <p>{{ whatIfResult.summary }}</p>
+      </div>
     </div>
 
     <!-- Daily bar chart -->

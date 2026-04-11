@@ -103,6 +103,15 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.accent-chip {
+  background: rgba(142, 225, 193, 0.16);
+  border-color: rgba(142, 225, 193, 0.3);
+}
+
+.accent-chip:hover {
+  background: rgba(142, 225, 193, 0.24);
+}
+
 .profile-chip:hover {
   background: rgba(255, 255, 255, 0.12);
 }

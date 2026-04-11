@@ -58,6 +58,26 @@
   gap: 0.45rem;
 }
 
+.category-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.duplicate-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 .table-card ::ng-deep .mat-mdc-paginator,
 .table-card ::ng-deep .mat-paginator {
   border-top: 1px solid rgba(19, 41, 61, 0.08);

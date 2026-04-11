@@ -14,6 +14,9 @@ describe('AiAssistantService', () => {
     daysRemaining: 20,
     trend: 'on-track',
     aiNarrative: 'Looking good.',
+    budgetAmount: 400,
+    topCategory: 'Groceries',
+    drivers: [{ category: 'Groceries', amount: 120 }],
     dailyBreakdown: [],
   };
 

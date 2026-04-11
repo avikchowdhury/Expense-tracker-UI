@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
@@ -6,6 +7,7 @@ import {
   AppNotification,
 } from '../services/ai-assistant.service';
 import { AuthService } from '../services/auth.service';
+import { QuickAddExpenseDialogComponent } from './quick-add-expense-dialog.component';
 import { Profile, ProfileService } from '../services/profile.service';
 import { UserManualService } from '../services/user-manual.service';
 
@@ -50,6 +52,7 @@ export class AppShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private aiService: AiAssistantService,
     private userManualService: UserManualService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -103,6 +106,20 @@ export class AppShellComponent implements OnInit, OnDestroy {
     this.userManualService
       .downloadPdf()
       .finally(() => (this.manualDownloading = false));
+  }
+
+  openQuickAdd(): void {
+    const dialogRef = this.dialog.open(QuickAddExpenseDialogComponent, {
+      width: '720px',
+      maxWidth: '96vw',
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((saved) => {
+      if (saved) {
+        this.loadNotifications();
+      }
+    });
   }
 
   ngOnDestroy(): void {

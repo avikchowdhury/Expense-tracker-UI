@@ -9,6 +9,12 @@ export interface Profile {
   fullName?: string | null;
   phone?: string | null;
   address?: string | null;
+  budgetNotificationsEnabled: boolean;
+  anomalyNotificationsEnabled: boolean;
+  subscriptionNotificationsEnabled: boolean;
+  weeklySummaryEmailEnabled: boolean;
+  monthlyReportEmailEnabled: boolean;
+  weeklySummaryDay: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -10,6 +10,15 @@
 
     <div class="shell-actions">
       <button
+        class="manual-chip accent-chip"
+        (click)="openQuickAdd()"
+        title="Quick add an expense"
+      >
+        <mat-icon>add_circle</mat-icon>
+        <span>Quick Add</span>
+      </button>
+
+      <button
         class="manual-chip"
         (click)="downloadManual()"
         [disabled]="manualDownloading"

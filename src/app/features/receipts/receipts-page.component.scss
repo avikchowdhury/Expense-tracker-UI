@@ -267,6 +267,41 @@
   gap: 1.15rem;
 }
 
+.bulk-toolbar {
+  display: grid;
+  gap: 0.95rem;
+  padding: 1rem 1.1rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(19, 41, 61, 0.08);
+  box-shadow: 0 18px 36px rgba(20, 40, 57, 0.06);
+}
+
+.bulk-toolbar-copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.bulk-toolbar-copy strong {
+  color: #13293d;
+}
+
+.bulk-toolbar-copy span {
+  color: #61798a;
+  font-size: 0.9rem;
+}
+
+.bulk-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.bulk-category-field {
+  min-width: 220px;
+}
+
 .support-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
@@ -344,5 +379,16 @@
 @media (max-width: 1080px) {
   .receipts-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .bulk-toolbar-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bulk-category-field {
+    min-width: 0;
   }
 }

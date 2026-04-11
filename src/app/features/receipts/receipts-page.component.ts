@@ -10,6 +10,7 @@ import { AiAssistantService } from '../../services/ai-assistant.service';
 import { Category, CategoryService } from '../../services/category.service';
 import { NotificationService } from '../../services/notification.service';
 import { ReceiptService } from '../../services/receipt.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog.component';
 import { ReceiptDeleteDialogComponent } from './dialogs/receipt-delete-dialog.component';
 import { ReceiptEditDialogComponent } from './dialogs/receipt-edit-dialog.component';
 import { ReceiptViewDialogComponent } from './dialogs/receipt-view-dialog.component';
@@ -26,6 +27,15 @@ export class ReceiptsPageComponent implements OnInit {
   pageSize = 10;
   pageIndex = 0;
   loading = false;
+  selectedReceiptIds: number[] = [];
+  bulkCategory = '';
+  bulkActionInFlight:
+    | 'categorize'
+    | 'vendor-rule'
+    | 'mark-duplicate'
+    | 'clear-duplicate'
+    | 'delete'
+    | null = null;
 
   selectedFile: File | null = null;
   aiPreview: ReceiptAiParseResult | null = null;
@@ -84,6 +94,7 @@ export class ReceiptsPageComponent implements OnInit {
       next: (response) => {
         this.receipts = response.data;
         this.totalReceipts = response.total;
+        this.selectedReceiptIds = [];
         this.loading = false;
       },
       error: () => {
@@ -113,6 +124,14 @@ export class ReceiptsPageComponent implements OnInit {
       pageSize: event.pageSize,
     };
     this.loadReceipts();
+  }
+
+  handleSelectionChange(receiptIds: number[]): void {
+    this.selectedReceiptIds = receiptIds;
+  }
+
+  get hasBulkSelection(): boolean {
+    return this.selectedReceiptIds.length > 0;
   }
 
   handleFileSelected(file: File | null): void {
@@ -341,5 +360,125 @@ export class ReceiptsPageComponent implements OnInit {
         },
       });
     });
+  }
+
+  applyBulkCategory(): void {
+    if (!this.bulkCategory || !this.hasBulkSelection || this.bulkActionInFlight) {
+      return;
+    }
+
+    this.bulkActionInFlight = 'categorize';
+    this.receiptService
+      .bulkCategorize(this.selectedReceiptIds, this.bulkCategory)
+      .subscribe({
+        next: (result) => {
+          this.notification.success(result.message, 'Bulk cleanup');
+          this.bulkCategory = '';
+          this.aiService.invalidateInsightCache();
+          this.loadReceipts();
+        },
+        error: () => {
+          this.notification.error(
+            'Failed to bulk update receipt categories.',
+            'Bulk cleanup',
+          );
+        },
+        complete: () => {
+          this.bulkActionInFlight = null;
+        },
+      });
+  }
+
+  applyBulkVendorRules(): void {
+    if (!this.hasBulkSelection || this.bulkActionInFlight) {
+      return;
+    }
+
+    this.bulkActionInFlight = 'vendor-rule';
+    this.receiptService.bulkApplyVendorRules(this.selectedReceiptIds).subscribe({
+      next: (result) => {
+        this.notification.success(result.message, 'Bulk cleanup');
+        this.aiService.invalidateInsightCache();
+        this.loadReceipts();
+      },
+      error: () => {
+        this.notification.error(
+          'Failed to apply vendor rules to the selected receipts.',
+          'Bulk cleanup',
+        );
+      },
+      complete: () => {
+        this.bulkActionInFlight = null;
+      },
+    });
+  }
+
+  markBulkDuplicates(markAsDuplicate = true): void {
+    if (!this.hasBulkSelection || this.bulkActionInFlight) {
+      return;
+    }
+
+    this.bulkActionInFlight = markAsDuplicate
+      ? 'mark-duplicate'
+      : 'clear-duplicate';
+    this.receiptService
+      .bulkMarkDuplicates(this.selectedReceiptIds, markAsDuplicate)
+      .subscribe({
+        next: (result) => {
+          this.notification.success(result.message, 'Bulk cleanup');
+          this.loadReceipts();
+        },
+        error: () => {
+          this.notification.error(
+            'Failed to update duplicate markers.',
+            'Bulk cleanup',
+          );
+        },
+        complete: () => {
+          this.bulkActionInFlight = null;
+        },
+      });
+  }
+
+  bulkDeleteReceipts(): void {
+    if (!this.hasBulkSelection || this.bulkActionInFlight) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        title: 'Delete selected receipts',
+        message: `Delete ${this.selectedReceiptIds.length} selected receipts? This also removes the linked expenses.`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.bulkActionInFlight = 'delete';
+      this.receiptService.bulkDelete(this.selectedReceiptIds).subscribe({
+        next: (result) => {
+          this.notification.success(result.message, 'Bulk cleanup');
+          this.aiService.invalidateInsightCache();
+          this.loadReceipts();
+        },
+        error: () => {
+          this.notification.error(
+            'Failed to delete the selected receipts.',
+            'Bulk cleanup',
+          );
+        },
+        complete: () => {
+          this.bulkActionInFlight = null;
+        },
+      });
+    });
+  }
+
+  clearBulkSelection(): void {
+    this.selectedReceiptIds = [];
   }
 }

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -16,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,6 +36,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog.component';
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDialogModule,
     MatDividerModule,
@@ -46,6 +49,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog.component';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
@@ -61,6 +65,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog.component';
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDialogModule,
     MatDividerModule,
@@ -73,6 +78,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog.component';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,

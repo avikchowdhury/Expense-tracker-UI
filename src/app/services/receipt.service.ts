@@ -103,4 +103,46 @@ export class ReceiptService {
       date,
     });
   }
+
+  bulkCategorize(
+    receiptIds: number[],
+    category: string,
+  ): Observable<BulkReceiptOperationResult> {
+    return this.http.post<BulkReceiptOperationResult>(
+      `${API_BASE}/receipts/bulk/categorize`,
+      { receiptIds, category },
+    );
+  }
+
+  bulkDelete(receiptIds: number[]): Observable<BulkReceiptOperationResult> {
+    return this.http.post<BulkReceiptOperationResult>(
+      `${API_BASE}/receipts/bulk/delete`,
+      { receiptIds },
+    );
+  }
+
+  bulkApplyVendorRules(
+    receiptIds: number[],
+  ): Observable<BulkReceiptOperationResult> {
+    return this.http.post<BulkReceiptOperationResult>(
+      `${API_BASE}/receipts/bulk/apply-vendor-rules`,
+      { receiptIds },
+    );
+  }
+
+  bulkMarkDuplicates(
+    receiptIds: number[],
+    markAsDuplicate = true,
+  ): Observable<BulkReceiptOperationResult> {
+    return this.http.post<BulkReceiptOperationResult>(
+      `${API_BASE}/receipts/bulk/mark-duplicates`,
+      { receiptIds, markAsDuplicate },
+    );
+  }
+}
+
+export interface BulkReceiptOperationResult {
+  requestedCount: number;
+  affectedCount: number;
+  message: string;
 }

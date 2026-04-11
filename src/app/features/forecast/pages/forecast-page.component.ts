@@ -7,7 +7,9 @@ import {
 import {
   AiAssistantService,
   DailySpendPoint,
+  ForecastDriver,
   SpendingForecast,
+  WhatIfForecast,
 } from '../../../services/ai-assistant.service';
 
 interface ForecastBarPoint extends DailySpendPoint {
@@ -25,6 +27,11 @@ export class ForecastPageComponent implements OnInit {
   chartDays: ForecastBarPoint[] = [];
   loading = true;
   loadError = false;
+  whatIfCategory = '';
+  whatIfAmount = 100;
+  whatIfMode: 'reduce' | 'increase' = 'reduce';
+  whatIfLoading = false;
+  whatIfResult: WhatIfForecast | null = null;
 
   constructor(
     private aiService: AiAssistantService,
@@ -50,6 +57,7 @@ export class ForecastPageComponent implements OnInit {
         this.loadError = true;
         this.forecast = null;
         this.chartDays = [];
+        this.whatIfResult = null;
         this.loading = false;
         this.cdr.markForCheck();
       },
@@ -78,6 +86,48 @@ export class ForecastPageComponent implements OnInit {
     return 'check_circle';
   }
 
+  get availableDrivers(): ForecastDriver[] {
+    return this.forecast?.drivers ?? [];
+  }
+
+  get scenarioDeltaAmount(): number {
+    const amount = Math.abs(Number(this.whatIfAmount) || 0);
+    return this.whatIfMode === 'reduce' ? amount * -1 : amount;
+  }
+
+  hasDriverCategory(category: string): boolean {
+    return this.availableDrivers.some((driver) => driver.category === category);
+  }
+
+  runWhatIf(): void {
+    if (!this.whatIfCategory || !this.whatIfAmount || this.whatIfLoading) {
+      return;
+    }
+
+    this.whatIfLoading = true;
+    this.whatIfResult = null;
+    this.cdr.markForCheck();
+
+    this.aiService
+      .getWhatIfForecast([
+        {
+          category: this.whatIfCategory,
+          deltaAmount: this.scenarioDeltaAmount,
+        },
+      ])
+      .subscribe({
+        next: (result) => {
+          this.whatIfResult = result;
+          this.whatIfLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.whatIfLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
   private setForecast(forecast: SpendingForecast): void {
     const maxBarAmount = Math.max(
       ...forecast.dailyBreakdown.map((day) => day.amount),
@@ -85,6 +135,11 @@ export class ForecastPageComponent implements OnInit {
     );
 
     this.forecast = forecast;
+    if (!this.whatIfCategory) {
+      this.whatIfCategory =
+        forecast.drivers[0]?.category ||
+        (forecast.topCategory !== 'N/A' ? forecast.topCategory : '');
+    }
     this.chartDays = forecast.dailyBreakdown.map((day) => ({
       ...day,
       barHeight: Math.min(

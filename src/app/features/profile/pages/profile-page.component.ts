@@ -13,6 +13,16 @@ interface PhoneCountryOption {
   flag: string;
 }
 
+const WEEKLY_SUMMARY_DAYS = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
 const PHONE_COUNTRIES: PhoneCountryOption[] = [
   { name: 'India', dialCode: '+91', flag: '🇮🇳' },
   { name: 'United States', dialCode: '+1', flag: '🇺🇸' },
@@ -36,6 +46,7 @@ const PHONE_COUNTRIES: PhoneCountryOption[] = [
 export class ProfilePageComponent implements OnInit {
   readonly defaultCountryCode = '+91';
   readonly phoneCountries = PHONE_COUNTRIES;
+  readonly weeklySummaryDays = WEEKLY_SUMMARY_DAYS;
   showOldPassword = false;
   showNewPassword = false;
   profile: Profile | null = null;
@@ -63,6 +74,12 @@ export class ProfilePageComponent implements OnInit {
       ],
       phoneNumber: ['', [Validators.pattern(/^\d{10}$/)]],
       address: [''],
+      budgetNotificationsEnabled: [true],
+      anomalyNotificationsEnabled: [true],
+      subscriptionNotificationsEnabled: [true],
+      weeklySummaryEmailEnabled: [true],
+      monthlyReportEmailEnabled: [false],
+      weeklySummaryDay: ['Monday', Validators.required],
     });
     this.passwordForm = this.fb.group({
       oldPassword: ['', Validators.required],
@@ -102,6 +119,13 @@ export class ProfilePageComponent implements OnInit {
           phoneCountryCode: phoneParts.countryCode,
           phoneNumber: phoneParts.phoneNumber,
           address: profile.address || '',
+          budgetNotificationsEnabled: profile.budgetNotificationsEnabled,
+          anomalyNotificationsEnabled: profile.anomalyNotificationsEnabled,
+          subscriptionNotificationsEnabled:
+            profile.subscriptionNotificationsEnabled,
+          weeklySummaryEmailEnabled: profile.weeklySummaryEmailEnabled,
+          monthlyReportEmailEnabled: profile.monthlyReportEmailEnabled,
+          weeklySummaryDay: profile.weeklySummaryDay || 'Monday',
         });
         this.loading = false;
       },
@@ -114,7 +138,17 @@ export class ProfilePageComponent implements OnInit {
 
   saveProfile() {
     if (this.editForm.invalid || this.savingProfile) return;
-    const { email, fullName, address } = this.editForm.value;
+    const {
+      email,
+      fullName,
+      address,
+      budgetNotificationsEnabled,
+      anomalyNotificationsEnabled,
+      subscriptionNotificationsEnabled,
+      weeklySummaryEmailEnabled,
+      monthlyReportEmailEnabled,
+      weeklySummaryDay,
+    } = this.editForm.value;
     this.savingProfile = true;
     this.profileService
       .updateProfile({
@@ -122,6 +156,12 @@ export class ProfilePageComponent implements OnInit {
         fullName,
         phone: this.buildPhoneValue(),
         address,
+        budgetNotificationsEnabled,
+        anomalyNotificationsEnabled,
+        subscriptionNotificationsEnabled,
+        weeklySummaryEmailEnabled,
+        monthlyReportEmailEnabled,
+        weeklySummaryDay,
       })
       .subscribe({
         next: (profile) => {
@@ -134,6 +174,13 @@ export class ProfilePageComponent implements OnInit {
             phoneCountryCode: phoneParts.countryCode,
             phoneNumber: phoneParts.phoneNumber,
             address: profile.address || '',
+            budgetNotificationsEnabled: profile.budgetNotificationsEnabled,
+            anomalyNotificationsEnabled: profile.anomalyNotificationsEnabled,
+            subscriptionNotificationsEnabled:
+              profile.subscriptionNotificationsEnabled,
+            weeklySummaryEmailEnabled: profile.weeklySummaryEmailEnabled,
+            monthlyReportEmailEnabled: profile.monthlyReportEmailEnabled,
+            weeklySummaryDay: profile.weeklySummaryDay || 'Monday',
           });
         },
         error: () => this.notification.error('Failed to update profile'),
