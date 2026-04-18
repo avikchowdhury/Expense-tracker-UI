@@ -59,7 +59,7 @@
         <mat-icon>attach_money</mat-icon>
         <div>
           <strong>{{ monthlySummary!.month }} spend</strong>
-          <span>${{ monthlySummary!.totalSpend | number: "1.0-0" }}</span>
+          <span>{{ monthlySummary!.totalSpend | appCurrency: "1.0-0" }}</span>
         </div>
       </div>
       <div class="summary-card">
@@ -103,7 +103,7 @@
       <div class="weekly-summary-metrics">
         <div>
           <small>Spent this week</small>
-          <strong>{{ weeklySummary.totalSpend | currency }}</strong>
+          <strong>{{ weeklySummary.totalSpend | appCurrency }}</strong>
         </div>
         <div>
           <small>Receipts logged</small>
@@ -117,7 +117,7 @@
 
       <div class="weekly-category-list" *ngIf="weeklySummary.topCategories.length">
         <span *ngFor="let item of weeklySummary.topCategories">
-          {{ item.category }} {{ item.totalSpend | currency }}
+          {{ item.category }} {{ item.totalSpend | appCurrency }}
         </span>
       </div>
 
@@ -207,7 +207,7 @@
           <div class="sub-stats">
             <div>
               <small>Monthly est.</small>
-              <strong>${{ sub.estimatedMonthlyCost | number: "1.2-2" }}</strong>
+              <strong>{{ sub.estimatedMonthlyCost | appCurrency }}</strong>
             </div>
             <div>
               <small>Frequency</small>
@@ -219,7 +219,7 @@
             </div>
             <div *ngIf="sub.nextExpectedDate">
               <small>Next</small>
-              <strong>{{ sub.nextExpectedDate | date: "MMM d" }}</strong>
+              <strong>{{ sub.nextExpectedDate | appDate: "MMM d" }}</strong>
             </div>
           </div>
           <button
@@ -264,11 +264,11 @@
           <div class="anomaly-stats">
             <div>
               <small>This month</small>
-              <strong>${{ a.thisMonth | number: "1.0-0" }}</strong>
+              <strong>{{ a.thisMonth | appCurrency: "1.0-0" }}</strong>
             </div>
             <div>
               <small>3-month avg</small>
-              <strong>${{ a.averageMonth | number: "1.0-0" }}</strong>
+              <strong>{{ a.averageMonth | appCurrency: "1.0-0" }}</strong>
             </div>
             <div>
               <small>Change</small>
@@ -317,14 +317,14 @@
           <div class="vendor-stats">
             <div>
               <small>Total spend</small
-              ><strong>{{ v.totalSpend | currency }}</strong>
+              ><strong>{{ v.totalSpend | appCurrency }}</strong>
             </div>
             <div>
               <small>Visits</small><strong>{{ v.visitCount }}</strong>
             </div>
             <div>
               <small>Avg</small
-              ><strong>{{ v.averageTransaction | currency }}</strong>
+              ><strong>{{ v.averageTransaction | appCurrency }}</strong>
             </div>
             <div *ngIf="v.changePercent !== null">
               <small>vs last month</small>
@@ -375,7 +375,7 @@
             [(ngModel)]="aiPrompt"
             name="aiPrompt"
             (keydown.enter)="askAi()"
-            placeholder="e.g. How can I save $200 next month?"
+            placeholder="e.g. How can I save more next month?"
           />
         </mat-form-field>
         <button

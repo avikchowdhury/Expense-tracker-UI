@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
   AiInsightSnapshot,
@@ -13,6 +13,7 @@ import {
 import { AiAssistantService } from '../../services/ai-assistant.service';
 import { AnalyticsService } from '../../services/analytics.service';
 import { BudgetService } from '../../services/budget.service';
+import { LocalePreferenceService } from '../../services/locale-preference.service';
 import { ReceiptService } from '../../services/receipt.service';
 
 export interface DashboardMetricCard {
@@ -27,9 +28,11 @@ export interface DashboardMetricCard {
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
 })
-export class DashboardPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit, OnDestroy {
   loading = true;
   loadError = '';
+  private readonly subscription = new Subscription();
+  private monthlySpendings: MonthlySpendingItem[] = [];
 
   barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -40,7 +43,8 @@ export class DashboardPageComponent implements OnInit {
     scales: {
       y: {
         ticks: {
-          callback: (value) => `$${value}`,
+          callback: (value) =>
+            this.localePreference.formatCurrency(Number(value), '1.0-0'),
         },
       },
     },
@@ -89,6 +93,7 @@ export class DashboardPageComponent implements OnInit {
     private receiptService: ReceiptService,
     private budgetService: BudgetService,
     private aiAssistantService: AiAssistantService,
+    private localePreference: LocalePreferenceService,
   ) {}
 
   onExportToExcel(): void {
@@ -101,10 +106,7 @@ export class DashboardPageComponent implements OnInit {
       next: (snapshot) => {
         this.aiSnapshot = snapshot;
         this.metrics = this.buildMetrics(
-          this.barChartData.labels?.map((l, i) => ({
-            month: String(l),
-            total: (this.barChartData.datasets[0].data[i] as number) ?? 0,
-          })) ?? [],
+          this.monthlySpendings,
           this.recentReceipts,
           this.budgetStatus,
           snapshot,
@@ -118,79 +120,102 @@ export class DashboardPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    forkJoin({
-      monthly: this.analyticsService
-        .getMonthlySpendings(6)
-        .pipe(catchError(() => of<MonthlySpendingItem[]>([]))),
-      category: this.analyticsService
-        .getCategoryBreakdown()
-        .pipe(catchError(() => of<CategorySpendItem[]>([]))),
-      receiptFeed: this.receiptService
-        .getReceipts({ page: 1, pageSize: 60 })
-        .pipe(
-          catchError(() =>
-            of<PaginatedResponse<ReceiptDto>>({ total: 0, data: [] }),
+    this.subscription.add(
+      this.localePreference.preference$.subscribe(() => {
+        if (!this.loading) {
+          this.metrics = this.buildMetrics(
+            this.monthlySpendings,
+            this.recentReceipts,
+            this.budgetStatus,
+            this.aiSnapshot,
+          );
+          this.barChartOptions = {
+            ...this.barChartOptions,
+          };
+        }
+      }),
+    );
+
+    this.subscription.add(
+      forkJoin({
+        monthly: this.analyticsService
+          .getMonthlySpendings(6)
+          .pipe(catchError(() => of<MonthlySpendingItem[]>([]))),
+        category: this.analyticsService
+          .getCategoryBreakdown()
+          .pipe(catchError(() => of<CategorySpendItem[]>([]))),
+        receiptFeed: this.receiptService
+          .getReceipts({ page: 1, pageSize: 60 })
+          .pipe(
+            catchError(() =>
+              of<PaginatedResponse<ReceiptDto>>({ total: 0, data: [] }),
+            ),
           ),
-        ),
-      budgetStatus: this.budgetService
-        .getBudgetStatus()
-        .pipe(catchError(() => of<BudgetStatus | null>(null))),
-      aiSnapshot: this.aiAssistantService
-        .getInsights()
-        .pipe(catchError(() => of<AiInsightSnapshot | null>(null))),
-    }).subscribe({
-      next: ({ monthly, category, receiptFeed, budgetStatus, aiSnapshot }) => {
-        const recentReceipts = receiptFeed.data.slice(0, 5);
+        budgetStatus: this.budgetService
+          .getBudgetStatus()
+          .pipe(catchError(() => of<BudgetStatus | null>(null))),
+        aiSnapshot: this.aiAssistantService
+          .getInsights()
+          .pipe(catchError(() => of<AiInsightSnapshot | null>(null))),
+      }).subscribe({
+        next: ({ monthly, category, receiptFeed, budgetStatus, aiSnapshot }) => {
+          const recentReceipts = receiptFeed.data.slice(0, 5);
+          this.monthlySpendings = monthly;
 
-        this.barChartData = {
-          labels: monthly.map((item) => item.month),
-          datasets: [
-            {
-              data: monthly.map((item) => item.total),
-              label: 'Monthly spending',
-              backgroundColor: '#0f6c5b',
-              borderRadius: 10,
-            },
-          ],
-        };
+          this.barChartData = {
+            labels: monthly.map((item) => item.month),
+            datasets: [
+              {
+                data: monthly.map((item) => item.total),
+                label: 'Monthly spending',
+                backgroundColor: '#0f6c5b',
+                borderRadius: 10,
+              },
+            ],
+          };
 
-        this.pieChartData = {
-          labels: category.map((item) => item.category),
-          datasets: [
-            {
-              data: category.map((item) => item.total),
-              backgroundColor: [
-                '#0f6c5b',
-                '#18a8c1',
-                '#ffb25b',
-                '#f16b4e',
-                '#607d8b',
-              ],
-            },
-          ],
-        };
+          this.pieChartData = {
+            labels: category.map((item) => item.category),
+            datasets: [
+              {
+                data: category.map((item) => item.total),
+                backgroundColor: [
+                  '#0f6c5b',
+                  '#18a8c1',
+                  '#ffb25b',
+                  '#f16b4e',
+                  '#607d8b',
+                ],
+              },
+            ],
+          };
 
-        this.topCategory = category.length
-          ? [...category].sort((left, right) => right.total - left.total)[0]
-              .category
-          : 'N/A';
-        this.recentReceipts = recentReceipts;
-        this.calendarReceipts = receiptFeed.data;
-        this.budgetStatus = budgetStatus;
-        this.aiSnapshot = aiSnapshot;
-        this.metrics = this.buildMetrics(
-          monthly,
-          recentReceipts,
-          budgetStatus,
-          aiSnapshot,
-        );
-        this.loading = false;
-      },
-      error: () => {
-        this.loadError = 'We could not load your dashboard right now.';
-        this.loading = false;
-      },
-    });
+          this.topCategory = category.length
+            ? [...category].sort((left, right) => right.total - left.total)[0]
+                .category
+            : 'N/A';
+          this.recentReceipts = recentReceipts;
+          this.calendarReceipts = receiptFeed.data;
+          this.budgetStatus = budgetStatus;
+          this.aiSnapshot = aiSnapshot;
+          this.metrics = this.buildMetrics(
+            monthly,
+            recentReceipts,
+            budgetStatus,
+            aiSnapshot,
+          );
+          this.loading = false;
+        },
+        error: () => {
+          this.loadError = 'We could not load your dashboard right now.';
+          this.loading = false;
+        },
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private buildMetrics(
@@ -212,20 +237,20 @@ export class DashboardPageComponent implements OnInit {
     return [
       {
         label: '6-month spend',
-        value: `$${totalSpend.toFixed(0)}`,
+        value: this.localePreference.formatCurrency(totalSpend, '1.0-0'),
         detail: `${monthly.length || 0} tracked months`,
         tone: 'default',
       },
       {
         label: 'Average month',
-        value: `$${averageSpend.toFixed(0)}`,
+        value: this.localePreference.formatCurrency(averageSpend, '1.0-0'),
         detail: aiSnapshot?.budgetHealth || 'AI summary pending',
         tone: 'positive',
       },
       {
         label: 'Recent receipts',
         value: `${recentReceipts.length}`,
-        detail: `$${recentTotal.toFixed(0)} in latest uploads`,
+        detail: `${this.localePreference.formatCurrency(recentTotal, '1.0-0')} in latest uploads`,
         tone: 'default',
       },
       {

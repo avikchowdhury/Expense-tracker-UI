@@ -55,7 +55,7 @@
           <span>{{ user.budgetCount }} budgets</span>
           <span>{{ user.categoryCount }} categories</span>
           <small *ngIf="user.latestReceiptAt">
-            Last receipt: {{ user.latestReceiptAt | date : 'mediumDate' }}
+            Last receipt: {{ user.latestReceiptAt | appDate : 'mediumDate' }}
           </small>
         </div>
       </td>

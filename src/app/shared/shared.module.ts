@@ -25,9 +25,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgChartsModule } from 'ng2-charts';
 import { ConfirmDialogComponent } from './components/confirm-dialog.component';
+import { AppCurrencyPipe } from './pipes/app-currency.pipe';
+import { AppDatePipe } from './pipes/app-date.pipe';
+import { AppTranslatePipe } from './pipes/app-translate.pipe';
 
 @NgModule({
-  declarations: [ConfirmDialogComponent],
+  declarations: [
+    ConfirmDialogComponent,
+    AppCurrencyPipe,
+    AppDatePipe,
+    AppTranslatePipe,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -58,6 +66,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog.component';
   ],
   exports: [
     ConfirmDialogComponent,
+    AppCurrencyPipe,
+    AppDatePipe,
+    AppTranslatePipe,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

@@ -3,7 +3,9 @@ import { AdminOverview } from '../../../models';
 
 interface AdminMetricCard {
   label: string;
-  value: string;
+  value?: string;
+  amount?: number;
+  digitsInfo?: string;
   hint: string;
   accent: string;
   icon: string;
@@ -76,19 +78,12 @@ export class AdminOverviewGridComponent {
       },
       {
         label: 'Tracked spend',
-        value: this.formatCurrency(this.overview.trackedReceiptSpend),
+        amount: this.overview.trackedReceiptSpend,
+        digitsInfo: '1.0-0',
         hint: 'Approximate amount currently represented by saved receipts',
         accent: 'rgba(39, 174, 96, 0.12)',
         icon: 'payments',
       },
     ];
-  }
-
-  private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(value);
   }
 }

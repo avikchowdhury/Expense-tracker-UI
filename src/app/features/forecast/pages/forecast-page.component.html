@@ -39,13 +39,13 @@
     <div class="metrics-grid">
       <div class="metric-card">
         <span class="metric-label">Current Spend</span>
-        <span class="metric-value">{{ forecast.currentSpend | currency }}</span>
+        <span class="metric-value">{{ forecast.currentSpend | appCurrency }}</span>
         <span class="metric-sub">{{ forecast.daysElapsed }} days elapsed</span>
       </div>
       <div class="metric-card accent">
         <span class="metric-label">Projected Month-End</span>
         <span class="metric-value">{{
-          forecast.projectedMonthEnd | currency
+          forecast.projectedMonthEnd | appCurrency
         }}</span>
         <span class="metric-sub"
           >{{ forecast.daysRemaining }} days remaining</span
@@ -53,12 +53,12 @@
       </div>
       <div class="metric-card">
         <span class="metric-label">Daily Average</span>
-        <span class="metric-value">{{ forecast.dailyAverage | currency }}</span>
+        <span class="metric-value">{{ forecast.dailyAverage | appCurrency }}</span>
         <span class="metric-sub">per day this month</span>
       </div>
       <div class="metric-card">
         <span class="metric-label">Budget Cover</span>
-        <span class="metric-value">{{ forecast.budgetAmount | currency }}</span>
+        <span class="metric-value">{{ forecast.budgetAmount | appCurrency }}</span>
         <span class="metric-sub">current planned budget</span>
       </div>
     </div>
@@ -71,7 +71,7 @@
       <div class="driver-list">
         <div class="driver-chip" *ngFor="let driver of availableDrivers">
           <span>{{ driver.category }}</span>
-          <strong>{{ driver.amount | currency }}</strong>
+          <strong>{{ driver.amount | appCurrency }}</strong>
         </div>
       </div>
     </div>
@@ -104,10 +104,14 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Amount</mat-label>
+          <span matPrefix
+            >{{ localePreference.currentPreference.currencySymbol }}&nbsp;</span
+          >
           <input
             matInput
             type="number"
             min="1"
+            step="0.01"
             [(ngModel)]="whatIfAmount"
             name="whatIfAmount"
           />
@@ -149,16 +153,16 @@
         <div class="scenario-metrics">
           <div>
             <span>Base forecast</span>
-            <strong>{{ whatIfResult.baseProjectedMonthEnd | currency }}</strong>
+            <strong>{{ whatIfResult.baseProjectedMonthEnd | appCurrency }}</strong>
           </div>
           <div>
             <span>Adjusted forecast</span>
-            <strong>{{ whatIfResult.adjustedProjectedMonthEnd | currency }}</strong>
+            <strong>{{ whatIfResult.adjustedProjectedMonthEnd | appCurrency }}</strong>
           </div>
           <div>
             <span>Net change</span>
             <strong [class.positive]="whatIfResult.netChange > 0" [class.negative]="whatIfResult.netChange < 0">
-              {{ whatIfResult.netChange | currency }}
+              {{ whatIfResult.netChange | appCurrency }}
             </strong>
           </div>
         </div>
@@ -173,14 +177,14 @@
         <div
           *ngFor="let day of chartDays; trackBy: trackDay"
           class="bar-col"
-          [title]="day.date + ': ' + (day.amount | currency)"
+          [title]="day.date + ': ' + (day.amount | appCurrency)"
         >
           <div
             class="bar"
             [class.projected]="day.isProjected"
             [style.height.%]="day.barHeight"
           ></div>
-          <span class="bar-label">{{ day.date | date: "d" }}</span>
+          <span class="bar-label">{{ day.date | appDate: "d" }}</span>
         </div>
       </div>
       <div class="chart-legend">

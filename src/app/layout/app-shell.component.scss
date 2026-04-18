@@ -103,6 +103,54 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.region-chip {
+  min-width: 170px;
+  justify-content: space-between;
+}
+
+.region-flag,
+.menu-flag {
+  font-size: 1.3rem;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.region-flag {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: rgba(142, 225, 193, 0.12);
+}
+
+.region-copy,
+.menu-copy {
+  display: grid;
+  gap: 0.1rem;
+  text-align: left;
+}
+
+.region-copy strong,
+.menu-copy strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.region-copy small,
+.menu-copy small {
+  font-size: 0.74rem;
+}
+
+.region-copy small {
+  color: rgba(249, 251, 253, 0.72);
+}
+
+.menu-copy small {
+  color: rgba(24, 50, 71, 0.68);
+}
+
 .accent-chip {
   background: rgba(142, 225, 193, 0.16);
   border-color: rgba(142, 225, 193, 0.3);
@@ -345,6 +393,10 @@
 
   .logout-button {
     align-self: flex-start;
+  }
+
+  .region-chip {
+    width: 100%;
   }
 
   .nav-link {

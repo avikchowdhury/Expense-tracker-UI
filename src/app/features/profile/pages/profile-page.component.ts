@@ -1,9 +1,9 @@
-// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
+import { LocalePreferenceService } from '../../../services/locale-preference.service';
 import { NotificationService } from '../../../services/notification.service';
 import { Profile, ProfileService } from '../../../services/profile.service';
 
@@ -12,6 +12,31 @@ interface PhoneCountryOption {
   dialCode: string;
   flag: string;
 }
+
+const FLAG_BASE_CODE_POINT = 127397;
+
+function toFlagIcon(code: string): string {
+  return code
+    .toUpperCase()
+    .replace(/[A-Z]/g, (char) =>
+      String.fromCodePoint(FLAG_BASE_CODE_POINT + char.charCodeAt(0)),
+    );
+}
+
+const REGION_PHONE_COUNTRIES: PhoneCountryOption[] = [
+  { name: 'India', dialCode: '+91', flag: toFlagIcon('IN') },
+  { name: 'United States', dialCode: '+1', flag: toFlagIcon('US') },
+  { name: 'United Kingdom', dialCode: '+44', flag: toFlagIcon('GB') },
+  { name: 'Canada', dialCode: '+1', flag: toFlagIcon('CA') },
+  { name: 'Australia', dialCode: '+61', flag: toFlagIcon('AU') },
+  { name: 'United Arab Emirates', dialCode: '+971', flag: toFlagIcon('AE') },
+  { name: 'Germany', dialCode: '+49', flag: toFlagIcon('DE') },
+  { name: 'France', dialCode: '+33', flag: toFlagIcon('FR') },
+  { name: 'Singapore', dialCode: '+65', flag: toFlagIcon('SG') },
+  { name: 'Japan', dialCode: '+81', flag: toFlagIcon('JP') },
+  { name: 'South Korea', dialCode: '+82', flag: toFlagIcon('KR') },
+  { name: 'Saudi Arabia', dialCode: '+966', flag: toFlagIcon('SA') },
+];
 
 const WEEKLY_SUMMARY_DAYS = [
   'Monday',
@@ -45,7 +70,7 @@ const PHONE_COUNTRIES: PhoneCountryOption[] = [
 })
 export class ProfilePageComponent implements OnInit {
   readonly defaultCountryCode = '+91';
-  readonly phoneCountries = PHONE_COUNTRIES;
+  readonly phoneCountries = REGION_PHONE_COUNTRIES;
   readonly weeklySummaryDays = WEEKLY_SUMMARY_DAYS;
   showOldPassword = false;
   showNewPassword = false;
@@ -64,6 +89,7 @@ export class ProfilePageComponent implements OnInit {
     private notification: NotificationService,
     private fb: FormBuilder,
     private router: Router,
+    public localePreference: LocalePreferenceService,
   ) {
     this.editForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -309,5 +335,15 @@ export class ProfilePageComponent implements OnInit {
       'Demo Promote',
     );
     // Here you would call a real promote endpoint or mock the effect for demo purposes.
+  }
+
+  get currentRegionLabel(): string {
+    const preference = this.localePreference.currentPreference;
+    return `${this.localePreference.getFlagIcon(preference.code)} ${preference.name}`;
+  }
+
+  get currentLanguageCurrencyLabel(): string {
+    const preference = this.localePreference.currentPreference;
+    return `${preference.languageLabel} - ${preference.currencySymbol}`;
   }
 }

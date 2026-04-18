@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <p>Are you sure you want to delete this receipt?</p>
   <div><strong>Vendor:</strong> {{ data.receipt.vendor || "Unknown" }}</div>
-  <div><strong>Amount:</strong> {{ data.receipt.totalAmount | currency }}</div>
+  <div><strong>Amount:</strong> {{ data.receipt.totalAmount | appCurrency }}</div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="cancel()">Cancel</button>

@@ -10,11 +10,11 @@
   <div class="budget-strip" *ngIf="budgetStatus">
     <div>
       <span>Budget</span>
-      <strong>{{ budgetStatus.budget | currency }}</strong>
+      <strong>{{ budgetStatus.budget | appCurrency }}</strong>
     </div>
     <div>
       <span>Spent</span>
-      <strong>{{ budgetStatus.spent | currency }}</strong>
+      <strong>{{ budgetStatus.spent | appCurrency }}</strong>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
         <strong>{{ item.vendor }}</strong>
         <small>{{ item.frequency }} • {{ item.category }}</small>
       </div>
-      <span>{{ item.estimatedMonthlyCost | currency }}</span>
+      <span>{{ item.estimatedMonthlyCost | appCurrency }}</span>
     </article>
   </div>
 

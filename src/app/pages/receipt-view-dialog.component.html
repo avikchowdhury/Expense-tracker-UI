@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Receipt Details</h2>
 <mat-dialog-content>
   <div>
-    <strong>Date:</strong> {{ data.receipt.uploadedAt | date: "short" }}
+    <strong>Date:</strong> {{ data.receipt.uploadedAt | appDate: "short" }}
   </div>
   <div><strong>Vendor:</strong> {{ data.receipt.vendor || "Unknown" }}</div>
-  <div><strong>Amount:</strong> {{ data.receipt.totalAmount | currency }}</div>
+  <div><strong>Amount:</strong> {{ data.receipt.totalAmount | appCurrency }}</div>
   <div>
     <strong>Category:</strong> {{ data.receipt.category || "Uncategorized" }}
   </div>

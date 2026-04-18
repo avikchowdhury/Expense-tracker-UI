@@ -29,19 +29,19 @@
       <div class="stat-grid">
         <div>
           <span>Budget</span>
-          <strong>{{ item.budget | currency }}</strong>
+          <strong>{{ item.budget | appCurrency }}</strong>
         </div>
         <div>
           <span>Spent</span>
-          <strong>{{ item.spent | currency }}</strong>
+          <strong>{{ item.spent | appCurrency }}</strong>
         </div>
         <div>
           <span>Projected</span>
-          <strong>{{ item.projectedSpend | currency }}</strong>
+          <strong>{{ item.projectedSpend | appCurrency }}</strong>
         </div>
         <div>
           <span>Suggested</span>
-          <strong>{{ item.suggestedBudget | currency }}</strong>
+          <strong>{{ item.suggestedBudget | appCurrency }}</strong>
         </div>
       </div>
 

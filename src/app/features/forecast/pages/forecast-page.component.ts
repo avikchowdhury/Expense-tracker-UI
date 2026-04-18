@@ -11,6 +11,7 @@ import {
   SpendingForecast,
   WhatIfForecast,
 } from '../../../services/ai-assistant.service';
+import { LocalePreferenceService } from '../../../services/locale-preference.service';
 
 interface ForecastBarPoint extends DailySpendPoint {
   barHeight: number;
@@ -28,14 +29,15 @@ export class ForecastPageComponent implements OnInit {
   loading = true;
   loadError = false;
   whatIfCategory = '';
-  whatIfAmount = 100;
   whatIfMode: 'reduce' | 'increase' = 'reduce';
   whatIfLoading = false;
   whatIfResult: WhatIfForecast | null = null;
+  private whatIfAmountBase = 100;
 
   constructor(
     private aiService: AiAssistantService,
     private cdr: ChangeDetectorRef,
+    public localePreference: LocalePreferenceService,
   ) {}
 
   ngOnInit(): void {
@@ -91,8 +93,16 @@ export class ForecastPageComponent implements OnInit {
   }
 
   get scenarioDeltaAmount(): number {
-    const amount = Math.abs(Number(this.whatIfAmount) || 0);
+    const amount = Math.abs(Number(this.whatIfAmountBase) || 0);
     return this.whatIfMode === 'reduce' ? amount * -1 : amount;
+  }
+
+  get whatIfAmount(): number {
+    return this.localePreference.convertFromBase(this.whatIfAmountBase);
+  }
+
+  set whatIfAmount(value: number | string) {
+    this.whatIfAmountBase = this.localePreference.convertToBase(value);
   }
 
   hasDriverCategory(category: string): boolean {
@@ -100,7 +110,7 @@ export class ForecastPageComponent implements OnInit {
   }
 
   runWhatIf(): void {
-    if (!this.whatIfCategory || !this.whatIfAmount || this.whatIfLoading) {
+    if (!this.whatIfCategory || !this.whatIfAmountBase || this.whatIfLoading) {
       return;
     }
 

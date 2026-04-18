@@ -43,6 +43,11 @@
   align-items: start;
 }
 
+.profile-sidebar {
+  display: grid;
+  gap: 1rem;
+}
+
 .profile-overview,
 .settings-card {
   padding: clamp(1.2rem, 2vw, 1.7rem);
@@ -118,7 +123,7 @@
 
 .summary-strip {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
@@ -139,6 +144,13 @@
 
 .summary-card strong {
   color: #13293d;
+}
+
+.summary-card small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #61798a;
+  font-size: 0.82rem;
 }
 
 .admin-setup-card {

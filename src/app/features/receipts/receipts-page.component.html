@@ -29,7 +29,7 @@
         </button>
       </div>
       <p class="nl-hint">
-        Type a plain-English description, e.g. "I spent $45 at Dominos on pizza"
+        Type a plain-English description, e.g. "I spent Rupees 45 at Dominos" or "$12 at Starbucks"
       </p>
       <div class="nl-input-row">
         <mat-form-field appearance="outline" class="nl-field">
@@ -38,7 +38,7 @@
             matInput
             [(ngModel)]="nlText"
             (keydown.enter)="parseNlText()"
-            placeholder="e.g. spent $12 at Starbucks"
+            placeholder="e.g. spent Rupees 12 at Starbucks"
           />
         </mat-form-field>
         <button
@@ -57,7 +57,10 @@
           <span>Vendor</span><strong>{{ nlResult.vendor }}</strong>
         </div>
         <div class="nl-result-row">
-          <span>Amount</span><strong>{{ nlResult.amount | currency }}</strong>
+          <span>Amount</span><strong>{{ nlResult.amount | appCurrency }}</strong>
+        </div>
+        <div class="nl-result-row" *ngIf="nlResult.detectedCurrency">
+          <span>Parsed currency</span><strong>{{ nlResult.detectedCurrency }}</strong>
         </div>
         <div class="nl-result-row">
           <span>Category</span><strong>{{ nlResult.category }}</strong>

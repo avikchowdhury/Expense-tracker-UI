@@ -1,12 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay, tap } from 'rxjs';
+import { Observable, map, shareReplay, tap } from 'rxjs';
 import {
   AiChatRequest,
   AiChatResponse,
   AiInsightSnapshot,
   AiSubscriptionInsight,
 } from '../models';
+import {
+  ExpenseCurrencyCode,
+  LocalePreferenceService,
+} from './locale-preference.service';
 
 const API_BASE = '/api';
 const DEFAULT_CACHE_TTL_MS = 20_000;
@@ -18,7 +22,10 @@ interface CacheEntry<T> {
 
 @Injectable({ providedIn: 'root' })
 export class AiAssistantService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private localePreference: LocalePreferenceService,
+  ) {}
 
   private readonly requestCache = new Map<string, CacheEntry<unknown>>();
 
@@ -99,9 +106,28 @@ export class AiAssistantService {
   }
 
   parseTextExpense(text: string): Observable<ParseTextResult> {
-    return this.http.post<ParseTextResult>(`${API_BASE}/ai/parse-text`, {
-      text,
-    });
+    const sourceText = text.trim();
+    const detectedCurrency =
+      this.localePreference.detectExplicitExpenseCurrency(sourceText);
+
+    return this.http
+      .post<ParseTextResult>(`${API_BASE}/ai/parse-text`, {
+        text: this.localePreference.buildCurrencyAwareExpenseText(sourceText),
+      })
+      .pipe(
+        map((result) => ({
+          ...result,
+          rawText: sourceText,
+          detectedCurrency,
+          amount:
+            typeof result.amount === 'number'
+              ? this.localePreference.normalizeExplicitCurrencyToBase(
+                  result.amount,
+                  detectedCurrency,
+                )
+              : result.amount,
+        })),
+      );
   }
 
   getVendorAnalysis(forceRefresh = false): Observable<VendorAnalysis> {
@@ -272,6 +298,7 @@ export interface ParseTextResult {
   date: string;
   parsed: boolean;
   rawText: string;
+  detectedCurrency?: ExpenseCurrencyCode | null;
 }
 
 export interface VendorSummary {

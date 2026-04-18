@@ -27,13 +27,13 @@
 
     <mat-card class="summary-card">
       <span>Total planned spend</span>
-      <strong>{{ totalBudgetAmount | currency }}</strong>
+      <strong>{{ totalBudgetAmount | appCurrency }}</strong>
       <small>Combined limit across all budget rows</small>
     </mat-card>
 
     <mat-card class="summary-card">
       <span>Projected month-end</span>
-      <strong>{{ projectedSpend | currency }}</strong>
+      <strong>{{ projectedSpend | appCurrency }}</strong>
       <small>{{
         advisor
           ? "Forecast built from your current burn rate"
@@ -96,7 +96,7 @@
             [(ngModel)]="coachPrompt"
             name="coachPrompt"
             (keydown.enter)="askCoach()"
-            placeholder="e.g. I want to save $300 this month — how?"
+            placeholder="e.g. I want to save more this month - how?"
           />
         </mat-form-field>
         <button

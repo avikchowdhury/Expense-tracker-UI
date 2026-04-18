@@ -15,7 +15,7 @@
         title="Quick add an expense"
       >
         <mat-icon>add_circle</mat-icon>
-        <span>Quick Add</span>
+        <span>{{ "shell.quickAdd" | appTranslate : "Quick Add" }}</span>
       </button>
 
       <button
@@ -27,11 +27,51 @@
         <mat-icon>{{
           manualDownloading ? "hourglass_top" : "picture_as_pdf"
         }}</mat-icon>
-        <span>{{ manualDownloading ? "Preparing…" : "User Manual" }}</span>
+        <span>{{
+          manualDownloading
+            ? "Preparing..."
+            : ("shell.userManual" | appTranslate : "User Manual")
+        }}</span>
       </button>
 
+      <button
+        class="manual-chip region-chip"
+        [matMenuTriggerFor]="countryMenu"
+        [title]="'shell.region' | appTranslate : 'Country'"
+      >
+        <span class="region-flag">{{ countryFlag(selectedCountry.code) }}</span>
+        <span class="region-copy">
+          <strong>{{ selectedCountry.code }}</strong>
+          <small>
+            {{ selectedCountry.currencySymbol }} -
+            {{ selectedCountry.languageLabel }}
+          </small>
+        </span>
+        <mat-icon>expand_more</mat-icon>
+      </button>
+
+      <mat-menu #countryMenu="matMenu" xPosition="before">
+        <button
+          mat-menu-item
+          *ngFor="
+            let country of localePreference.supportedCountries;
+            trackBy: trackCountry
+          "
+          (click)="changeCountry(country.code)"
+        >
+          <span class="menu-flag">{{ countryFlag(country.code) }}</span>
+          <span class="menu-copy">
+            <strong>{{ country.name }}</strong>
+            <small>
+              {{ country.code }} - {{ country.currencySymbol }}
+            </small>
+          </span>
+          <mat-icon *ngIf="country.code === selectedCountry.code">check</mat-icon>
+        </button>
+      </mat-menu>
+
       <!-- Notification Bell -->
-      <div class="notif-bell-wrapper">
+      <div class="notif-bell-wrapper" #notifPanelHost>
         <button
           class="notif-bell"
           (click)="toggleNotifPanel()"
@@ -45,14 +85,19 @@
 
         <div class="notif-panel" *ngIf="notifPanelOpen">
           <div class="notif-panel-header">
-            <strong>Notifications</strong>
+            <strong>{{
+              "shell.notifications" | appTranslate : "Notifications"
+            }}</strong>
             <button mat-icon-button (click)="closeNotifPanel()">
               <mat-icon>close</mat-icon>
             </button>
           </div>
           <div *ngIf="notifications.length === 0" class="notif-empty">
             <mat-icon>check_circle</mat-icon>
-            <p>All clear — no active alerts</p>
+            <p>{{
+              "shell.allClear"
+                | appTranslate : "All clear - no active alerts"
+            }}</p>
           </div>
           <div
             *ngFor="let n of notifications"
@@ -79,8 +124,15 @@
         </div>
 
         <div class="profile-meta">
-          <strong>{{ profile?.email || "Your profile" }}</strong>
-          <small>{{ profile?.role || "Account settings" }}</small>
+          <strong>{{
+            profile?.email ||
+              ("shell.yourProfile" | appTranslate : "Your profile")
+          }}</strong>
+          <small>{{
+            profile?.role ||
+              ("shell.accountSettings"
+                | appTranslate : "Account settings")
+          }}</small>
         </div>
       </a>
 
@@ -91,7 +143,7 @@
         (click)="logout()"
       >
         <mat-icon>logout</mat-icon>
-        Logout
+        {{ "shell.logout" | appTranslate : "Logout" }}
       </button>
     </div>
   </header>
@@ -104,7 +156,7 @@
       class="nav-link"
     >
       <mat-icon>{{ item.icon }}</mat-icon>
-      <span>{{ item.label }}</span>
+      <span>{{ item.labelKey | appTranslate : item.label }}</span>
     </a>
   </nav>
 

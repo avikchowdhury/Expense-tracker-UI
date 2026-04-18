@@ -4,6 +4,7 @@ import { Category, CategoryService } from '../services/category.service';
 import { AiAssistantService } from '../services/ai-assistant.service';
 import { NotificationService } from '../services/notification.service';
 import { ReceiptService } from '../services/receipt.service';
+import { LocalePreferenceService } from '../services/locale-preference.service';
 
 @Component({
   selector: 'app-quick-add-expense-dialog',
@@ -16,9 +17,10 @@ export class QuickAddExpenseDialogComponent implements OnInit {
   parsing = false;
   saving = false;
   vendor = '';
-  amount: number | null = null;
   category = 'Uncategorized';
   date = new Date().toISOString().slice(0, 10);
+  parsedCurrency: 'INR' | 'USD' | null = null;
+  private amountBase: number | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<QuickAddExpenseDialogComponent>,
@@ -26,6 +28,7 @@ export class QuickAddExpenseDialogComponent implements OnInit {
     private receiptService: ReceiptService,
     private categoryService: CategoryService,
     private notification: NotificationService,
+    public localePreference: LocalePreferenceService,
   ) {}
 
   ngOnInit(): void {
@@ -42,12 +45,14 @@ export class QuickAddExpenseDialogComponent implements OnInit {
     }
 
     this.parsing = true;
+    this.parsedCurrency = null;
     this.aiService.parseTextExpense(this.text.trim()).subscribe({
       next: (result) => {
         this.vendor = result.vendor || '';
-        this.amount = result.amount || null;
+        this.amountBase = result.amount || null;
         this.category = result.category || 'Uncategorized';
         this.date = result.date || new Date().toISOString().slice(0, 10);
+        this.parsedCurrency = result.detectedCurrency ?? null;
         this.parsing = false;
       },
       error: () => {
@@ -58,7 +63,12 @@ export class QuickAddExpenseDialogComponent implements OnInit {
   }
 
   save(): void {
-    if (!this.vendor.trim() || !this.amount || this.amount <= 0 || this.saving) {
+    if (
+      !this.vendor.trim() ||
+      !this.amountBase ||
+      this.amountBase <= 0 ||
+      this.saving
+    ) {
       return;
     }
 
@@ -66,7 +76,7 @@ export class QuickAddExpenseDialogComponent implements OnInit {
     this.receiptService
       .quickAddReceipt(
         this.vendor.trim(),
-        this.amount,
+        this.amountBase,
         this.category || 'Uncategorized',
         this.date,
       )
@@ -86,5 +96,32 @@ export class QuickAddExpenseDialogComponent implements OnInit {
 
   close(): void {
     this.dialogRef.close(false);
+  }
+
+  get parsedCurrencyLabel(): string {
+    if (!this.parsedCurrency) {
+      return '';
+    }
+
+    return this.parsedCurrency === 'INR'
+      ? 'Parsed as Indian rupees'
+      : 'Parsed as US dollars';
+  }
+
+  get amount(): number | null {
+    if (this.amountBase === null) {
+      return null;
+    }
+
+    return this.localePreference.convertFromBase(this.amountBase);
+  }
+
+  set amount(value: number | string | null) {
+    if (value === null || value === '' || value === undefined) {
+      this.amountBase = null;
+      return;
+    }
+
+    this.amountBase = this.localePreference.convertToBase(value);
   }
 }

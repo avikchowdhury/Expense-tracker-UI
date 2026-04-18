@@ -33,7 +33,7 @@
         </span>
         <span class="summary-chip accent">
           <mat-icon>attach_money</mat-icon>
-          ${{ monthlySummary.totalSpend | number: "1.0-0" }} total
+          {{ monthlySummary.totalSpend | appCurrency: "1.0-0" }} total
         </span>
         <span class="summary-chip" *ngIf="monthlySummary.topCategory !== 'N/A'">
           <mat-icon>trending_up</mat-icon>
@@ -90,7 +90,7 @@
             message.role === "assistant" ? "AI Assistant" : "You"
           }}</span>
           <small *ngIf="message.createdAt">{{
-            message.createdAt | date: "shortTime"
+            message.createdAt | appDate: "shortTime"
           }}</small>
         </div>
 

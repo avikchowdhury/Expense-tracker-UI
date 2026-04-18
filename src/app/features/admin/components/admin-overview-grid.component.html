@@ -10,7 +10,10 @@
 
     <div class="metric-copy">
       <span>{{ card.label }}</span>
-      <strong>{{ card.value }}</strong>
+      <strong *ngIf="card.amount === undefined">{{ card.value }}</strong>
+      <strong *ngIf="card.amount !== undefined">{{
+        card.amount | appCurrency : (card.digitsInfo || "1.2-2")
+      }}</strong>
       <p>{{ card.hint }}</p>
     </div>
   </mat-card>

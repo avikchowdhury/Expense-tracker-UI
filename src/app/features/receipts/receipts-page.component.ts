@@ -8,6 +8,7 @@ import {
 } from '../../models';
 import { AiAssistantService } from '../../services/ai-assistant.service';
 import { Category, CategoryService } from '../../services/category.service';
+import { LocalePreferenceService } from '../../services/locale-preference.service';
 import { NotificationService } from '../../services/notification.service';
 import { ReceiptService } from '../../services/receipt.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog.component';
@@ -73,6 +74,7 @@ export class ReceiptsPageComponent implements OnInit {
     private aiService: AiAssistantService,
     private dialog: MatDialog,
     private notification: NotificationService,
+    private localePreference: LocalePreferenceService,
   ) {}
 
   ngOnInit(): void {
@@ -284,7 +286,7 @@ export class ReceiptsPageComponent implements OnInit {
   ): void {
     const vendor = preview?.vendor || 'a vendor';
     const amount = preview?.amount
-      ? `$${preview.amount.toFixed(2)}`
+      ? this.localePreference.formatCurrency(preview.amount)
       : 'an amount';
     const cat = category || preview?.category || 'Uncategorized';
     const message = `I just saved a receipt from ${vendor} for ${amount} in the ${cat} category. Based on my spending history, give me one short insight about this purchase.`;

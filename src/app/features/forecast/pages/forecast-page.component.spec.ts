@@ -14,6 +14,9 @@ import {
   WhatIfForecast,
   SpendingForecast,
 } from '../../../services/ai-assistant.service';
+import { LocalePreferenceService } from '../../../services/locale-preference.service';
+import { AppCurrencyPipe } from '../../../shared/pipes/app-currency.pipe';
+import { AppDatePipe } from '../../../shared/pipes/app-date.pipe';
 import { ForecastPageComponent } from './forecast-page.component';
 
 describe('ForecastPageComponent', () => {
@@ -69,7 +72,7 @@ describe('ForecastPageComponent', () => {
         MatSelectModule,
         NoopAnimationsModule,
       ],
-      declarations: [ForecastPageComponent],
+      declarations: [ForecastPageComponent, AppCurrencyPipe, AppDatePipe],
       providers: [
         {
           provide: AiAssistantService,
@@ -77,6 +80,8 @@ describe('ForecastPageComponent', () => {
         },
       ],
     }).compileComponents();
+
+    TestBed.inject(LocalePreferenceService).setCountry('US');
   });
 
   it('loads forecast on init and maps chart heights', () => {

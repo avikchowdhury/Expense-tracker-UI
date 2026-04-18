@@ -20,19 +20,19 @@
     <div class="metric-grid">
       <article class="metric-card">
         <span>Projected month-end spend</span>
-        <strong>{{ snapshot.projectedSpend | currency }}</strong>
+        <strong>{{ snapshot.projectedSpend | appCurrency }}</strong>
         <small>Current pace across {{ snapshot.daysInMonth }} days</small>
       </article>
 
       <article class="metric-card">
         <span>Remaining budget today</span>
-        <strong>{{ snapshot.remainingBudget | currency }}</strong>
+        <strong>{{ snapshot.remainingBudget | appCurrency }}</strong>
         <small>{{ snapshot.daysRemaining }} days left in this cycle</small>
       </article>
 
       <article class="metric-card">
         <span>Suggested budget target</span>
-        <strong>{{ snapshot.suggestedBudget | currency }}</strong>
+        <strong>{{ snapshot.suggestedBudget | appCurrency }}</strong>
         <small>Based on projected spend and recent history</small>
       </article>
     </div>

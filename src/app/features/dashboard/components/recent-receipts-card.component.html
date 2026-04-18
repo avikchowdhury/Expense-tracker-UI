@@ -10,7 +10,7 @@
 
     <article class="summary-chip">
       <span>Recent total</span>
-      <strong>{{ totalRecentAmount | currency }}</strong>
+      <strong>{{ totalRecentAmount | appCurrency }}</strong>
     </article>
 
     <article class="summary-chip">
@@ -24,12 +24,12 @@
       <div class="receipt-main">
         <strong>{{ receipt.vendor || 'Unknown vendor' }}</strong>
         <p>
-          <span>{{ receipt.uploadedAt | date:'mediumDate' }}</span>
+          <span>{{ receipt.uploadedAt | appDate:'mediumDate' }}</span>
           <span class="separator">&middot;</span>
           <span>{{ receipt.category || 'Uncategorized' }}</span>
         </p>
       </div>
-      <span class="amount">{{ receipt.totalAmount | currency }}</span>
+      <span class="amount">{{ receipt.totalAmount | appCurrency }}</span>
     </article>
   </div>
 
@@ -44,7 +44,7 @@
 
     <div class="calendar-summary">
       <span>{{ activeDays }} active days</span>
-      <strong>{{ calendarTotal | currency }}</strong>
+      <strong>{{ calendarTotal | appCurrency }}</strong>
     </div>
 
     <div class="calendar-grid">

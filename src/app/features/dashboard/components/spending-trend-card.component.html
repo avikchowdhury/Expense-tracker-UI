@@ -9,19 +9,19 @@
   <section class="trend-summary" *ngIf="hasChartData">
     <article class="summary-pill">
       <span>Latest month</span>
-      <strong>{{ latestValue | currency }}</strong>
+      <strong>{{ latestValue | appCurrency }}</strong>
       <small>{{ latestMonth }}</small>
     </article>
 
     <article class="summary-pill">
       <span>Peak month</span>
-      <strong>{{ peakValue | currency }}</strong>
+      <strong>{{ peakValue | appCurrency }}</strong>
       <small>{{ peakMonth }}</small>
     </article>
 
     <article class="summary-pill">
       <span>Average pace</span>
-      <strong>{{ averageValue | currency }}</strong>
+      <strong>{{ averageValue | appCurrency }}</strong>
       <small>{{ paceLabel }}</small>
     </article>
   </section>

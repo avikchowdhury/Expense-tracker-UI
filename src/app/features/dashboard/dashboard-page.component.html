@@ -39,7 +39,7 @@
         <span>AI sync</span>
         <strong *ngIf="!syncing">{{
           aiSnapshot?.generatedAt
-            ? (aiSnapshot?.generatedAt | date: "mediumDate")
+            ? (aiSnapshot?.generatedAt | appDate: "mediumDate")
             : "Not synced yet"
         }}</strong>
         <mat-spinner

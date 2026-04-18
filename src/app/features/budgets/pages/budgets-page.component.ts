@@ -4,6 +4,7 @@ import { catchError, forkJoin, of } from 'rxjs';
 import { Budget, BudgetAdvisorSnapshot } from '../../../models';
 import { AiAssistantService } from '../../../services/ai-assistant.service';
 import { BudgetService } from '../../../services/budget.service';
+import { LocalePreferenceService } from '../../../services/locale-preference.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { BudgetEditDialogComponent } from '../components/budget-edit-dialog.component';
@@ -37,6 +38,7 @@ export class BudgetsPageComponent implements OnInit {
     private aiService: AiAssistantService,
     private dialog: MatDialog,
     private notification: NotificationService,
+    private localePreference: LocalePreferenceService,
   ) {}
 
   ngOnInit() {
@@ -118,7 +120,7 @@ export class BudgetsPageComponent implements OnInit {
     this.coachResponse = '';
 
     const context = this.advisor
-      ? `My current budget: $${this.advisor.totalBudget.toFixed(0)} total, $${this.advisor.currentSpend.toFixed(0)} spent, projected $${this.advisor.projectedSpend.toFixed(0)}. At-risk categories: ${this.atRiskCategoryCount}. `
+      ? `My current budget: ${this.localePreference.formatCurrency(this.advisor.totalBudget, '1.0-0')} total, ${this.localePreference.formatCurrency(this.advisor.currentSpend, '1.0-0')} spent, projected ${this.localePreference.formatCurrency(this.advisor.projectedSpend, '1.0-0')}. At-risk categories: ${this.atRiskCategoryCount}. `
       : '';
 
     this.aiService.sendMessage({ message: context + message }).subscribe({
