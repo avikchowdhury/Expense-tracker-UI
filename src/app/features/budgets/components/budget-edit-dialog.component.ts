@@ -11,6 +11,7 @@ import { LocalePreferenceService } from '../../../services/locale-preference.ser
 export class BudgetEditDialogComponent {
   category: string;
   private amountBase: number;
+  amountInput: number | null;
 
   constructor(
     public dialogRef: MatDialogRef<BudgetEditDialogComponent>,
@@ -19,9 +20,12 @@ export class BudgetEditDialogComponent {
   ) {
     this.category = data.budget?.category || '';
     this.amountBase = data.budget?.amount || 0;
+    this.amountInput = this.toLocalizedAmount(this.amountBase);
   }
 
   save() {
+    this.amountBase = this.localePreference.convertToBase(this.amountInput);
+
     this.dialogRef.close({
       category: this.category,
       amount: this.amountBase,
@@ -32,11 +36,9 @@ export class BudgetEditDialogComponent {
     this.dialogRef.close();
   }
 
-  get amount(): number {
-    return this.localePreference.convertFromBase(this.amountBase);
-  }
-
-  set amount(value: number | string) {
-    this.amountBase = this.localePreference.convertToBase(value);
+  private toLocalizedAmount(amountBase: number): number {
+    return Number(
+      this.localePreference.convertFromBase(amountBase).toFixed(2),
+    );
   }
 }
