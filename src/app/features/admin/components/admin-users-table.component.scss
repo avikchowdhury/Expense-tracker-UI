@@ -26,6 +26,11 @@
   width: 100%;
 }
 
+.select-column {
+  width: 72px;
+  text-align: center;
+}
+
 .user-cell {
   display: flex;
   align-items: center;
@@ -89,6 +94,6 @@ td.mat-mdc-cell {
 
 @media (max-width: 720px) {
   .admin-table {
-    min-width: 760px;
+    min-width: 920px;
   }
 }

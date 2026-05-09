@@ -52,6 +52,14 @@
   align-items: flex-start;
 }
 
+.panel-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .panel-label {
   margin: 0 0 0.3rem;
   color: #0f6c5b;
@@ -71,6 +79,20 @@
   border-radius: 999px;
   background: rgba(15, 108, 91, 0.1);
   color: #0f6c5b;
+  font-weight: 600;
+}
+
+.bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.selection-summary {
+  color: #61798a;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -268,6 +290,12 @@
   .page-header,
   .panel-head {
     flex-direction: column;
+  }
+
+  .panel-tools,
+  .bulk-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .tracking-toolbar {

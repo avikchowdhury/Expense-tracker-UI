@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AdminOverview, AdminUserSummary, AppUserRole } from '../../models';
+import {
+  AdminDeleteUsersResult,
+  AdminOverview,
+  AdminUserSummary,
+  AppUserRole,
+} from '../../models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -23,6 +28,16 @@ export class AdminService {
   ): Observable<AdminUserSummary> {
     return this.http.put<AdminUserSummary>(`${this.apiUrl}/users/${userId}/role`, {
       role,
+    });
+  }
+
+  deleteUser(userId: number): Observable<AdminDeleteUsersResult> {
+    return this.http.delete<AdminDeleteUsersResult>(`${this.apiUrl}/users/${userId}`);
+  }
+
+  bulkDeleteUsers(userIds: number[]): Observable<AdminDeleteUsersResult> {
+    return this.http.post<AdminDeleteUsersResult>(`${this.apiUrl}/users/bulk-delete`, {
+      userIds,
     });
   }
 }

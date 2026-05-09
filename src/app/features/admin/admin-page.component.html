@@ -188,7 +188,31 @@
         <p class="panel-label">Access Control</p>
         <h3>User roles and workspace ownership</h3>
       </div>
-      <span class="panel-count">{{ visibleUserCountLabel }}</span>
+      <div class="panel-tools">
+        <span class="panel-count">{{ visibleUserCountLabel }}</span>
+        <div class="bulk-actions">
+          <span class="selection-summary">
+            {{ selectedUsers.length }} selected
+          </span>
+          <button
+            mat-button
+            type="button"
+            (click)="clearSelectedUsers()"
+            [disabled]="!selectedUsers.length || bulkDeleting"
+          >
+            Clear selection
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            type="button"
+            (click)="confirmBulkDeleteSelected()"
+            [disabled]="!selectedUsers.length || bulkDeleting || !!deletingUserId"
+          >
+            {{ bulkDeleting ? 'Deleting...' : 'Delete selected' }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <app-admin-users-table
@@ -196,7 +220,13 @@
       [loading]="loading"
       [currentUserId]="currentUserId"
       [updatingUserId]="updatingUserId"
+      [deletingUserId]="deletingUserId"
+      [bulkDeleting]="bulkDeleting"
+      [selectedUserIds]="selectedUserIds"
       (roleChange)="handleRoleChange($event)"
+      (selectionToggle)="handleSelectionToggle($event)"
+      (selectAllToggle)="toggleVisibleUserSelection()"
+      (deleteRequested)="confirmDeleteUser($event)"
     ></app-admin-users-table>
   </mat-card>
 </section>

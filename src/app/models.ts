@@ -204,7 +204,20 @@ export interface AdminUserSummary {
   role: AppUserRole;
   avatarUrl?: string;
   receiptCount: number;
+  expenseCount: number;
   budgetCount: number;
   categoryCount: number;
   latestReceiptAt?: string;
+}
+
+export interface AdminDeleteUsersResult {
+  requestedCount: number;
+  deletedCount: number;
+  deletedReceiptCount: number;
+  deletedExpenseCount: number;
+  deletedBudgetCount: number;
+  deletedCategoryCount: number;
+  deletedVendorRuleCount: number;
+  deletedUserIds: number[];
+  message: string;
 }

@@ -1,9 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { AdminOverview, AdminUserSummary, AppUserRole } from '../../models';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  AdminDeleteUsersResult,
+  AdminOverview,
+  AdminUserSummary,
+  AppUserRole,
+} from '../../models';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { AdminService } from './admin.service';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from '../../shared/components/confirm-dialog.component';
 
 type AdminUserFilter = 'all' | 'admins' | 'needs-setup' | 'recent';
 
@@ -44,13 +54,17 @@ export class AdminPageComponent implements OnInit {
   users: AdminUserSummary[] = [];
   loading = false;
   updatingUserId: number | null = null;
+  deletingUserId: number | null = null;
+  bulkDeleting = false;
   searchText = '';
+  selectedUserIds: number[] = [];
   activityFilter: AdminUserFilter = 'all';
   readonly currentUserId = this.authService.getUserId();
 
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
+    private dialog: MatDialog,
     private notification: NotificationService,
   ) {}
 
@@ -68,6 +82,10 @@ export class AdminPageComponent implements OnInit {
       next: ({ overview, users }) => {
         this.overview = overview;
         this.users = users;
+        const availableUserIds = new Set(users.map((user) => user.id));
+        this.selectedUserIds = this.selectedUserIds.filter((userId) =>
+          availableUserIds.has(userId),
+        );
         this.loading = false;
       },
       error: () => {
@@ -81,7 +99,7 @@ export class AdminPageComponent implements OnInit {
   }
 
   handleRoleChange(event: { userId: number; role: AppUserRole }): void {
-    if (this.updatingUserId) {
+    if (this.updatingUserId || this.deletingUserId || this.bulkDeleting) {
       return;
     }
 
@@ -101,6 +119,105 @@ export class AdminPageComponent implements OnInit {
     });
   }
 
+  handleSelectionToggle(userId: number): void {
+    if (this.selectedUserIds.includes(userId)) {
+      this.selectedUserIds = this.selectedUserIds.filter(
+        (selectedUserId) => selectedUserId !== userId,
+      );
+      return;
+    }
+
+    this.selectedUserIds = [...this.selectedUserIds, userId];
+  }
+
+  toggleVisibleUserSelection(): void {
+    const visibleUserIds = this.filteredUsers
+      .filter((user) => this.canDeleteUser(user))
+      .map((user) => user.id);
+
+    if (!visibleUserIds.length) {
+      return;
+    }
+
+    const selectedIds = new Set(this.selectedUserIds);
+    const allVisibleSelected = visibleUserIds.every((userId) =>
+      selectedIds.has(userId),
+    );
+
+    if (allVisibleSelected) {
+      this.selectedUserIds = this.selectedUserIds.filter(
+        (selectedUserId) => !visibleUserIds.includes(selectedUserId),
+      );
+      return;
+    }
+
+    this.selectedUserIds = Array.from(
+      new Set([...this.selectedUserIds, ...visibleUserIds]),
+    );
+  }
+
+  clearSelectedUsers(): void {
+    this.selectedUserIds = [];
+  }
+
+  confirmDeleteUser(user: AdminUserSummary): void {
+    if (!this.canDeleteUser(user) || this.deletingUserId || this.bulkDeleting) {
+      return;
+    }
+
+    this.openDeleteConfirmation([user], {
+      title: 'Delete User Profile',
+      confirmLabel: 'Delete user',
+    }).afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.deletingUserId = user.id;
+      this.adminService.deleteUser(user.id).subscribe({
+        next: (result) => {
+          this.handleDeleteSuccess(result);
+          this.deletingUserId = null;
+        },
+        error: (error) => {
+          const message =
+            error?.error?.message || 'Failed to delete the selected user.';
+          this.notification.error(message, 'Admin');
+          this.deletingUserId = null;
+        },
+      });
+    });
+  }
+
+  confirmBulkDeleteSelected(): void {
+    if (!this.selectedUsers.length || this.deletingUserId || this.bulkDeleting) {
+      return;
+    }
+
+    this.openDeleteConfirmation(this.selectedUsers, {
+      title: 'Delete Selected Users',
+      confirmLabel: 'Delete selected',
+    }).afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.bulkDeleting = true;
+      this.adminService.bulkDeleteUsers(this.selectedUsers.map((user) => user.id)).subscribe({
+        next: (result) => {
+          this.handleDeleteSuccess(result);
+          this.bulkDeleting = false;
+        },
+        error: (error) => {
+          const message =
+            error?.error?.message || 'Failed to delete the selected users.';
+          this.notification.error(message, 'Admin');
+          this.bulkDeleting = false;
+        },
+      });
+    });
+  }
+
   setActivityFilter(filter: AdminUserFilter): void {
     this.activityFilter = filter;
   }
@@ -116,6 +233,7 @@ export class AdminPageComponent implements OnInit {
         'Email',
         'Role',
         'Receipts',
+        'Expenses',
         'Budgets',
         'Categories',
         'Last Receipt',
@@ -126,6 +244,7 @@ export class AdminPageComponent implements OnInit {
         user.email,
         user.role,
         String(user.receiptCount),
+        String(user.expenseCount),
         String(user.budgetCount),
         String(user.categoryCount),
         user.latestReceiptAt ?? '',
@@ -178,6 +297,15 @@ export class AdminPageComponent implements OnInit {
     }
 
     return `${this.filteredUsers.length} of ${this.users.length} users`;
+  }
+
+  get selectedUsers(): AdminUserSummary[] {
+    const selectedUserIds = new Set(this.selectedUserIds);
+    return this.users.filter((user) => selectedUserIds.has(user.id));
+  }
+
+  canDeleteUser(user: AdminUserSummary): boolean {
+    return user.id !== this.currentUserId;
   }
 
   get trackingCards(): AdminTrackingCard[] {
@@ -360,5 +488,44 @@ export class AdminPageComponent implements OnInit {
     }
 
     return reasons;
+  }
+
+  private openDeleteConfirmation(
+    users: AdminUserSummary[],
+    data: Pick<ConfirmDialogData, 'title' | 'confirmLabel'>,
+  ) {
+    return this.dialog.open(ConfirmDialogComponent, {
+      width: '460px',
+      maxWidth: '94vw',
+      autoFocus: false,
+      data: {
+        ...data,
+        confirmColor: 'warn',
+        cancelLabel: 'Keep users',
+        message: this.buildDeleteMessage(users),
+      } satisfies ConfirmDialogData,
+    });
+  }
+
+  private buildDeleteMessage(users: AdminUserSummary[]): string {
+    const receiptCount = users.reduce((sum, user) => sum + user.receiptCount, 0);
+    const expenseCount = users.reduce((sum, user) => sum + user.expenseCount, 0);
+    const budgetCount = users.reduce((sum, user) => sum + user.budgetCount, 0);
+    const categoryCount = users.reduce((sum, user) => sum + user.categoryCount, 0);
+    const targetLabel =
+      users.length === 1
+        ? `${users[0].email}'s profile`
+        : `${users.length} user profiles`;
+
+    return `This permanently deletes ${targetLabel} and removes ${receiptCount} receipt${receiptCount === 1 ? '' : 's'}, ${expenseCount} expense${expenseCount === 1 ? '' : 's'}, ${budgetCount} budget${budgetCount === 1 ? '' : 's'}, ${categoryCount} categor${categoryCount === 1 ? 'y' : 'ies'}, vendor rules, avatars, and uploaded receipt files.`;
+  }
+
+  private handleDeleteSuccess(result: AdminDeleteUsersResult): void {
+    const deletedUserIdSet = new Set(result.deletedUserIds);
+    this.selectedUserIds = this.selectedUserIds.filter(
+      (userId) => !deletedUserIdSet.has(userId),
+    );
+    this.notification.success(result.message, 'Admin');
+    this.loadAdminWorkspace();
   }
 }
