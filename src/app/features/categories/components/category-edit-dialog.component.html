@@ -1,13 +1,33 @@
-<h2 mat-dialog-title>{{ data.name ? 'Edit Category' : 'Add Category' }}</h2>
-<form [formGroup]="form" (ngSubmit)="save()" class="category-edit-form">
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Category Name</mat-label>
-    <input matInput formControlName="name" maxlength="255" autofocus>
-    <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
-    <mat-error *ngIf="form.get('name')?.hasError('maxlength')">Max 255 characters</mat-error>
-  </mat-form-field>
-  <div class="actions">
-    <button mat-button type="button" (click)="cancel()">Cancel</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Save</button>
-  </div>
-</form>
+<div class="category-dialog">
+  <h2 mat-dialog-title class="dialog-title">
+    {{ data.name ? 'Edit Category' : 'Add Category' }}
+  </h2>
+  <form [formGroup]="form" (ngSubmit)="save()" class="category-edit-form">
+    <mat-dialog-content class="dialog-content">
+      <p class="dialog-copy">
+        Choose a clear category name so future receipts are easier to sort.
+      </p>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Category Name</mat-label>
+        <input matInput formControlName="name" maxlength="255" autofocus />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+        <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+          Max 255 characters
+        </mat-error>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="actions">
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        Save
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

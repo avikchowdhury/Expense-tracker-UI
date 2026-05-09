@@ -51,7 +51,9 @@ export class CategoriesPageComponent implements OnInit {
 
   addCategory() {
     const dialogRef = this.dialog.open(CategoryEditDialogComponent, {
-      width: '350px',
+      width: '420px',
+      maxWidth: '94vw',
+      autoFocus: false,
       data: {}
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -69,7 +71,9 @@ export class CategoriesPageComponent implements OnInit {
 
   editCategory(category: Category) {
     const dialogRef = this.dialog.open(CategoryEditDialogComponent, {
-      width: '350px',
+      width: '420px',
+      maxWidth: '94vw',
+      autoFocus: false,
       data: { name: category.name }
     });
     dialogRef.afterClosed().subscribe(result => {
