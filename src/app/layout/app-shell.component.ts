@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import {
   AiAssistantService,
   AppNotification,
@@ -127,12 +127,15 @@ export class AppShellComponent implements OnInit, OnDestroy {
       this.subscription.add(
         this.profileService.getProfile().subscribe({ error: () => undefined }),
       );
-      this.loadNotifications();
+      this.loadNotifications(true);
+      this.subscription.add(
+        interval(60_000).subscribe(() => this.loadNotifications(true)),
+      );
     }
   }
 
-  loadNotifications(): void {
-    this.aiService.getNotifications().subscribe({
+  loadNotifications(forceRefresh = false): void {
+    this.aiService.getNotifications(forceRefresh).subscribe({
       next: (n) => {
         this.notifications = n;
       },
@@ -148,6 +151,9 @@ export class AppShellComponent implements OnInit, OnDestroy {
 
   toggleNotifPanel(): void {
     this.notifPanelOpen = !this.notifPanelOpen;
+    if (this.notifPanelOpen) {
+      this.loadNotifications(true);
+    }
   }
 
   closeNotifPanel(): void {

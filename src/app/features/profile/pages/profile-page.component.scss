@@ -387,6 +387,48 @@
   font-size: 0.9rem;
 }
 
+.delivery-status-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(15, 108, 91, 0.08);
+  border: 1px solid rgba(15, 108, 91, 0.18);
+}
+
+.delivery-status-card--preview {
+  background: rgba(198, 135, 44, 0.1);
+  border-color: rgba(198, 135, 44, 0.22);
+}
+
+.delivery-status-copy {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.delivery-status-copy strong {
+  color: #13293d;
+}
+
+.delivery-status-copy p {
+  margin: 0;
+  color: #61798a;
+  line-height: 1.5;
+}
+
+.delivery-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.delivery-status-actions button {
+  white-space: nowrap;
+}
+
 @media (max-width: 960px) {
   .profile-grid {
     grid-template-columns: 1fr;
@@ -419,5 +461,14 @@
   .toggle-card {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .delivery-status-card {
+    flex-direction: column;
+  }
+
+  .delivery-status-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

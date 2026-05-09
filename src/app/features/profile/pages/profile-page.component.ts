@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import {
+  AiAssistantService,
+  NotificationDeliveryStatus,
+  NotificationDigestType,
+} from '../../../services/ai-assistant.service';
 import { AuthService } from '../../../services/auth.service';
 import { LocalePreferenceService } from '../../../services/locale-preference.service';
 import { NotificationService } from '../../../services/notification.service';
@@ -79,6 +84,12 @@ export class ProfilePageComponent implements OnInit {
   savingProfile = false;
   changingPassword = false;
   bootstrappingAdmin = false;
+  deliveryStatus: NotificationDeliveryStatus | null = null;
+  loadingDeliveryStatus = false;
+  sendingDigestTests: Record<NotificationDigestType, boolean> = {
+    'weekly-summary': false,
+    'monthly-report': false,
+  };
   editForm: FormGroup;
   passwordForm: FormGroup;
   avatarUploading = false;
@@ -86,6 +97,7 @@ export class ProfilePageComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private profileService: ProfileService,
+    private aiAssistant: AiAssistantService,
     private notification: NotificationService,
     private fb: FormBuilder,
     private router: Router,
@@ -115,6 +127,7 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
+    this.loadDeliveryStatus();
   }
 
   get avatarInitials(): string {
@@ -193,6 +206,7 @@ export class ProfilePageComponent implements OnInit {
         next: (profile) => {
           this.notification.success('Profile updated');
           this.profile = profile;
+          this.aiAssistant.invalidateInsightCache();
           const phoneParts = this.parsePhone(profile.phone);
           this.editForm.patchValue({
             email: profile.email,
@@ -208,6 +222,7 @@ export class ProfilePageComponent implements OnInit {
             monthlyReportEmailEnabled: profile.monthlyReportEmailEnabled,
             weeklySummaryDay: profile.weeklySummaryDay || 'Monday',
           });
+          this.loadDeliveryStatus();
         },
         error: () => this.notification.error('Failed to update profile'),
         complete: () => {
@@ -345,5 +360,45 @@ export class ProfilePageComponent implements OnInit {
   get currentLanguageCurrencyLabel(): string {
     const preference = this.localePreference.currentPreference;
     return `${preference.languageLabel} | ${preference.currencyCode}`;
+  }
+
+  loadDeliveryStatus(): void {
+    this.loadingDeliveryStatus = true;
+    this.aiAssistant.getNotificationDeliveryStatus().subscribe({
+      next: (status) => {
+        this.deliveryStatus = status;
+        this.loadingDeliveryStatus = false;
+      },
+      error: () => {
+        this.deliveryStatus = {
+          isOperational: false,
+          deliveryMode: 'file-preview',
+          message: 'Unable to check digest delivery status right now.',
+        };
+        this.loadingDeliveryStatus = false;
+      },
+    });
+  }
+
+  sendDigestTest(type: NotificationDigestType): void {
+    if (this.sendingDigestTests[type]) {
+      return;
+    }
+
+    this.sendingDigestTests[type] = true;
+    this.aiAssistant.sendTestDigest(type).subscribe({
+      next: (result) => {
+        if (result.delivered) {
+          this.notification.success(result.message, 'Digest test');
+        } else {
+          this.notification.warning(result.message, 'Digest test');
+        }
+      },
+      error: () => this.notification.error('Failed to send digest test', 'Digest test'),
+      complete: () => {
+        this.sendingDigestTests[type] = false;
+        this.loadDeliveryStatus();
+      },
+    });
   }
 }

@@ -108,6 +108,21 @@ export class AiAssistantService {
     );
   }
 
+  getNotificationDeliveryStatus(): Observable<NotificationDeliveryStatus> {
+    return this.http.get<NotificationDeliveryStatus>(
+      `${API_BASE}/notifications/email-status`,
+    );
+  }
+
+  sendTestDigest(
+    type: NotificationDigestType,
+  ): Observable<SendTestDigestResult> {
+    return this.http.post<SendTestDigestResult>(
+      `${API_BASE}/notifications/send-test-digest`,
+      { type },
+    );
+  }
+
   parseTextExpense(text: string): Observable<ParseTextResult> {
     const sourceText = text.trim();
     const detectedCurrency =
@@ -302,6 +317,22 @@ export interface AppNotification {
   type: 'budget' | 'anomaly' | 'subscription' | 'info';
   severity: 'info' | 'warning' | 'critical';
   generatedAt: string;
+}
+
+export type NotificationDigestType = 'weekly-summary' | 'monthly-report';
+
+export interface NotificationDeliveryStatus {
+  isOperational: boolean;
+  deliveryMode: 'smtp' | 'file-preview';
+  message: string;
+}
+
+export interface SendTestDigestResult {
+  type: NotificationDigestType;
+  delivered: boolean;
+  deliveryMode: 'smtp' | 'file-preview';
+  message: string;
+  previewPath?: string | null;
 }
 
 export interface ParseTextResult {

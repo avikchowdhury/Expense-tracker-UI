@@ -365,6 +365,61 @@
             </label>
           </div>
 
+          <div
+            class="delivery-status-card"
+            [class.delivery-status-card--preview]="
+              deliveryStatus?.deliveryMode === 'file-preview'
+            "
+          >
+            <div class="delivery-status-copy">
+              <strong>
+                {{
+                  loadingDeliveryStatus
+                    ? "Checking delivery status..."
+                    : deliveryStatus?.deliveryMode === "smtp"
+                      ? "Email delivery is live"
+                      : "Local preview mode is active"
+                }}
+              </strong>
+              <p>
+                {{
+                  deliveryStatus?.message ||
+                    "The app is checking how digest delivery is configured."
+                }}
+              </p>
+            </div>
+
+            <div class="delivery-status-actions">
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="sendDigestTest('weekly-summary')"
+                [disabled]="sendingDigestTests['weekly-summary']"
+              >
+                <mat-icon>send</mat-icon>
+                {{
+                  sendingDigestTests["weekly-summary"]
+                    ? "Sending weekly test..."
+                    : "Send weekly test"
+                }}
+              </button>
+
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="sendDigestTest('monthly-report')"
+                [disabled]="sendingDigestTests['monthly-report']"
+              >
+                <mat-icon>description</mat-icon>
+                {{
+                  sendingDigestTests["monthly-report"]
+                    ? "Sending monthly test..."
+                    : "Send monthly test"
+                }}
+              </button>
+            </div>
+          </div>
+
           <mat-form-field appearance="outline">
             <mat-label>Weekly summary day</mat-label>
             <mat-select formControlName="weeklySummaryDay">
