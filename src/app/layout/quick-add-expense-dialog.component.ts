@@ -51,6 +51,14 @@ export class QuickAddExpenseDialogComponent implements OnInit {
         this.vendor = result.vendor || '';
         this.amountBase = result.amount || null;
         this.category = result.category || 'Uncategorized';
+        this.categories = result.category
+          ? [
+              ...new Set([
+                result.category,
+                ...this.categories.map((c) => c.name),
+              ]),
+            ].map((name) => ({ id: 0, name }))
+          : this.categories;
         this.date = result.date || new Date().toISOString().slice(0, 10);
         this.parsedCurrency = result.detectedCurrency ?? null;
         this.parsing = false;
