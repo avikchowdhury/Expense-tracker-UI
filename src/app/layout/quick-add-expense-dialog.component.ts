@@ -5,6 +5,7 @@ import { AiAssistantService } from '../services/ai-assistant.service';
 import { NotificationService } from '../services/notification.service';
 import { ReceiptService } from '../services/receipt.service';
 import { LocalePreferenceService } from '../services/locale-preference.service';
+import { AppConstants } from '../shared/app-constants';
 
 @Component({
   selector: 'app-quick-add-expense-dialog',
@@ -17,7 +18,7 @@ export class QuickAddExpenseDialogComponent implements OnInit {
   parsing = false;
   saving = false;
   vendor = '';
-  category = 'Uncategorized';
+  category = AppConstants.UNCATEGORIZED;
   date = new Date().toISOString().slice(0, 10);
   parsedCurrency: 'INR' | 'USD' | null = null;
   private amountBase: number | null = null;
@@ -50,7 +51,7 @@ export class QuickAddExpenseDialogComponent implements OnInit {
       next: (result) => {
         this.vendor = result.vendor || '';
         this.amountBase = result.amount || null;
-        this.category = result.category || 'Uncategorized';
+        this.category = result.category || AppConstants.UNCATEGORIZED;
         this.categories = result.category
           ? [
               ...new Set([
@@ -64,13 +65,14 @@ export class QuickAddExpenseDialogComponent implements OnInit {
         this.parsing = false;
       },
       error: () => {
-        this.notification.error('Could not parse that expense yet.', 'Quick add');
+        this.notification.error(AppConstants.PARSE_ERROR, AppConstants.QUICK_ADD);
         this.parsing = false;
       },
     });
   }
 
   save(): void {
+
     if (
       !this.vendor.trim() ||
       !this.amountBase ||
@@ -85,18 +87,18 @@ export class QuickAddExpenseDialogComponent implements OnInit {
       .quickAddReceipt(
         this.vendor.trim(),
         this.amountBase,
-        this.category || 'Uncategorized',
+        this.category || AppConstants.UNCATEGORIZED,
         this.date,
       )
       .subscribe({
         next: () => {
           this.aiService.invalidateInsightCache();
-          this.notification.success('Expense saved successfully.', 'Quick add');
+          this.notification.success(AppConstants.SAVE_SUCCESS, AppConstants.QUICK_ADD);
           this.saving = false;
           this.dialogRef.close(true);
         },
         error: () => {
-          this.notification.error('Failed to save the expense.', 'Quick add');
+          this.notification.error(AppConstants.SAVE_ERROR, AppConstants.QUICK_ADD);
           this.saving = false;
         },
       });
@@ -110,10 +112,9 @@ export class QuickAddExpenseDialogComponent implements OnInit {
     if (!this.parsedCurrency) {
       return '';
     }
-
     return this.parsedCurrency === 'INR'
-      ? 'Parsed as Indian rupees'
-      : 'Parsed as US dollars';
+      ? AppConstants.PARSED_INR
+      : AppConstants.PARSED_USD;
   }
 
   get amount(): number | null {
