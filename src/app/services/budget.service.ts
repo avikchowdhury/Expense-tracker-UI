@@ -17,7 +17,7 @@ export class BudgetService {
   constructor(private http: HttpClient) {}
 
   getBudgetStatus(): Observable<BudgetStatus> {
-    return this.http.get<BudgetStatus>('/api/budget/status');
+    return this.http.get<BudgetStatus>('/api/budgets/status');
   }
 
   getBudgetAdvisor(): Observable<BudgetAdvisorSnapshot> {
